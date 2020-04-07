@@ -5,6 +5,12 @@
 #include "sprites.h"
 #include "maps.h"
 
+enum State{
+    INTRO,
+    HACKING,
+    EXPLORE
+};
+
 int main(){
     using Pokitto::Core;
     using Pokitto::Display;
@@ -34,82 +40,128 @@ int main(){
     auto playerX = LCDWIDTH/2 - playerWidth/2;
     auto playerY = LCDHEIGHT/2 - playerHeight/2;
     
+    State state = State::INTRO;
+    bool hacking = false, intro = true;
+    
+    
+    
     while( Core::isRunning() ){
         if( !Core::update() ) {
             continue;
         }
+        switch(state){
+        case INTRO:
+            if( Buttons::bBtn() ){
+                state = State::EXPLORE;
+            }
+            break;
             
-        int oldX = cameraX;
-        int oldY = cameraY;
+        case HACKING:
         
-        if(!Buttons::rightBtn() && !Buttons::leftBtn() && !Buttons::upBtn() && !Buttons::downBtn()){
-            if(player.animation == Hero::walkEast){
-                player.play(hero, Hero::idleEast);
+            // Debug state switch
+            if( Buttons::bBtn() ){
+                state = State::EXPLORE;
             }
-            if(player.animation == Hero::walkWest){
-                player.play(hero, Hero::idleWest);
-            }
-            if(player.animation == Hero::walkNorth){
-                player.play(hero, Hero::idleNorth);
-            }
-            if(player.animation == Hero::walkSouth){
-                player.play(hero, Hero::idleSouth);
-            }
-        }
-
-
-        if(Buttons::rightBtn()){
-            cameraX += speed;
-            if(player.animation != Hero::walkEast){
-                player.play(hero, Hero::walkEast);
-            }
-        }
-        if(Buttons::leftBtn()){
-            cameraX -= speed;
-            if(player.animation != Hero::walkWest){
-                player.play(hero, Hero::walkWest);
-            }
-        }
+            
         
-        if(Buttons::upBtn()){
-            cameraY -= speed;
-            if(player.animation != Hero::walkNorth){
-                player.play(hero, Hero::walkNorth);
-            }
-        }
-        if(Buttons::downBtn()){
-            cameraY += speed;
-            if(player.animation != Hero::walkSouth){
-                player.play(hero, Hero::walkSouth);
-            }
-        }
-        
-        
-        // get current tile
-        int tileX = (cameraX + playerX + PROJ_TILE_W/2) / PROJ_TILE_W;
-        int tileY = (cameraY + playerY + playerHeight) / PROJ_TILE_H;
-        auto tile = suburbEnum(tileX, tileY);
-
-        if( tile&Hack ){
-            //Eventually play a Hack tone here, draw hack when actually hacking
             hack.draw(playerX, playerY-16, false, false);
-        }
+             // draw map
+            tilemap.draw(-cameraX, -cameraY);
+            
+            // draw hero player
+            player.draw(playerX, playerY, false, false, recolor);
+            
+            
+            Display::setColor(7);
+            Display::print("Hack the planet!");
+            break;
+            
+        case EXPLORE:
         
-        if( tile&Collide ){
-            cameraX = oldX;
-            cameraY = oldY;
+             
+            int oldX = cameraX;
+            int oldY = cameraY;
+            
+            if(!Buttons::rightBtn() && !Buttons::leftBtn() && !Buttons::upBtn() && !Buttons::downBtn()){
+                if(player.animation == Hero::walkEast){
+                    player.play(hero, Hero::idleEast);
+                }
+                if(player.animation == Hero::walkWest){
+                    player.play(hero, Hero::idleWest);
+                }
+                if(player.animation == Hero::walkNorth){
+                    player.play(hero, Hero::idleNorth);
+                }
+                if(player.animation == Hero::walkSouth){
+                    player.play(hero, Hero::idleSouth);
+                }
+            }
+    
+    
+            if(Buttons::leftBtn() || Buttons::rightBtn() ){
+                if(Buttons::rightBtn()){
+                    cameraX += speed;
+                    if(player.animation != Hero::walkEast){
+                        player.play(hero, Hero::walkEast);
+                    }
+                }
+                if(Buttons::leftBtn()){
+                    cameraX -= speed;
+                    if(player.animation != Hero::walkWest){
+                        player.play(hero, Hero::walkWest);
+                    }
+                }
+            }else{
+                
+                if(Buttons::upBtn()){
+                    cameraY -= speed;
+                    if(player.animation != Hero::walkNorth){
+                        player.play(hero, Hero::walkNorth);
+                    }
+                }
+                if(Buttons::downBtn()){
+                    cameraY += speed;
+                    if(player.animation != Hero::walkSouth){
+                        player.play(hero, Hero::walkSouth);
+                    }
+                }
+            }
+            
+            
+            // get current tile
+            int tileX = (cameraX + playerX + PROJ_TILE_W/2) / PROJ_TILE_W;
+            int tileY = (cameraY + playerY + playerHeight) / PROJ_TILE_H;
+            auto tile = suburbEnum(tileX, tileY);
+    
+            if( tile&Hack ){
+                // Eventually play a Hack tone here, draw hack when actually hacking
+                // Play hackable notification 
+                
+                
+                if( Buttons::aBtn() ){
+                    state = State::HACKING;
+                }
+            }
+            
+            if( tile&Collide ){
+                cameraX = oldX;
+                cameraY = oldY;
+            }
+    
+    
+            // draw map
+            tilemap.draw(-cameraX, -cameraY);
+            
+            // draw hero player
+            player.draw(playerX, playerY, false, false, recolor);
+            
+            
+            Display::setColor(7);
+            Display::print("How do I get out of here?");
+            break;
+            
         }
 
-
-        // draw map
-        tilemap.draw(-cameraX, -cameraY);
-        
-        // draw hero player
-        player.draw(playerX, playerY, false, false, recolor);
-        
-        
-        Display::setColor(7);
-        Display::print("Hello, World!");
     }
     
     return 0;

@@ -190,12 +190,12 @@
   "frameTags": [
    { "name": "walkSouth", "from": 0, "to": 3, "direction": "forward" },
    { "name": "walkNorth", "from": 4, "to": 7, "direction": "forward" },
-   { "name": "walkEast", "from": 8, "to": 11, "direction": "forward" },
-   { "name": "walkWest", "from": 12, "to": 15, "direction": "forward" },
+   { "name": "walkWest", "from": 8, "to": 11, "direction": "forward" },
+   { "name": "walkEast", "from": 12, "to": 15, "direction": "forward" },
    { "name": "idleSouth", "from": 16, "to": 16, "direction": "forward" },
    { "name": "idleNorth", "from": 17, "to": 17, "direction": "forward" },
-   { "name": "idleEast", "from": 18, "to": 18, "direction": "forward" },
-   { "name": "idleWest", "from": 19, "to": 19, "direction": "forward" }
+   { "name": "idleWest", "from": 18, "to": 18, "direction": "forward" },
+   { "name": "idleEast", "from": 19, "to": 19, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }

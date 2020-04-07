@@ -116,12 +116,12 @@ public:
     enum Animation : std::uint16_t {
 		walkSouth = 0,
 		walkNorth = 9,
-		walkEast = 18,
-		walkWest = 27,
+		walkWest = 18,
+		walkEast = 27,
 		idleSouth = 36,
 		idleNorth = 39,
-		idleEast = 42,
-		idleWest = 45
+		idleWest = 42,
+		idleEast = 45
 	};
 };
 

@@ -360,6 +360,21 @@
 		},
 		"/sprites/Hackme.h": {
 			"sdcard": false
+		},
+		"/NanoPhageZero.bin.1.gif": {
+			"sdcard": false
+		},
+		"/NanoPhageZero.bin.2.gif": {
+			"sdcard": false
+		},
+		"/NanoPhageZero.bin.3.png": {
+			"sdcard": false
+		},
+		"/NanoPhageZero.bin.4.png": {
+			"sdcard": false
+		},
+		"/NanoPhageZero.bin.5.gif": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
