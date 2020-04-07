@@ -3,76 +3,113 @@
 #include <Tilemap.hpp>
 #include <SDFileSystem.h>
 #include "sprites.h"
-#include "Smile.h"
 #include "maps.h"
 
 int main(){
-    using PC=Pokitto::Core;
-    using PD=Pokitto::Display;
-    using PB=Pokitto::Buttons;
+    using Pokitto::Core;
+    using Pokitto::Display;
+    using Pokitto::Buttons;
     
-    PC::begin();
-    PD::loadRGBPalette(miloslav);
+    Core::begin();
+    Display::loadRGBPalette(miloslav);
     
     Tilemap tilemap;
-    tilemap.set(gardenPath[0], gardenPath[1], gardenPath+2);
-    for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++)
+    //0 = 14, 1 = 11, suburb+2 = mapPixelData
+    tilemap.set(suburb[0], suburb[1], suburb+2);
+    for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
         tilemap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
-
-    int cameraX = 64, cameraY = 64, speed = 3, recolor = 0;
+    }
+    
+    // set background to blank black tile
+    tilemap.setColorTile(0,0);
+    
+    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0;
     
     Sprite player;
+    Sprite hack;
+    hack.play(hackme, Hackme::show);
     player.play(hero, Hero::walkSouth);
     auto playerWidth = player.getFrameWidth();
     auto playerHeight = player.getFrameHeight();
     auto playerX = LCDWIDTH/2 - playerWidth/2;
     auto playerY = LCDHEIGHT/2 - playerHeight/2;
     
-    while( PC::isRunning() ){
-        if( !PC::update() ) 
+    while( Core::isRunning() ){
+        if( !Core::update() ) {
             continue;
+        }
             
         int oldX = cameraX;
         int oldY = cameraY;
+        
+        if(!Buttons::rightBtn() && !Buttons::leftBtn() && !Buttons::upBtn() && !Buttons::downBtn()){
+            if(player.animation == Hero::walkEast){
+                player.play(hero, Hero::idleEast);
+            }
+            if(player.animation == Hero::walkWest){
+                player.play(hero, Hero::idleWest);
+            }
+            if(player.animation == Hero::walkNorth){
+                player.play(hero, Hero::idleNorth);
+            }
+            if(player.animation == Hero::walkSouth){
+                player.play(hero, Hero::idleSouth);
+            }
+        }
 
-        if(PB::rightBtn()){
+
+        if(Buttons::rightBtn()){
             cameraX += speed;
-            if(player.animation != Hero::walkEast)
+            if(player.animation != Hero::walkEast){
                 player.play(hero, Hero::walkEast);
-        }else if(PB::leftBtn()){
+            }
+        }
+        if(Buttons::leftBtn()){
             cameraX -= speed;
-            if(player.animation != Hero::walkWest)
+            if(player.animation != Hero::walkWest){
                 player.play(hero, Hero::walkWest);
+            }
         }
         
-        if(PB::upBtn()){
+        if(Buttons::upBtn()){
             cameraY -= speed;
-            if(player.animation != Hero::walkNorth)
+            if(player.animation != Hero::walkNorth){
                 player.play(hero, Hero::walkNorth);
-        }else if(PB::downBtn()){
+            }
+        }
+        if(Buttons::downBtn()){
             cameraY += speed;
-            if(player.animation != Hero::walkSouth)
+            if(player.animation != Hero::walkSouth){
                 player.play(hero, Hero::walkSouth);
+            }
         }
         
+        
+        // get current tile
         int tileX = (cameraX + playerX + PROJ_TILE_W/2) / PROJ_TILE_W;
         int tileY = (cameraY + playerY + playerHeight) / PROJ_TILE_H;
-        auto tile = gardenPathEnum(tileX, tileY);
+        auto tile = suburbEnum(tileX, tileY);
 
+        if( tile&Hack ){
+            //Eventually play a Hack tone here, draw hack when actually hacking
+            hack.draw(playerX, playerY-16, false, false);
+        }
+        
         if( tile&Collide ){
             cameraX = oldX;
             cameraY = oldY;
         }
-        
-        if( tile&WalkOnGrass ){
-            recolor++;
-        }else{
-            recolor = 0;
-        }
 
-        //tilemap.draw(-cameraX, -cameraY);
-        PD::drawSprite(-cameraX, -cameraY, Smile, false, false, recolor);
+
+        // draw map
+        tilemap.draw(-cameraX, -cameraY);
+        
+        // draw hero player
         player.draw(playerX, playerY, false, false, recolor);
+        
+        
+        Display::setColor(7);
+        Display::print("Hello, World!");
     }
     
     return 0;

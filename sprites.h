@@ -104,13 +104,24 @@ public:
 	};
 };
 
+class Hackme {
+public:
+    enum Animation : std::uint16_t {
+		show = 0
+	};
+};
+
 class Hero {
 public:
     enum Animation : std::uint16_t {
 		walkSouth = 0,
 		walkNorth = 9,
 		walkEast = 18,
-		walkWest = 27
+		walkWest = 27,
+		idleSouth = 36,
+		idleNorth = 39,
+		idleEast = 42,
+		idleWest = 45
 	};
 };
 
@@ -118,5 +129,6 @@ public:
 // https://stackoverflow.com/a/19591902
 extern "C" {
 extern const Dude dude;
+extern const Hackme hackme;
 extern const Hero hero;
 }

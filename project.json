@@ -333,6 +333,33 @@
 		},
 		"/README.md": {
 			"sdcard": false
+		},
+		"/maps/PhageCity.png": {
+			"sdcard": false
+		},
+		"/maps/PhageCity.h": {
+			"sdcard": false
+		},
+		"/maps/suburb.tmx": {
+			"sdcard": false
+		},
+		"/Hackme.aseprite": {
+			"sdcard": false
+		},
+		"/hackme.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/Hackme.json": {
+			"sdcard": false
+		},
+		"/sprites/Hackme.png": {
+			"sdcard": false
+		},
+		"/sprites/Hackme.bin": {
+			"sdcard": false
+		},
+		"/sprites/Hackme.h": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

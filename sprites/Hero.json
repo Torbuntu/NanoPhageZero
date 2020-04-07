@@ -142,6 +142,42 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
     "duration": 150
+   },
+   {
+    "filename": "Hero 16.aseprite",
+    "frame": { "x": 256, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 150
+   },
+   {
+    "filename": "Hero 17.aseprite",
+    "frame": { "x": 272, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 150
+   },
+   {
+    "filename": "Hero 18.aseprite",
+    "frame": { "x": 288, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 150
+   },
+   {
+    "filename": "Hero 19.aseprite",
+    "frame": { "x": 304, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 150
    }
  ],
  "meta": {
@@ -149,13 +185,17 @@
   "version": "1.2.16.3-x64",
   "image": "Hero.png",
   "format": "RGBA8888",
-  "size": { "w": 256, "h": 16 },
+  "size": { "w": 320, "h": 16 },
   "scale": "1",
   "frameTags": [
    { "name": "walkSouth", "from": 0, "to": 3, "direction": "forward" },
    { "name": "walkNorth", "from": 4, "to": 7, "direction": "forward" },
    { "name": "walkEast", "from": 8, "to": 11, "direction": "forward" },
-   { "name": "walkWest", "from": 12, "to": 15, "direction": "forward" }
+   { "name": "walkWest", "from": 12, "to": 15, "direction": "forward" },
+   { "name": "idleSouth", "from": 16, "to": 16, "direction": "forward" },
+   { "name": "idleNorth", "from": 17, "to": 17, "direction": "forward" },
+   { "name": "idleEast", "from": 18, "to": 18, "direction": "forward" },
+   { "name": "idleWest", "from": 19, "to": 19, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
