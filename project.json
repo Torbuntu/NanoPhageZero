@@ -375,6 +375,27 @@
 		},
 		"/NanoPhageZero.bin.5.gif": {
 			"sdcard": false
+		},
+		"/HackIcons.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/HackIcons.json": {
+			"sdcard": false
+		},
+		"/sprites/HackIcons.png": {
+			"sdcard": false
+		},
+		"/asepriteFiles": {
+			"sdcard": false
+		},
+		"/sprites/HackIcons.bin": {
+			"sdcard": false
+		},
+		"/sprites/HackIcons.h": {
+			"sdcard": false
+		},
+		"/NanoPhageZero.eeprom": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

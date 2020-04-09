@@ -31,6 +31,9 @@ int main(){
     
     int cameraX = 12, cameraY = 12, speed = 1, recolor = 0;
     
+    Sprite icons;
+    icons.play(hackIcons, HackIcons::bUp);
+    
     Sprite player;
     Sprite hack;
     hack.play(hackme, Hackme::show);
@@ -41,8 +44,9 @@ int main(){
     auto playerY = LCDHEIGHT/2 - playerHeight/2;
     
     State state = State::INTRO;
-    bool hacking = false, intro = true;
+    bool hacking = false, intro = true, bpress = false, apress = false, cpress = false;
     
+    int prog = 0;
     
     
     while( Core::isRunning() ){
@@ -51,11 +55,26 @@ int main(){
         }
         switch(state){
         case INTRO:
-            if( Buttons::bBtn() ){
+            if( Buttons::bBtn() && !bpress ){
+                bpress = true;
+                prog++;
+                icons.play(hackIcons, HackIcons::bDown);
+            }
+            if( !Buttons::bBtn() ){
+                bpress = false;
+                icons.play(hackIcons, HackIcons::bUp);
+            }
+            
+            if( prog >= 10 ){
+                prog = 0;
                 state = State::EXPLORE;
             }
-            break;
             
+            Display::setColor(7);
+            Display::print(prog);
+            icons.draw(12, 12);
+            
+            break;
         case HACKING:
         
             // Debug state switch
@@ -74,8 +93,8 @@ int main(){
             
             Display::setColor(7);
             Display::print("Hack the planet!");
-            break;
             
+            break;
         case EXPLORE:
         
              
@@ -159,7 +178,6 @@ int main(){
             Display::setColor(7);
             Display::print("How do I get out of here?");
             break;
-            
         }
 
     }

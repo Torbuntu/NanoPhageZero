@@ -87,20 +87,15 @@ public:
     }
 };
 
-class Dude {
+class HackIcons {
 public:
     enum Animation : std::uint16_t {
-		walkS = 0,
-		punchS = 9,
-		jump = 12,
-		land = 15,
-		walkN = 18,
-		punchN = 27,
-		yay = 30,
-		walkW = 33,
-		punchW = 42,
-		walkE = 45,
-		punchE = 54
+		bUp = 0,
+		bDown = 3,
+		aUp = 6,
+		aDown = 9,
+		cUp = 12,
+		cDown = 15
 	};
 };
 
@@ -128,7 +123,7 @@ public:
 
 // https://stackoverflow.com/a/19591902
 extern "C" {
-extern const Dude dude;
+extern const HackIcons hackIcons;
 extern const Hackme hackme;
 extern const Hero hero;
 }
