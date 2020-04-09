@@ -396,6 +396,9 @@
 		},
 		"/NanoPhageZero.eeprom": {
 			"sdcard": false
+		},
+		"/LICENSE": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
