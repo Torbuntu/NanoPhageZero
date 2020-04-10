@@ -31,11 +31,15 @@ int main(){
     
     int cameraX = 12, cameraY = 12, speed = 1, recolor = 0;
     
-    Sprite icons;
-    icons.play(hackIcons, HackIcons::bUp);
+    
     
     Sprite player;
     Sprite hack;
+    Sprite icons;
+    Sprite pBar;
+    
+    pBar.play(progBar, ProgBar::start);
+    icons.play(hackIcons, HackIcons::bUp);
     hack.play(hackme, Hackme::show);
     player.play(hero, Hero::walkSouth);
     auto playerWidth = player.getFrameWidth();
@@ -46,7 +50,7 @@ int main(){
     State state = State::INTRO;
     bool hacking = false, intro = true, bpress = false, apress = false, cpress = false;
     
-    int prog = 0;
+    int prog = 0, percent = 0;
     
     
     while( Core::isRunning() ){
@@ -55,33 +59,73 @@ int main(){
         }
         switch(state){
         case INTRO:
-            if( Buttons::bBtn() && !bpress ){
-                bpress = true;
-                prog++;
-                icons.play(hackIcons, HackIcons::bDown);
-            }
-            if( !Buttons::bBtn() ){
-                bpress = false;
-                icons.play(hackIcons, HackIcons::bUp);
+            if( prog <= 3 ){
+                
+                if( Buttons::pressed(BTN_B) ){
+                    pBar.play(progBar, ProgBar::first);
+                    prog++;
+                    icons.play(hackIcons, HackIcons::bDown);
+                }
+                if( !Buttons::bBtn() ){
+                    icons.play(hackIcons, HackIcons::bUp);
+                }
+                
+                if(Buttons::cBtn() || Buttons::pressed(BTN_A)){
+                    prog--;
+                }
+            }else if( prog <= 6 ){
+                
+                if( Buttons::pressed(BTN_A) ){
+                    pBar.play(progBar, ProgBar::second);
+                    prog++;
+                    icons.play(hackIcons, HackIcons::aDown);
+                }
+                if( !Buttons::aBtn() ){
+                    icons.play(hackIcons, HackIcons::aUp);
+                }
+                if(Buttons::pressed(BTN_B) || Buttons::cBtn()){
+                    prog--;
+                }
+            }else {
+                
+                if( Buttons::pressed(BTN_C) ){
+                    pBar.play(progBar, ProgBar::third);
+                    prog++;
+                    icons.play(hackIcons, HackIcons::cDown);
+                }
+                if( !Buttons::cBtn() ){
+                    icons.play(hackIcons, HackIcons::cUp);
+                }
+                if(Buttons::pressed(BTN_B) || Buttons::pressed(BTN_A)){
+                    prog--;
+                }
             }
             
-            if( prog >= 10 ){
+            if(prog < 0){
+                prog = 0;
+            }
+            
+            if(prog == 10){
+                pBar.play(progBar, ProgBar::final);
+            }
+            
+            if( prog > 10 ){
                 prog = 0;
                 state = State::EXPLORE;
             }
             
             Display::setColor(7);
             Display::print(prog);
-            icons.draw(12, 12);
+            icons.draw(12, 32);
+            pBar.draw(10, 10);
             
             break;
         case HACKING:
         
             // Debug state switch
-            if( Buttons::bBtn() ){
-                state = State::EXPLORE;
-            }
-            
+            // if( Buttons::bBtn() ){
+            //     state = State::EXPLORE;
+            // }
         
             hack.draw(playerX, playerY-16, false, false);
              // draw map
@@ -91,8 +135,73 @@ int main(){
             player.draw(playerX, playerY, false, false, recolor);
             
             
+            if( prog <= 18 ){
+                if(prog == 1){
+                     pBar.play(progBar, ProgBar::first);
+                }
+                if( Buttons::pressed(BTN_B) ){
+                    prog++;
+                    icons.play(hackIcons, HackIcons::bDown);
+                }
+                if( !Buttons::bBtn() ){
+                    icons.play(hackIcons, HackIcons::bUp);
+                }
+                
+                if(Buttons::cBtn() || Buttons::pressed(BTN_A)){
+                    prog--;
+                }
+            }else if( prog <= 38 ){
+                if(prog == 19){
+                    pBar.play(progBar, ProgBar::second);
+                }
+                if( Buttons::pressed(BTN_A) ){
+                    prog++;
+                    icons.play(hackIcons, HackIcons::aDown);
+                }
+                if( !Buttons::aBtn() ){
+                    icons.play(hackIcons, HackIcons::aUp);
+                }
+                if(Buttons::pressed(BTN_B) || Buttons::cBtn()){
+                    prog--;
+                }
+            }else {
+                if(prog == 39){
+                    pBar.play(progBar, ProgBar::third);
+                }
+                if( Buttons::pressed(BTN_C) ){
+                    prog++;
+                    icons.play(hackIcons, HackIcons::cDown);
+                }
+                if( !Buttons::cBtn() ){
+                    icons.play(hackIcons, HackIcons::cUp);
+                }
+                if(Buttons::pressed(BTN_B) || Buttons::pressed(BTN_A)){
+                    prog--;
+                }
+            }
+            
+            if(prog < 0){
+                prog = 0;
+            }
+            
+            if(prog == 50){
+                pBar.play(progBar, ProgBar::final);
+            }
+            
+            if( prog > 50 ){
+                prog = 0;
+                state = State::EXPLORE;
+            }
+            
+            percent = prog / 50.0 * 100;
+            
             Display::setColor(7);
-            Display::print("Hack the planet!");
+            Display::print(percent);
+            Display::print("%");
+            icons.draw(12, 32);
+            pBar.draw(10, 10);
+            
+            Display::print(100, 0, "Have to hack!");
             
             break;
         case EXPLORE:
@@ -158,6 +267,8 @@ int main(){
                 
                 
                 if( Buttons::aBtn() ){
+                    prog = 0;
+                    pBar.play(progBar, ProgBar::start);
                     state = State::HACKING;
                 }
             }

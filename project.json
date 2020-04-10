@@ -399,6 +399,21 @@
 		},
 		"/LICENSE": {
 			"sdcard": false
+		},
+		"/ProgBar.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/ProgBar.json": {
+			"sdcard": false
+		},
+		"/sprites/ProgBar.png": {
+			"sdcard": false
+		},
+		"/sprites/ProgBar.h": {
+			"sdcard": false
+		},
+		"/sprites/ProgBar.bin": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

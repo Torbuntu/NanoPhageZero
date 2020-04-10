@@ -1,0 +1,149 @@
+{ "frames": [
+   {
+    "filename": "ProgBar 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 1.aseprite",
+    "frame": { "x": 200, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 2.aseprite",
+    "frame": { "x": 400, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 3.aseprite",
+    "frame": { "x": 600, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 4.aseprite",
+    "frame": { "x": 800, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 5.aseprite",
+    "frame": { "x": 1000, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 6.aseprite",
+    "frame": { "x": 1200, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 7.aseprite",
+    "frame": { "x": 1400, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 8.aseprite",
+    "frame": { "x": 1600, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 9.aseprite",
+    "frame": { "x": 1800, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 10.aseprite",
+    "frame": { "x": 2000, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 11.aseprite",
+    "frame": { "x": 2200, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 12.aseprite",
+    "frame": { "x": 2400, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "ProgBar 13.aseprite",
+    "frame": { "x": 2600, "y": 0, "w": 200, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "sourceSize": { "w": 200, "h": 16 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.16.3-x64",
+  "image": "ProgBar.png",
+  "format": "RGBA8888",
+  "size": { "w": 2800, "h": 16 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "start", "from": 0, "to": 0, "direction": "forward" },
+   { "name": "first", "from": 1, "to": 4, "direction": "forward" },
+   { "name": "second", "from": 5, "to": 8, "direction": "forward" },
+   { "name": "third", "from": 9, "to": 12, "direction": "forward" },
+   { "name": "final", "from": 13, "to": 13, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

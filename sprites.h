@@ -120,10 +120,22 @@ public:
 	};
 };
 
+class ProgBar {
+public:
+    enum Animation : std::uint16_t {
+		start = 0,
+		first = 3,
+		second = 12,
+		third = 21,
+		final = 30
+	};
+};
+
 
 // https://stackoverflow.com/a/19591902
 extern "C" {
 extern const HackIcons hackIcons;
 extern const Hackme hackme;
 extern const Hero hero;
+extern const ProgBar progBar;
 }
