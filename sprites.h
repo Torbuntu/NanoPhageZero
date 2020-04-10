@@ -95,7 +95,15 @@ public:
 		aUp = 6,
 		aDown = 9,
 		cUp = 12,
-		cDown = 15
+		cDown = 15,
+		dUpUp = 18,
+		dUpDown = 21,
+		dLeftUp = 24,
+		dLeftDown = 27,
+		dRightUp = 30,
+		dRightDown = 33,
+		dDownUp = 36,
+		dDownDown = 39
 	};
 };
 

@@ -5,10 +5,12 @@
 #include "sprites.h"
 #include "maps.h"
 
+enum Inputs{
+    A, B, C, UP, DOWN, LEFT, RIGHT
+};
+
 enum State{
-    INTRO,
-    HACKING,
-    EXPLORE
+    INTRO, HACKING, EXPLORE
 };
 
 int main(){
@@ -38,6 +40,10 @@ int main(){
     Sprite icons;
     Sprite pBar;
     
+    Inputs order[7] = {UP, A, RIGHT, B, C, DOWN, LEFT};
+    bool orderStatus[7] = {false, false, false, false, false, false, false};
+    
+    
     pBar.play(progBar, ProgBar::start);
     icons.play(hackIcons, HackIcons::bUp);
     hack.play(hackme, Hackme::show);
@@ -50,7 +56,7 @@ int main(){
     State state = State::INTRO;
     bool hacking = false, intro = true, bpress = false, apress = false, cpress = false;
     
-    int prog = 0, percent = 0;
+    int prog = 0, percent = 0, select = 0;
     
     
     while( Core::isRunning() ){
@@ -59,64 +65,126 @@ int main(){
         }
         switch(state){
         case INTRO:
-            if( prog <= 3 ){
-                
-                if( Buttons::pressed(BTN_B) ){
-                    pBar.play(progBar, ProgBar::first);
-                    prog++;
-                    icons.play(hackIcons, HackIcons::bDown);
-                }
-                if( !Buttons::bBtn() ){
-                    icons.play(hackIcons, HackIcons::bUp);
-                }
-                
-                if(Buttons::cBtn() || Buttons::pressed(BTN_A)){
-                    prog--;
-                }
-            }else if( prog <= 6 ){
-                
-                if( Buttons::pressed(BTN_A) ){
-                    pBar.play(progBar, ProgBar::second);
-                    prog++;
-                    icons.play(hackIcons, HackIcons::aDown);
-                }
-                if( !Buttons::aBtn() ){
-                    icons.play(hackIcons, HackIcons::aUp);
-                }
-                if(Buttons::pressed(BTN_B) || Buttons::cBtn()){
-                    prog--;
-                }
-            }else {
-                
-                if( Buttons::pressed(BTN_C) ){
-                    pBar.play(progBar, ProgBar::third);
-                    prog++;
-                    icons.play(hackIcons, HackIcons::cDown);
-                }
-                if( !Buttons::cBtn() ){
-                    icons.play(hackIcons, HackIcons::cUp);
-                }
-                if(Buttons::pressed(BTN_B) || Buttons::pressed(BTN_A)){
-                    prog--;
-                }
+        
+            switch(order[select]){
+                case A:
+                    if( Buttons::pressed(BTN_A)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case B:
+                    if( Buttons::pressed(BTN_B)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case C:
+                    if( Buttons::pressed(BTN_C)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case UP:
+                    if( Buttons::pressed(BTN_UP)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case DOWN:
+                    if( Buttons::pressed(BTN_DOWN)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case LEFT:
+                    if( Buttons::pressed(BTN_LEFT)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case RIGHT:
+                    if( Buttons::pressed(BTN_RIGHT)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
             }
             
-            if(prog < 0){
-                prog = 0;
+            for(int x = 0; x < 7; ++x){
+                switch(order[x]){
+                    case A:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::aDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::aUp);
+                        }
+                        break;
+                    case B:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::bDown);
+                        }else {
+                            icons.play(hackIcons, HackIcons::bUp);
+                        }
+                        break;
+                    case C:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::cDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::cUp);
+                        }
+                        break;
+                    case UP:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::dUpDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::dUpUp);
+                        }
+                        break;
+                    case DOWN:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::dDownDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::dDownUp);
+                        }
+                        break;
+                    case LEFT:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::dLeftDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::dLeftUp);
+                        }
+                        break;
+                    case RIGHT:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::dRightDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::dRightUp);
+                        }
+                        break;
+                }
+                icons.draw(16 + x * 16, 32);
             }
-            
-            if(prog == 10){
+
+            if(select == 0){
+                pBar.play(progBar, ProgBar::first);
+            }
+            if(select == 2){
+                pBar.play(progBar, ProgBar::second);
+            }
+            if(select == 4){
+                pBar.play(progBar, ProgBar::third);
+            }
+            if(select == 6){
                 pBar.play(progBar, ProgBar::final);
             }
-            
-            if( prog > 10 ){
-                prog = 0;
+
+            if(select == 7){
+                select = 0;
                 state = State::EXPLORE;
             }
-            
             Display::setColor(7);
             Display::print(prog);
-            icons.draw(12, 32);
             pBar.draw(10, 10);
             
             break;
@@ -135,71 +203,127 @@ int main(){
             player.draw(playerX, playerY, false, false, recolor);
             
             
-            if( prog <= 18 ){
-                if(prog == 1){
-                     pBar.play(progBar, ProgBar::first);
-                }
-                if( Buttons::pressed(BTN_B) ){
-                    prog++;
-                    icons.play(hackIcons, HackIcons::bDown);
-                }
-                if( !Buttons::bBtn() ){
-                    icons.play(hackIcons, HackIcons::bUp);
-                }
-                
-                if(Buttons::cBtn() || Buttons::pressed(BTN_A)){
-                    prog--;
-                }
-            }else if( prog <= 38 ){
-                if(prog == 19){
-                    pBar.play(progBar, ProgBar::second);
-                }
-                if( Buttons::pressed(BTN_A) ){
-                    prog++;
-                    icons.play(hackIcons, HackIcons::aDown);
-                }
-                if( !Buttons::aBtn() ){
-                    icons.play(hackIcons, HackIcons::aUp);
-                }
-                if(Buttons::pressed(BTN_B) || Buttons::cBtn()){
-                    prog--;
-                }
-            }else {
-                if(prog == 39){
-                    pBar.play(progBar, ProgBar::third);
-                }
-                if( Buttons::pressed(BTN_C) ){
-                    prog++;
-                    icons.play(hackIcons, HackIcons::cDown);
-                }
-                if( !Buttons::cBtn() ){
-                    icons.play(hackIcons, HackIcons::cUp);
-                }
-                if(Buttons::pressed(BTN_B) || Buttons::pressed(BTN_A)){
-                    prog--;
-                }
+            switch(order[select]){
+                case A:
+                    if( Buttons::pressed(BTN_A)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case B:
+                    if( Buttons::pressed(BTN_B)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case C:
+                    if( Buttons::pressed(BTN_C)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case UP:
+                    if( Buttons::pressed(BTN_UP)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case DOWN:
+                    if( Buttons::pressed(BTN_DOWN)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case LEFT:
+                    if( Buttons::pressed(BTN_LEFT)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
+                case RIGHT:
+                    if( Buttons::pressed(BTN_RIGHT)){
+                        orderStatus[select] = true;
+                        select++;
+                    }
+                    break;
             }
             
-            if(prog < 0){
-                prog = 0;
+            for(int x = 0; x < 7; ++x){
+                switch(order[x]){
+                    case A:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::aDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::aUp);
+                        }
+                        break;
+                    case B:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::bDown);
+                        }else {
+                            icons.play(hackIcons, HackIcons::bUp);
+                        }
+                        break;
+                    case C:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::cDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::cUp);
+                        }
+                        break;
+                    case UP:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::dUpDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::dUpUp);
+                        }
+                        break;
+                    case DOWN:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::dDownDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::dDownUp);
+                        }
+                        break;
+                    case LEFT:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::dLeftDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::dLeftUp);
+                        }
+                        break;
+                    case RIGHT:
+                        if(orderStatus[x]){
+                            icons.play(hackIcons, HackIcons::dRightDown);
+                        }else{
+                            icons.play(hackIcons, HackIcons::dRightUp);
+                        }
+                        break;
+                }
+                icons.draw(16 + x * 16, 32);
             }
-            
-            if(prog == 50){
+
+            if(select == 0){
+                pBar.play(progBar, ProgBar::first);
+            }
+            if(select == 2){
+                pBar.play(progBar, ProgBar::second);
+            }
+            if(select == 4){
+                pBar.play(progBar, ProgBar::third);
+            }
+            if(select == 6){
                 pBar.play(progBar, ProgBar::final);
             }
-            
-            if( prog > 50 ){
-                prog = 0;
+
+            if(select == 7){
+                select = 0;
                 state = State::EXPLORE;
             }
-            
-            percent = prog / 50.0 * 100;
-            
             Display::setColor(7);
-            Display::print(percent);
-            Display::print("%");
-            icons.draw(12, 32);
+            Display::print(prog);
             pBar.draw(10, 10);
+            
             
             Display::print(100, 0, "Have to hack!");
             
@@ -269,6 +393,10 @@ int main(){
                 if( Buttons::aBtn() ){
                     prog = 0;
                     pBar.play(progBar, ProgBar::start);
+                    select = 0;
+                    for(int i = 0; i < 7; ++i){
+                        orderStatus[i] = false;
+                    }
                     state = State::HACKING;
                 }
             }

@@ -52,6 +52,78 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
     "duration": 100
+   },
+   {
+    "filename": "HackIcons 6.aseprite",
+    "frame": { "x": 96, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "HackIcons 7.aseprite",
+    "frame": { "x": 112, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "HackIcons 8.aseprite",
+    "frame": { "x": 128, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "HackIcons 9.aseprite",
+    "frame": { "x": 144, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "HackIcons 10.aseprite",
+    "frame": { "x": 160, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "HackIcons 11.aseprite",
+    "frame": { "x": 176, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "HackIcons 12.aseprite",
+    "frame": { "x": 192, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "HackIcons 13.aseprite",
+    "frame": { "x": 208, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
    }
  ],
  "meta": {
@@ -59,7 +131,7 @@
   "version": "1.2.16.3-x64",
   "image": "HackIcons.png",
   "format": "RGBA8888",
-  "size": { "w": 96, "h": 16 },
+  "size": { "w": 224, "h": 16 },
   "scale": "1",
   "frameTags": [
    { "name": "bUp", "from": 0, "to": 0, "direction": "forward" },
@@ -67,7 +139,15 @@
    { "name": "aUp", "from": 2, "to": 2, "direction": "forward" },
    { "name": "aDown", "from": 3, "to": 3, "direction": "forward" },
    { "name": "cUp", "from": 4, "to": 4, "direction": "forward" },
-   { "name": "cDown", "from": 5, "to": 5, "direction": "forward" }
+   { "name": "cDown", "from": 5, "to": 5, "direction": "forward" },
+   { "name": "dUpUp", "from": 6, "to": 6, "direction": "forward" },
+   { "name": "dUpDown", "from": 7, "to": 7, "direction": "forward" },
+   { "name": "dLeftUp", "from": 8, "to": 8, "direction": "forward" },
+   { "name": "dLeftDown", "from": 9, "to": 9, "direction": "forward" },
+   { "name": "dRightUp", "from": 10, "to": 10, "direction": "forward" },
+   { "name": "dRightDown", "from": 11, "to": 11, "direction": "forward" },
+   { "name": "dDownUp", "from": 12, "to": 12, "direction": "forward" },
+   { "name": "dDownDown", "from": 13, "to": 13, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
