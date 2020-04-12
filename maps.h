@@ -24,7 +24,7 @@ inline MapEnum suburbEnum(uint32_t x, uint32_t y){
 static const MapEnum parameters[] = {
 	EMPTY,
 	Collide,
-	EMPTY,
+	Collide,
 	Door,
 	Collide,
 	Collide,

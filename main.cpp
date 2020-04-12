@@ -17,61 +17,19 @@ static const uint8_t B_A = 1 << ABIT;
 static const uint8_t B_B = 1 << BBIT;
 static const uint8_t B_C = 1 << CBIT;
 
-int main(){
-    using Pokitto::Core;
-    using Pokitto::Display;
-    using Pokitto::Buttons;
+// Size of the sequence
+int seqSize; 
     
-    Core::begin();
-    Display::loadRGBPalette(miloslav);
-    
-    Tilemap tilemap;
-    //0 = 14, 1 = 11, suburb+2 = mapPixelData
-    tilemap.set(suburb[0], suburb[1], suburb+2);
-    for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
-        tilemap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
-    }
-    
-    // set background to blank black tile
-    tilemap.setColorTile(0,0);
-    
-    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, seqSize = 13;
-    
-    
-    
-    Sprite player;
-    Sprite hack;
-    Sprite icons;
-    Sprite pBar;
-    Sprite pFill;
-    Sprite sent;
-    Sprite tLevel;
-    
-    
-    pBar.play(progBar, ProgBar::start);
-    pFill.play(progFill, ProgFill::play);
-    icons.play(hackIcons, HackIcons::bUp);
-    hack.play(hackme, Hackme::show);
-    player.play(hero, Hero::walkSouth);
-    sent.play(sentinal, Sentinal::scanning);
-    tLevel.play(threatLevel, ThreatLevel::zero);
-    
-    auto playerWidth = player.getFrameWidth();
-    auto playerHeight = player.getFrameHeight();
-    auto playerX = LCDWIDTH/2 - playerWidth/2;
-    auto playerY = LCDHEIGHT/2 - playerHeight/2;
-    
-    State state = State::INTRO;
-    bool hacking = false, doorLocked = true;
-    
-    int prog = 0, percent = 0, select = 0, threat = 0;
-    
-    
-    // init button state mechanism
-    uint8_t buttonsPreviousState = 0, buttonsJustPressed = 0;
-    
+// the sequence order
+int order[13];
+
+// status of current sequence
+bool orderStatus[13];
+
+// Shuffles the order of the sequence input
+void shuffleSequence(int size){
     // init hacking sequence variables.
-    uint8_t order[seqSize];
+    seqSize = size;
     srand((unsigned int) time (NULL));
     
     for(int i = 0; i < seqSize; ++i){
@@ -101,11 +59,55 @@ int main(){
         }
     }
     
-    bool orderStatus[seqSize];
+    // reset order status
     for(int i = 0; i < seqSize; ++i){
         orderStatus[i] = false;   
     }
+}
+
+int main(){
+    using Pokitto::Core;
+    using Pokitto::Display;
+    using Pokitto::Buttons;
     
+    Core::begin();
+    Display::loadRGBPalette(miloslav);
+    
+    Tilemap tilemap;
+    //0 = 14, 1 = 11, suburb+2 = mapPixelData
+    tilemap.set(suburb[0], suburb[1], suburb+2);
+    for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
+        tilemap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
+    }
+    
+    // set background to blank black tile
+    tilemap.setColorTile(0,0);
+    
+    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, select = 0, threat = 0;
+    
+    Sprite player, hack, icons,  pBar, pFill, sent, tLevel,
+    
+    pBar.play(progBar, ProgBar::start);
+    pFill.play(progFill, ProgFill::play);
+    icons.play(hackIcons, HackIcons::bUp);
+    hack.play(hackme, Hackme::show);
+    player.play(hero, Hero::walkSouth);
+    sent.play(sentinal, Sentinal::scanning);
+    tLevel.play(threatLevel, ThreatLevel::zero);
+    
+    auto playerWidth = player.getFrameWidth();
+    auto playerHeight = player.getFrameHeight();
+    auto playerX = LCDWIDTH/2 - playerWidth/2;
+    auto playerY = LCDHEIGHT/2 - playerHeight/2;
+    
+    State state = State::INTRO;
+    bool hacking = false, doorLocked = true;
+    
+    
+    // init button state mechanism
+    uint8_t buttonsPreviousState = 0, buttonsJustPressed = 0;
+    
+    shuffleSequence(6);
     
     while( Core::isRunning() ){
         if( !Core::update() ) {
@@ -129,56 +131,28 @@ int main(){
             for(int x = 0; x < seqSize; ++x){
                 switch(order[x]){
                     case B_A:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::aDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::aUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::aDown : HackIcons::aUp));
                         break;
                     case B_B:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::bDown);
-                        }else {
-                            icons.play(hackIcons, HackIcons::bUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::bDown : HackIcons::bUp));
                         break;
                     case B_C:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::cDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::cUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::cDown : HackIcons::cUp));
                         break;
                     case B_UP:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::dUpDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::dUpUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dUpDown : HackIcons::dUpUp));
                         break;
                     case B_DOWN:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::dDownDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::dDownUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dDownDown : HackIcons::dDownUp));
                         break;
                     case B_LEFT:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::dLeftDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::dLeftUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dLeftDown : HackIcons::dLeftUp));
                         break;
                     case B_RIGHT:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::dRightDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::dRightUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dRightDown : HackIcons::dRightUp));
                         break;
                 }
-                icons.draw(16 + x * 16, 32);
+                icons.draw(8 + x * 16, 32);
             }
             
             switch(threat){
@@ -205,9 +179,9 @@ int main(){
                 //lose
             }
 
-
             if(select == seqSize){
                 select = 0;
+                threat = 0;
                 doorLocked = true;
                 state = State::EXPLORE;
             }
@@ -221,8 +195,6 @@ int main(){
             tLevel.draw(200, 70);
             
             Display::setColor(7);
-            Display::print(prog);
-            
             
             break;
         case HACKING:
@@ -234,7 +206,6 @@ int main(){
             // draw hero player
             player.draw(playerX, playerY, false, false, recolor);
             
-            
             if (buttonsJustPressed & order[select] ){
                 orderStatus[select] = true;
                 select++;
@@ -245,56 +216,28 @@ int main(){
             for(int x = 0; x < seqSize; ++x){
                 switch(order[x]){
                     case B_A:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::aDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::aUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::aDown : HackIcons::aUp));
                         break;
                     case B_B:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::bDown);
-                        }else {
-                            icons.play(hackIcons, HackIcons::bUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::bDown : HackIcons::bUp));
                         break;
                     case B_C:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::cDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::cUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::cDown : HackIcons::cUp));
                         break;
                     case B_UP:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::dUpDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::dUpUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dUpDown : HackIcons::dUpUp));
                         break;
                     case B_DOWN:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::dDownDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::dDownUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dDownDown : HackIcons::dDownUp));
                         break;
                     case B_LEFT:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::dLeftDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::dLeftUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dLeftDown : HackIcons::dLeftUp));
                         break;
                     case B_RIGHT:
-                        if(orderStatus[x]){
-                            icons.play(hackIcons, HackIcons::dRightDown);
-                        }else{
-                            icons.play(hackIcons, HackIcons::dRightUp);
-                        }
+                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dRightDown : HackIcons::dRightUp));
                         break;
                 }
-                icons.draw(16 + x * 16, 32);
+                icons.draw(8 + x * 16, 32);
             }
             
             switch(threat){
@@ -324,6 +267,8 @@ int main(){
             if(select == seqSize){
                 select = 0;
                 doorLocked = false;
+                tilemap.setColorTile(3, 0);
+                
                 state = State::EXPLORE;
             }
             
@@ -336,32 +281,35 @@ int main(){
             tLevel.draw(200, 70);
             
             Display::setColor(7);
-            Display::print(prog);
-            
-            
-            
-            Display::print(100, 0, "Have to hack!");
+            Display::print(100, 0, "Hack the planet!");
             
             break;
         case EXPLORE:
-        
              
             int oldX = cameraX;
             int oldY = cameraY;
             
             // We don't poll for movement because it will be held down.
             if(!Buttons::rightBtn() && !Buttons::leftBtn() && !Buttons::upBtn() && !Buttons::downBtn()){
-                if(player.animation == Hero::walkEast){
-                    player.play(hero, Hero::idleEast);
+                switch(player.animation){
+                    case Hero::walkEast:
+                        player.play(hero, Hero::idleEast);
+                        break;
+                    case Hero::walkWest:
+                        player.play(hero, Hero::idleWest);
+                        break;
+                    case Hero::walkNorth:
+                        player.play(hero, Hero::idleNorth);
+                        break;
+                    case Hero::walkSouth:
+                        player.play(hero, Hero::idleSouth);
+                        break;
                 }
-                if(player.animation == Hero::walkWest){
-                    player.play(hero, Hero::idleWest);
-                }
-                if(player.animation == Hero::walkNorth){
-                    player.play(hero, Hero::idleNorth);
-                }
-                if(player.animation == Hero::walkSouth){
-                    player.play(hero, Hero::idleSouth);
+                
+                if(doorLocked){
+                    Display::print("How do I get out of here?");
+                }else {
+                    Display::print("The door is open!");
                 }
             }
     
@@ -401,48 +349,16 @@ int main(){
             int tileY = (cameraY + playerY - 8 + playerHeight) / PROJ_TILE_H;
             auto tile = suburbEnum(tileX, tileY);
     
-            if( tile&Hack ){
+            if( tile == Hack ){
                 // Eventually play a Hack tone here, draw hack when actually hacking
                 // Play hackable notification 
                 
                 
                 if( Buttons::aBtn() ){
-                    prog = 0;
                     pBar.play(progBar, ProgBar::start);
                     select = 0;
                     threat = 0;
-                    srand((unsigned int) time (NULL));
-                    
-                    for(int i = 0; i < seqSize; ++i){
-                        int r = rand()%7;
-                        switch(r){
-                            case 0:
-                                order[i] = B_A;
-                                break;
-                            case 1:
-                                order[i] = B_B;
-                                break;
-                            case 2:
-                                order[i] = B_C;
-                                break;
-                            case 3:
-                                order[i] = B_UP;
-                                break;
-                            case 4:
-                                order[i] = B_RIGHT;
-                                break;
-                            case 5:
-                                order[i] = B_DOWN;
-                                break;
-                            case 6:
-                                order[i] = B_LEFT;
-                                break;
-                        }
-                    }
-                    
-                    for(int i = 0; i < seqSize; ++i){
-                        orderStatus[i] = false;   
-                    }
+                    shuffleSequence(13);
                     state = State::HACKING;
                 }
             }
@@ -456,8 +372,9 @@ int main(){
                 if(doorLocked){
                     cameraX = oldX;
                     cameraY = oldY;
+                    Display::print("The door is locked! Where is the control system?");
                 }else {
-                    // Move to next area.
+                    // if !doorLocked enter next level
                 }
             }
     
@@ -470,7 +387,7 @@ int main(){
             
             
             Display::setColor(7);
-            Display::print("How do I get out of here?");
+            
             break;
         }
 

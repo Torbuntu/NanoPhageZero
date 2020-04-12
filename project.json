@@ -459,6 +459,12 @@
 		},
 		"/sprites/ThreatLevel.bin": {
 			"sdcard": false
+		},
+		"/sequence.h": {
+			"sdcard": false
+		},
+		"/sequence.cpp": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
