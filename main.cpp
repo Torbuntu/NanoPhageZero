@@ -179,7 +179,6 @@ int main(){
                         break;
                 }
                 icons.draw(16 + x * 16, 32);
-                Display::print(16 + x * 16, 80, orderStatus[x]);
             }
             
             switch(threat){
@@ -226,11 +225,6 @@ int main(){
             break;
         case HACKING:
         
-            // Debug state switch
-            // if( Buttons::bBtn() ){
-            //     state = State::EXPLORE;
-            // }
-        
             hack.draw(playerX, playerY-16, false, false);
              // draw map
             tilemap.draw(-cameraX, -cameraY);
@@ -239,51 +233,58 @@ int main(){
             player.draw(playerX, playerY, false, false, recolor);
             
             
-            for(int x = 0; x < 7; ++x){
+            if (buttonsJustPressed & order[select] ){
+                orderStatus[select] = true;
+                select++;
+            } else if (buttonsJustPressed != 0) {
+                threat++;
+            }
+            
+            for(int x = 0; x < seqSize; ++x){
                 switch(order[x]){
-                    case BTN_A:
+                    case B_A:
                         if(orderStatus[x]){
                             icons.play(hackIcons, HackIcons::aDown);
                         }else{
                             icons.play(hackIcons, HackIcons::aUp);
                         }
                         break;
-                    case BTN_B:
+                    case B_B:
                         if(orderStatus[x]){
                             icons.play(hackIcons, HackIcons::bDown);
                         }else {
                             icons.play(hackIcons, HackIcons::bUp);
                         }
                         break;
-                    case BTN_C:
+                    case B_C:
                         if(orderStatus[x]){
                             icons.play(hackIcons, HackIcons::cDown);
                         }else{
                             icons.play(hackIcons, HackIcons::cUp);
                         }
                         break;
-                    case BTN_UP:
+                    case B_UP:
                         if(orderStatus[x]){
                             icons.play(hackIcons, HackIcons::dUpDown);
                         }else{
                             icons.play(hackIcons, HackIcons::dUpUp);
                         }
                         break;
-                    case BTN_DOWN:
+                    case B_DOWN:
                         if(orderStatus[x]){
                             icons.play(hackIcons, HackIcons::dDownDown);
                         }else{
                             icons.play(hackIcons, HackIcons::dDownUp);
                         }
                         break;
-                    case BTN_LEFT:
+                    case B_LEFT:
                         if(orderStatus[x]){
                             icons.play(hackIcons, HackIcons::dLeftDown);
                         }else{
                             icons.play(hackIcons, HackIcons::dLeftUp);
                         }
                         break;
-                    case BTN_RIGHT:
+                    case B_RIGHT:
                         if(orderStatus[x]){
                             icons.play(hackIcons, HackIcons::dRightDown);
                         }else{
@@ -293,14 +294,38 @@ int main(){
                 }
                 icons.draw(16 + x * 16, 32);
             }
-
-            for(int i = 0; i < select; ++i){
-                pFill.draw(15 + i * 15, 14);
+            
+            switch(threat){
+                case 1:
+                    tLevel.play(threatLevel, ThreatLevel::one);
+                    break;
+                case 2:
+                    tLevel.play(threatLevel, ThreatLevel::two);
+                    break;
+                case 3:
+                    tLevel.play(threatLevel, ThreatLevel::three);
+                    break;
+                case 4:
+                    tLevel.play(threatLevel, ThreatLevel::four);
+                    break;
+                case 5:
+                    tLevel.play(threatLevel, ThreatLevel::five);
+                    sent.play(sentinal, Sentinal::warning);
+                    threat++;
+                    break;
+            }
+            
+            if(threat > 8){
+                //lose
             }
 
-            if(select == 7){
+            if(select == seqSize){
                 select = 0;
                 state = State::EXPLORE;
+            }
+            
+            for(int i = 0; i < select; ++i){
+                pFill.draw(15 + i * 15, 14);
             }
             
             sent.draw(200, 50);
@@ -380,37 +405,38 @@ int main(){
                     prog = 0;
                     pBar.play(progBar, ProgBar::start);
                     select = 0;
-                    for(int i = 0; i < 7; ++i){
-                        orderStatus[i] = false;
-                    }
                     threat = 0;
                     srand((unsigned int) time (NULL));
                     
-                    for(int i = 0; i < 7; ++i){
-                        int r = rand()%8;
+                    for(int i = 0; i < seqSize; ++i){
+                        int r = rand()%7;
                         switch(r){
                             case 0:
-                                order[i] = BTN_A;
+                                order[i] = B_A;
                                 break;
                             case 1:
-                                order[i] = BTN_B;
+                                order[i] = B_B;
                                 break;
                             case 2:
-                                order[i] = BTN_C;
+                                order[i] = B_C;
                                 break;
                             case 3:
-                                order[i] = BTN_UP;
+                                order[i] = B_UP;
                                 break;
                             case 4:
-                                order[i] = BTN_RIGHT;
+                                order[i] = B_RIGHT;
                                 break;
                             case 5:
-                                order[i] = BTN_DOWN;
+                                order[i] = B_DOWN;
                                 break;
                             case 6:
-                                order[i] = BTN_LEFT;
+                                order[i] = B_LEFT;
                                 break;
                         }
+                    }
+                    
+                    for(int i = 0; i < seqSize; ++i){
+                        orderStatus[i] = false;   
                     }
                     state = State::HACKING;
                 }
