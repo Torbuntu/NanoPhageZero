@@ -35,7 +35,7 @@ int main(){
     // set background to blank black tile
     tilemap.setColorTile(0,0);
     
-    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, seqSize = 10;
+    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, seqSize = 13;
     
     
     
@@ -62,7 +62,7 @@ int main(){
     auto playerY = LCDHEIGHT/2 - playerHeight/2;
     
     State state = State::INTRO;
-    bool hacking = false, intro = true, bpress = false, apress = false, cpress = false;
+    bool hacking = false, doorLocked = true;
     
     int prog = 0, percent = 0, select = 0, threat = 0;
     
@@ -208,9 +208,11 @@ int main(){
 
             if(select == seqSize){
                 select = 0;
+                doorLocked = true;
                 state = State::EXPLORE;
             }
             
+            pBar.draw(10, 10);
             for(int i = 0; i < select; ++i){
                 pFill.draw(15 + i * 15, 14);
             }
@@ -220,7 +222,7 @@ int main(){
             
             Display::setColor(7);
             Display::print(prog);
-            pBar.draw(10, 10);
+            
             
             break;
         case HACKING:
@@ -321,9 +323,11 @@ int main(){
 
             if(select == seqSize){
                 select = 0;
+                doorLocked = false;
                 state = State::EXPLORE;
             }
             
+            pBar.draw(10, 10);
             for(int i = 0; i < select; ++i){
                 pFill.draw(15 + i * 15, 14);
             }
@@ -333,7 +337,7 @@ int main(){
             
             Display::setColor(7);
             Display::print(prog);
-            pBar.draw(10, 10);
+            
             
             
             Display::print(100, 0, "Have to hack!");
@@ -345,6 +349,7 @@ int main(){
             int oldX = cameraX;
             int oldY = cameraY;
             
+            // We don't poll for movement because it will be held down.
             if(!Buttons::rightBtn() && !Buttons::leftBtn() && !Buttons::upBtn() && !Buttons::downBtn()){
                 if(player.animation == Hero::walkEast){
                     player.play(hero, Hero::idleEast);
@@ -393,7 +398,7 @@ int main(){
             
             // get current tile
             int tileX = (cameraX + playerX + PROJ_TILE_W/2) / PROJ_TILE_W;
-            int tileY = (cameraY + playerY + playerHeight) / PROJ_TILE_H;
+            int tileY = (cameraY + playerY - 8 + playerHeight) / PROJ_TILE_H;
             auto tile = suburbEnum(tileX, tileY);
     
             if( tile&Hack ){
@@ -442,9 +447,18 @@ int main(){
                 }
             }
             
-            if( tile&Collide ){
+            if( tile == Collide ){
                 cameraX = oldX;
                 cameraY = oldY;
+            }
+            
+            if( tile == Door && doorLocked ){
+                if(doorLocked){
+                    cameraX = oldX;
+                    cameraY = oldY;
+                }else {
+                    // Move to next area.
+                }
             }
     
     
