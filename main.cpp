@@ -75,7 +75,7 @@ int main(){
     srand((unsigned int) time (NULL));
     
     for(int i = 0; i < seqSize; ++i){
-        int r = rand()%8;
+        int r = rand()%7;
         switch(r){
             case 0:
                 order[i] = B_A;
