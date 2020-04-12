@@ -131,11 +131,34 @@ public:
 class ProgBar {
 public:
     enum Animation : std::uint16_t {
-		start = 0,
-		first = 3,
-		second = 12,
-		third = 21,
-		final = 30
+		start = 0
+	};
+};
+
+class ProgFill {
+public:
+    enum Animation : std::uint16_t {
+		play = 0
+	};
+};
+
+class Sentinal {
+public:
+    enum Animation : std::uint16_t {
+		scanning = 0,
+		warning = 17
+	};
+};
+
+class ThreatLevel {
+public:
+    enum Animation : std::uint16_t {
+		zero = 0,
+		one = 3,
+		two = 6,
+		three = 9,
+		four = 12,
+		five = 15
 	};
 };
 
@@ -146,4 +169,7 @@ extern const HackIcons hackIcons;
 extern const Hackme hackme;
 extern const Hero hero;
 extern const ProgBar progBar;
+extern const ProgFill progFill;
+extern const Sentinal sentinal;
+extern const ThreatLevel threatLevel;
 }

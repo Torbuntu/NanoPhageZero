@@ -1,23 +1,23 @@
 { "frames": [
    {
-    "filename": "ProgBar.aseprite",
-    "frame": { "x": 0, "y": 0, "w": 200, "h": 16 },
+    "filename": "ProgFill.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 16, "h": 8 },
     "rotated": false,
     "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 200, "h": 16 },
-    "sourceSize": { "w": 200, "h": 16 },
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 8 },
+    "sourceSize": { "w": 16, "h": 8 },
     "duration": 100
    }
  ],
  "meta": {
   "app": "http://www.aseprite.org/",
   "version": "1.2.16.3-x64",
-  "image": "ProgBar.png",
+  "image": "ProgFill.png",
   "format": "RGBA8888",
-  "size": { "w": 200, "h": 16 },
+  "size": { "w": 16, "h": 8 },
   "scale": "1",
   "frameTags": [
-   { "name": "start", "from": 0, "to": 0, "direction": "forward" }
+   { "name": "play", "from": 0, "to": 0, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }

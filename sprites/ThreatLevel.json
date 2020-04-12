@@ -1,0 +1,78 @@
+{ "frames": [
+   {
+    "filename": "ThreatLevel 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 16, "h": 80 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 80 },
+    "sourceSize": { "w": 16, "h": 80 },
+    "duration": 100
+   },
+   {
+    "filename": "ThreatLevel 1.aseprite",
+    "frame": { "x": 16, "y": 0, "w": 16, "h": 80 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 80 },
+    "sourceSize": { "w": 16, "h": 80 },
+    "duration": 100
+   },
+   {
+    "filename": "ThreatLevel 2.aseprite",
+    "frame": { "x": 32, "y": 0, "w": 16, "h": 80 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 80 },
+    "sourceSize": { "w": 16, "h": 80 },
+    "duration": 100
+   },
+   {
+    "filename": "ThreatLevel 3.aseprite",
+    "frame": { "x": 48, "y": 0, "w": 16, "h": 80 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 80 },
+    "sourceSize": { "w": 16, "h": 80 },
+    "duration": 100
+   },
+   {
+    "filename": "ThreatLevel 4.aseprite",
+    "frame": { "x": 64, "y": 0, "w": 16, "h": 80 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 80 },
+    "sourceSize": { "w": 16, "h": 80 },
+    "duration": 100
+   },
+   {
+    "filename": "ThreatLevel 5.aseprite",
+    "frame": { "x": 80, "y": 0, "w": 16, "h": 80 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 80 },
+    "sourceSize": { "w": 16, "h": 80 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.16.3-x64",
+  "image": "ThreatLevel.png",
+  "format": "RGBA8888",
+  "size": { "w": 96, "h": 80 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "zero", "from": 0, "to": 0, "direction": "forward" },
+   { "name": "one", "from": 1, "to": 1, "direction": "forward" },
+   { "name": "two", "from": 2, "to": 2, "direction": "forward" },
+   { "name": "three", "from": 3, "to": 3, "direction": "forward" },
+   { "name": "four", "from": 4, "to": 4, "direction": "forward" },
+   { "name": "five", "from": 5, "to": 5, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

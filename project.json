@@ -414,6 +414,51 @@
 		},
 		"/sprites/ProgBar.bin": {
 			"sdcard": false
+		},
+		"/Sentinal.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/Sentinal.json": {
+			"sdcard": false
+		},
+		"/sprites/Sentinal.png": {
+			"sdcard": false
+		},
+		"/sprites/Sentinal.bin": {
+			"sdcard": false
+		},
+		"/ProgFill.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/ProgFill.json": {
+			"sdcard": false
+		},
+		"/sprites/ProgFill.png": {
+			"sdcard": false
+		},
+		"/sprites/ProgFill.bin": {
+			"sdcard": false
+		},
+		"/sprites/Sentinal.h": {
+			"sdcard": false
+		},
+		"/sprites/ProgFill.h": {
+			"sdcard": false
+		},
+		"/ThreatLevel.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/ThreatLevel.json": {
+			"sdcard": false
+		},
+		"/sprites/ThreatLevel.png": {
+			"sdcard": false
+		},
+		"/sprites/ThreatLevel.h": {
+			"sdcard": false
+		},
+		"/sprites/ThreatLevel.bin": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
