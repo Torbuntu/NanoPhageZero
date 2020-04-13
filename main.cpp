@@ -6,7 +6,7 @@
 #include "maps.h"
 
 enum State{
-    INTRO, HACKING, EXPLORE
+    INTRO, BRUTE_FORCE, SEQUENCE, EXPLORE, TUT_BRUT, TUT_SEQ
 };
 
 static const uint8_t B_UP = 1 << UPBIT;
@@ -83,9 +83,9 @@ int main(){
     // set background to blank black tile
     tilemap.setColorTile(0,0);
     
-    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, select = 0, threat = 0;
+    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, select = 0, threat = 0, bruteCount = 0, bruteSelect = B_A, bruteProgress = 0;
     
-    Sprite player, hack, icons,  pBar, pFill, sent, tLevel,
+    Sprite player, hack, icons,  pBar, pFill, sent, tLevel;
     
     pBar.play(progBar, ProgBar::start);
     pFill.play(progFill, ProgFill::play);
@@ -119,8 +119,66 @@ int main(){
         buttonsPreviousState = Buttons::buttons_state;
         
         switch(state){
-        case INTRO:
-
+        case TUT_BRUT:
+            
+            if(buttonsJustPressed & bruteSelect){
+                select++;
+                bruteProgress++;
+            }
+            if( select == bruteCount ){
+                int r = rand()%7;
+                switch(r){
+                    case 0:
+                        bruteSelect = B_A;
+                        icons.play(hackIcons, HackIcons::aUp);
+                        break;
+                    case 1:
+                        bruteSelect = B_B;
+                        icons.play(hackIcons, HackIcons::bUp);
+                        break;
+                    case 2:
+                        bruteSelect = B_C;
+                        icons.play(hackIcons, HackIcons::cUp);
+                        break;
+                    case 3:
+                        bruteSelect = B_UP;
+                        icons.play(hackIcons, HackIcons::dUpUp);
+                        break;
+                    case 4:
+                        bruteSelect = B_RIGHT;
+                        icons.play(hackIcons, HackIcons::dRightUp);
+                        break;
+                    case 5:
+                        bruteSelect = B_DOWN;
+                        icons.play(hackIcons, HackIcons::dDownUp);
+                        break;
+                    case 6:
+                        bruteSelect = B_LEFT;
+                        icons.play(hackIcons, HackIcons::dLeftUp);
+                        break;
+                }
+                select = 0;
+            }
+            
+            // icon to press
+            icons.draw(8, 32);
+            
+            // player bar
+            pBar.draw(10,10);
+            
+            // enemy bar
+            pBar.draw(10,150);
+            for(int i = 0; i < bruteProgress; ++i){
+                pFill.draw(15 + i * 5 , 14);
+            }
+            
+            if(bruteProgress >= 35){
+                state = State::INTRO;
+            }
+            
+            break;
+        case TUT_SEQ:
+        
             if (buttonsJustPressed & order[select] ){
                 orderStatus[select] = true;
                 select++;
@@ -181,24 +239,51 @@ int main(){
 
             if(select == seqSize){
                 select = 0;
-                threat = 0;
-                doorLocked = true;
-                state = State::EXPLORE;
+                state = State::INTRO;
             }
             
             pBar.draw(10, 10);
-            for(int i = 0; i < select; ++i){
+            for(int i = 0; i < select*2; ++i){
                 pFill.draw(15 + i * 15, 14);
             }
             
             sent.draw(200, 50);
             tLevel.draw(200, 70);
+        
+            break;
+        case INTRO:
+            if( Buttons::leftBtn() ){
+                pBar.play(progBar, ProgBar::start);
+                select = 0;
+                threat = 0;
+                shuffleSequence(6);
+                tLevel.play(threatLevel, ThreatLevel::zero);
+                state = State::TUT_SEQ;
+            }
+            
+            if( Buttons::rightBtn() ){
+                bruteCount = 5;
+                select = 0;
+                bruteSelect = B_A;
+                bruteProgress = 0;
+                icons.play(hackIcons, HackIcons::aUp);
+                srand((unsigned int) time (NULL));
+                state = State::TUT_BRUT;   
+            }
+            
+            if( Buttons::cBtn() ){
+                state = State::EXPLORE;
+            }
             
             Display::setColor(7);
+            Display::println("Sequence Tutorial: <-");
+            Display::println("Brute Force Tutorial: ->");
+            Display::print("C to start.");
             
             break;
-        case HACKING:
+        case SEQUENCE:
         
+            // draw the hacking icon above player
             hack.draw(playerX, playerY-16, false, false);
              // draw map
             tilemap.draw(-cameraX, -cameraY);
@@ -281,7 +366,7 @@ int main(){
             tLevel.draw(200, 70);
             
             Display::setColor(7);
-            Display::print(100, 0, "Hack the planet!");
+            Display::print(0, 0, "Hack the planet!");
             
             break;
         case EXPLORE:
@@ -358,8 +443,9 @@ int main(){
                     pBar.play(progBar, ProgBar::start);
                     select = 0;
                     threat = 0;
+                    tLevel.play(threatLevel, ThreatLevel::zero);
                     shuffleSequence(13);
-                    state = State::HACKING;
+                    state = State::SEQUENCE;
                 }
             }
             
