@@ -1,3 +1,5 @@
+__asm__(".global enemyProgFill\nenemyProgFill:\n.incbin \"sprites/EnemyProgFill.bin\"");
+__asm__(".global enemyVirus\nenemyVirus:\n.incbin \"sprites/EnemyVirus.bin\"");
 __asm__(".global hackIcons\nhackIcons:\n.incbin \"sprites/HackIcons.bin\"");
 __asm__(".global hackme\nhackme:\n.incbin \"sprites/Hackme.bin\"");
 __asm__(".global hero\nhero:\n.incbin \"sprites/Hero.bin\"");

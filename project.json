@@ -465,6 +465,57 @@
 		},
 		"/sequence.cpp": {
 			"sdcard": false
+		},
+		"/sprites/EnemyProgFill.json": {
+			"sdcard": false
+		},
+		"/sprites/EnemyProgFill.png": {
+			"sdcard": false
+		},
+		"/sprites/EnemyProgFill.bin": {
+			"sdcard": false
+		},
+		"/sprites/EnemyProgFill.h": {
+			"sdcard": false
+		},
+		"/EnemyProgFill.aseprite": {
+			"sdcard": false
+		},
+		"/asepriteProjects": {
+			"sdcard": false
+		},
+		"/asepriteProjects/EnemyProgFill.aseprite": {
+			"sdcard": false
+		},
+		"/asepriteProjects/HackIcons.aseprite": {
+			"sdcard": false
+		},
+		"/asepriteProjects/Hackme.aseprite": {
+			"sdcard": false
+		},
+		"/asepriteProjects/Hero.aseprite": {
+			"sdcard": false
+		},
+		"/asepriteProjects/ProgBar.aseprite": {
+			"sdcard": false
+		},
+		"/asepriteProjects/ProgFill.aseprite": {
+			"sdcard": false
+		},
+		"/asepriteProjects/Sentinal.aseprite": {
+			"sdcard": false
+		},
+		"/asepriteProjects/ThreatLevel.aseprite": {
+			"sdcard": false
+		},
+		"/asepriteProjects/EnemyVirus.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/EnemyVirus.json": {
+			"sdcard": false
+		},
+		"/sprites/EnemyVirus.bin": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

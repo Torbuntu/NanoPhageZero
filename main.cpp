@@ -83,15 +83,20 @@ int main(){
     // set background to blank black tile
     tilemap.setColorTile(0,0);
     
-    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, select = 0, threat = 0, bruteCount = 0, bruteSelect = B_A, bruteProgress = 0;
+    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, select = 0, threat = 0, bruteCount = 0, bruteSelect = B_A, bruteProgress = 0, enemyProgress = 0, enemyTimer = 0, enemySpeed = 0;
     
-    Sprite player, hack, icons,  pBar, pFill, sent, tLevel;
+    Sprite player, hack, icons,  pBar, pFill, eFill, sent, tLevel, virus;
     
     pBar.play(progBar, ProgBar::start);
     pFill.play(progFill, ProgFill::play);
+    eFill.play(enemyProgFill, EnemyProgFill::play);
+    
+    player.play(hero, Hero::walkSouth);
+    virus.play(enemyVirus, EnemyVirus::play);
+    
     icons.play(hackIcons, HackIcons::bUp);
     hack.play(hackme, Hackme::show);
-    player.play(hero, Hero::walkSouth);
+    
     sent.play(sentinal, Sentinal::scanning);
     tLevel.play(threatLevel, ThreatLevel::zero);
     
@@ -165,14 +170,29 @@ int main(){
             
             // player bar
             pBar.draw(10,10);
-            
-            // enemy bar
-            pBar.draw(10,150);
             for(int i = 0; i < bruteProgress; ++i){
-                pFill.draw(15 + i * 5 , 14);
+                pFill.draw(14 + i * 6 , 14);
             }
             
-            if(bruteProgress >= 35){
+            
+            enemyTimer++;
+            if(enemyTimer == enemySpeed){
+                enemyTimer = 0;
+                if(enemyProgress < 30){
+                    enemyProgress++;
+                }
+                
+            }
+            // enemy bar
+            pBar.draw(10,150);
+            for(int i = 0; i < enemyProgress; ++i){
+                eFill.draw(190 - i * 6 , 154);
+            }
+            
+            virus.draw(190, 130);
+            
+            
+            if(bruteProgress >= 30){
                 state = State::INTRO;
             }
             
@@ -244,7 +264,7 @@ int main(){
             
             pBar.draw(10, 10);
             for(int i = 0; i < select*2; ++i){
-                pFill.draw(15 + i * 15, 14);
+                pFill.draw(14 + i * 15, 14);
             }
             
             sent.draw(200, 50);
@@ -266,6 +286,9 @@ int main(){
                 select = 0;
                 bruteSelect = B_A;
                 bruteProgress = 0;
+                enemyProgress = 1;
+                enemySpeed = 15;
+                enemyTimer = 0;
                 icons.play(hackIcons, HackIcons::aUp);
                 srand((unsigned int) time (NULL));
                 state = State::TUT_BRUT;   
