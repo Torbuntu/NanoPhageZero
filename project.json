@@ -516,6 +516,24 @@
 		},
 		"/sprites/EnemyVirus.bin": {
 			"sdcard": false
+		},
+		"/sprites/EnemyVirus.png": {
+			"sdcard": false
+		},
+		"/SequenceHack.hpp": {
+			"sdcard": false
+		},
+		"/sprites/EnemyVirus.h": {
+			"sdcard": false
+		},
+		"/Sequence.cpp": {
+			"sdcard": false
+		},
+		"/ButtonMaps.h": {
+			"sdcard": false
+		},
+		"/Sequence.hpp": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

@@ -5,6 +5,8 @@
 #include "sprites.h"
 #include "maps.h"
 
+#include "Sequence.hpp"
+
 enum State{
     INTRO, BRUTE_FORCE, SEQUENCE, EXPLORE, TUT_BRUT, TUT_SEQ
 };
@@ -17,58 +19,11 @@ static const uint8_t B_A = 1 << ABIT;
 static const uint8_t B_B = 1 << BBIT;
 static const uint8_t B_C = 1 << CBIT;
 
-// Size of the sequence
-int seqSize; 
-    
-// the sequence order
-int order[13];
-
-// status of current sequence
-bool orderStatus[13];
-
-// Shuffles the order of the sequence input
-void shuffleSequence(int size){
-    // init hacking sequence variables.
-    seqSize = size;
-    srand((unsigned int) time (NULL));
-    
-    for(int i = 0; i < seqSize; ++i){
-        int r = rand()%7;
-        switch(r){
-            case 0:
-                order[i] = B_A;
-                break;
-            case 1:
-                order[i] = B_B;
-                break;
-            case 2:
-                order[i] = B_C;
-                break;
-            case 3:
-                order[i] = B_UP;
-                break;
-            case 4:
-                order[i] = B_RIGHT;
-                break;
-            case 5:
-                order[i] = B_DOWN;
-                break;
-            case 6:
-                order[i] = B_LEFT;
-                break;
-        }
-    }
-    
-    // reset order status
-    for(int i = 0; i < seqSize; ++i){
-        orderStatus[i] = false;   
-    }
-}
-
 int main(){
     using Pokitto::Core;
     using Pokitto::Display;
     using Pokitto::Buttons;
+    using Sequence::SeqHack;
     
     Core::begin();
     Display::loadRGBPalette(miloslav);
@@ -83,22 +38,15 @@ int main(){
     // set background to blank black tile
     tilemap.setColorTile(0,0);
     
-    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, select = 0, threat = 0, bruteCount = 0, bruteSelect = B_A, bruteProgress = 0, enemyProgress = 0, enemyTimer = 0, enemySpeed = 0;
+    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, bruteCount = 0, bruteSelect = B_A, bruteProgress = 0, enemyProgress = 0, enemyTimer = 0, enemySpeed = 0;
     
-    Sprite player, hack, icons,  pBar, pFill, eFill, sent, tLevel, virus;
+    Sprite player, hack, eFill, virus;
     
-    pBar.play(progBar, ProgBar::start);
-    pFill.play(progFill, ProgFill::play);
     eFill.play(enemyProgFill, EnemyProgFill::play);
-    
-    player.play(hero, Hero::walkSouth);
     virus.play(enemyVirus, EnemyVirus::play);
     
-    icons.play(hackIcons, HackIcons::bUp);
+    player.play(hero, Hero::walkSouth);
     hack.play(hackme, Hackme::show);
-    
-    sent.play(sentinal, Sentinal::scanning);
-    tLevel.play(threatLevel, ThreatLevel::zero);
     
     auto playerWidth = player.getFrameWidth();
     auto playerHeight = player.getFrameHeight();
@@ -108,190 +56,120 @@ int main(){
     State state = State::INTRO;
     bool hacking = false, doorLocked = true;
     
-    
-    // init button state mechanism
-    uint8_t buttonsPreviousState = 0, buttonsJustPressed = 0;
-    
-    shuffleSequence(6);
-    
     while( Core::isRunning() ){
         if( !Core::update() ) {
             continue;
         }
-        // Poll the button
-        Buttons::pollButtons();
-        buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
-        buttonsPreviousState = Buttons::buttons_state;
+        
+        // Poll the button: moved to Sequence.cpp
+        // Buttons::pollButtons();
+        // buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
+        // buttonsPreviousState = Buttons::buttons_state;
         
         switch(state){
         case TUT_BRUT:
             
-            if(buttonsJustPressed & bruteSelect){
-                select++;
-                bruteProgress++;
-            }
-            if( select == bruteCount ){
-                int r = rand()%7;
-                switch(r){
-                    case 0:
-                        bruteSelect = B_A;
-                        icons.play(hackIcons, HackIcons::aUp);
-                        break;
-                    case 1:
-                        bruteSelect = B_B;
-                        icons.play(hackIcons, HackIcons::bUp);
-                        break;
-                    case 2:
-                        bruteSelect = B_C;
-                        icons.play(hackIcons, HackIcons::cUp);
-                        break;
-                    case 3:
-                        bruteSelect = B_UP;
-                        icons.play(hackIcons, HackIcons::dUpUp);
-                        break;
-                    case 4:
-                        bruteSelect = B_RIGHT;
-                        icons.play(hackIcons, HackIcons::dRightUp);
-                        break;
-                    case 5:
-                        bruteSelect = B_DOWN;
-                        icons.play(hackIcons, HackIcons::dDownUp);
-                        break;
-                    case 6:
-                        bruteSelect = B_LEFT;
-                        icons.play(hackIcons, HackIcons::dLeftUp);
-                        break;
-                }
-                select = 0;
-            }
+            // if(buttonsJustPressed & bruteSelect){
+            //     select++;
+            //     bruteProgress++;
+            // }
+            // if( select == bruteCount ){
+            //     int r = rand()%7;
+            //     switch(r){
+            //         case 0:
+            //             bruteSelect = B_A;
+            //             icons.play(hackIcons, HackIcons::aUp);
+            //             break;
+            //         case 1:
+            //             bruteSelect = B_B;
+            //             icons.play(hackIcons, HackIcons::bUp);
+            //             break;
+            //         case 2:
+            //             bruteSelect = B_C;
+            //             icons.play(hackIcons, HackIcons::cUp);
+            //             break;
+            //         case 3:
+            //             bruteSelect = B_UP;
+            //             icons.play(hackIcons, HackIcons::dUpUp);
+            //             break;
+            //         case 4:
+            //             bruteSelect = B_RIGHT;
+            //             icons.play(hackIcons, HackIcons::dRightUp);
+            //             break;
+            //         case 5:
+            //             bruteSelect = B_DOWN;
+            //             icons.play(hackIcons, HackIcons::dDownUp);
+            //             break;
+            //         case 6:
+            //             bruteSelect = B_LEFT;
+            //             icons.play(hackIcons, HackIcons::dLeftUp);
+            //             break;
+            //     }
+            //     select = 0;
+            // }
             
-            // icon to press
-            icons.draw(8, 32);
+            // // icon to press
+            // icons.draw(8, 32);
             
-            // player bar
-            pBar.draw(10,10);
-            for(int i = 0; i < bruteProgress; ++i){
-                pFill.draw(14 + i * 6 , 14);
-            }
+            // // player bar
+            // pBar.draw(10,10);
+            // for(int i = 0; i < bruteProgress; ++i){
+            //     pFill.draw(14 + i * 6 , 14);
+            // }
             
             
-            enemyTimer++;
-            if(enemyTimer == enemySpeed){
-                enemyTimer = 0;
-                if(enemyProgress < 30){
-                    enemyProgress++;
-                }
+            // enemyTimer++;
+            // if(enemyTimer == enemySpeed){
+            //     enemyTimer = 0;
+            //     if(enemyProgress < 30){
+            //         enemyProgress++;
+            //     }
                 
-            }
-            // enemy bar
-            pBar.draw(10,150);
-            for(int i = 0; i < enemyProgress; ++i){
-                eFill.draw(190 - i * 6 , 154);
-            }
+            // }
+            // // enemy bar
+            // pBar.draw(10,150);
+            // for(int i = 0; i < enemyProgress; ++i){
+            //     eFill.draw(190 - i * 6 , 154);
+            // }
             
-            virus.draw(190, 130);
+            // virus.draw(190, 130);
             
             
-            if(bruteProgress >= 30){
-                state = State::INTRO;
-            }
+            // if(bruteProgress >= 30){
+            //     state = State::INTRO;
+            // }
             
             break;
         case TUT_SEQ:
-        
-            if (buttonsJustPressed & order[select] ){
-                orderStatus[select] = true;
-                select++;
-            } else if (buttonsJustPressed != 0) {
-                threat++;
-            }
+            SeqHack::update();
+            SeqHack::render();
             
-            for(int x = 0; x < seqSize; ++x){
-                switch(order[x]){
-                    case B_A:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::aDown : HackIcons::aUp));
-                        break;
-                    case B_B:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::bDown : HackIcons::bUp));
-                        break;
-                    case B_C:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::cDown : HackIcons::cUp));
-                        break;
-                    case B_UP:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dUpDown : HackIcons::dUpUp));
-                        break;
-                    case B_DOWN:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dDownDown : HackIcons::dDownUp));
-                        break;
-                    case B_LEFT:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dLeftDown : HackIcons::dLeftUp));
-                        break;
-                    case B_RIGHT:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dRightDown : HackIcons::dRightUp));
-                        break;
-                }
-                icons.draw(8 + x * 16, 32);
-            }
-            
-            switch(threat){
-                case 1:
-                    tLevel.play(threatLevel, ThreatLevel::one);
-                    break;
-                case 2:
-                    tLevel.play(threatLevel, ThreatLevel::two);
-                    break;
-                case 3:
-                    tLevel.play(threatLevel, ThreatLevel::three);
-                    break;
-                case 4:
-                    tLevel.play(threatLevel, ThreatLevel::four);
-                    break;
-                case 5:
-                    tLevel.play(threatLevel, ThreatLevel::five);
-                    sent.play(sentinal, Sentinal::warning);
-                    threat++;
-                    break;
-            }
-            
-            if(threat > 8){
-                //lose
-            }
-
-            if(select == seqSize){
-                select = 0;
+            if(SeqHack::complete()){
                 state = State::INTRO;
             }
             
-            pBar.draw(10, 10);
-            for(int i = 0; i < select*2; ++i){
-                pFill.draw(14 + i * 15, 14);
+            if(SeqHack::fail()){
+                state = State::INTRO;
             }
-            
-            sent.draw(200, 50);
-            tLevel.draw(200, 70);
-        
             break;
         case INTRO:
             if( Buttons::leftBtn() ){
-                pBar.play(progBar, ProgBar::start);
-                select = 0;
-                threat = 0;
-                shuffleSequence(6);
-                tLevel.play(threatLevel, ThreatLevel::zero);
+                SeqHack::init();
+                SeqHack::shuffle(6);
                 state = State::TUT_SEQ;
             }
             
             if( Buttons::rightBtn() ){
-                bruteCount = 5;
-                select = 0;
-                bruteSelect = B_A;
-                bruteProgress = 0;
-                enemyProgress = 1;
-                enemySpeed = 15;
-                enemyTimer = 0;
-                icons.play(hackIcons, HackIcons::aUp);
-                srand((unsigned int) time (NULL));
-                state = State::TUT_BRUT;   
+                // bruteCount = 5;
+                // select = 0;
+                // bruteSelect = B_A;
+                // bruteProgress = 0;
+                // enemyProgress = 1;
+                // enemySpeed = 15;
+                // enemyTimer = 0;
+                // icons.play(hackIcons, HackIcons::aUp);
+                // srand((unsigned int) time (NULL));
+                // state = State::TUT_BRUT;   
             }
             
             if( Buttons::cBtn() ){
@@ -314,79 +192,21 @@ int main(){
             // draw hero player
             player.draw(playerX, playerY, false, false, recolor);
             
-            if (buttonsJustPressed & order[select] ){
-                orderStatus[select] = true;
-                select++;
-            } else if (buttonsJustPressed != 0) {
-                threat++;
-            }
+            SeqHack::update();
             
-            for(int x = 0; x < seqSize; ++x){
-                switch(order[x]){
-                    case B_A:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::aDown : HackIcons::aUp));
-                        break;
-                    case B_B:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::bDown : HackIcons::bUp));
-                        break;
-                    case B_C:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::cDown : HackIcons::cUp));
-                        break;
-                    case B_UP:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dUpDown : HackIcons::dUpUp));
-                        break;
-                    case B_DOWN:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dDownDown : HackIcons::dDownUp));
-                        break;
-                    case B_LEFT:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dLeftDown : HackIcons::dLeftUp));
-                        break;
-                    case B_RIGHT:
-                        icons.play(hackIcons, (orderStatus[x] ? HackIcons::dRightDown : HackIcons::dRightUp));
-                        break;
-                }
-                icons.draw(8 + x * 16, 32);
-            }
-            
-            switch(threat){
-                case 1:
-                    tLevel.play(threatLevel, ThreatLevel::one);
-                    break;
-                case 2:
-                    tLevel.play(threatLevel, ThreatLevel::two);
-                    break;
-                case 3:
-                    tLevel.play(threatLevel, ThreatLevel::three);
-                    break;
-                case 4:
-                    tLevel.play(threatLevel, ThreatLevel::four);
-                    break;
-                case 5:
-                    tLevel.play(threatLevel, ThreatLevel::five);
-                    sent.play(sentinal, Sentinal::warning);
-                    threat++;
-                    break;
-            }
-            
-            if(threat > 8){
+            if(SeqHack::fail()){
                 //lose
+                state = State::EXPLORE;
+                doorLocked = true;
             }
 
-            if(select == seqSize){
-                select = 0;
+            if(SeqHack::complete()){
                 doorLocked = false;
                 tilemap.setColorTile(3, 0);
-                
                 state = State::EXPLORE;
             }
             
-            pBar.draw(10, 10);
-            for(int i = 0; i < select; ++i){
-                pFill.draw(15 + i * 15, 14);
-            }
-            
-            sent.draw(200, 50);
-            tLevel.draw(200, 70);
+            SeqHack::render();
             
             Display::setColor(7);
             Display::print(0, 0, "Hack the planet!");
@@ -421,7 +241,6 @@ int main(){
                 }
             }
     
-    
             if(Buttons::leftBtn() || Buttons::rightBtn() ){
                 if(Buttons::rightBtn()){
                     cameraX += speed;
@@ -451,7 +270,6 @@ int main(){
                 }
             }
             
-            
             // get current tile
             int tileX = (cameraX + playerX + PROJ_TILE_W/2) / PROJ_TILE_W;
             int tileY = (cameraY + playerY - 8 + playerHeight) / PROJ_TILE_H;
@@ -460,14 +278,9 @@ int main(){
             if( tile == Hack ){
                 // Eventually play a Hack tone here, draw hack when actually hacking
                 // Play hackable notification 
-                
-                
                 if( Buttons::aBtn() ){
-                    pBar.play(progBar, ProgBar::start);
-                    select = 0;
-                    threat = 0;
-                    tLevel.play(threatLevel, ThreatLevel::zero);
-                    shuffleSequence(13);
+                    SeqHack::init();
+                    SeqHack::shuffle(13);
                     state = State::SEQUENCE;
                 }
             }
@@ -486,7 +299,6 @@ int main(){
                     // if !doorLocked enter next level
                 }
             }
-    
     
             // draw map
             tilemap.draw(-cameraX, -cameraY);
