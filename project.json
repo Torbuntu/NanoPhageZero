@@ -534,6 +534,15 @@
 		},
 		"/Sequence.hpp": {
 			"sdcard": false
+		},
+		"/Minigames": {
+			"sdcard": false
+		},
+		"/Minigames/Sequence.cpp": {
+			"sdcard": false
+		},
+		"/Minigames/Sequence.hpp": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

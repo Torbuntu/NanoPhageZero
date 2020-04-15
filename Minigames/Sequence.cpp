@@ -1,4 +1,4 @@
-#include "Sequence.hpp"
+#include "Minigames/Sequence.hpp"
 #include "ButtonMaps.h"
 #include <Pokitto.h>
 #include "sprites.h"

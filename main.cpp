@@ -5,7 +5,7 @@
 #include "sprites.h"
 #include "maps.h"
 
-#include "Sequence.hpp"
+#include "Minigames/Sequence.hpp"
 
 enum State{
     INTRO, BRUTE_FORCE, SEQUENCE, EXPLORE, TUT_BRUT, TUT_SEQ
