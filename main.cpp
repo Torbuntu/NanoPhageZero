@@ -6,24 +6,18 @@
 #include "maps.h"
 
 #include "Minigames/Sequence.hpp"
+#include "Minigames/Bruteforce.hpp"
 
 enum State{
     INTRO, BRUTE_FORCE, SEQUENCE, EXPLORE, TUT_BRUT, TUT_SEQ
 };
-
-static const uint8_t B_UP = 1 << UPBIT;
-static const uint8_t B_DOWN = 1 << DOWNBIT;
-static const uint8_t B_LEFT = 1 << LEFTBIT;
-static const uint8_t B_RIGHT = 1 << RIGHTBIT;
-static const uint8_t B_A = 1 << ABIT;
-static const uint8_t B_B = 1 << BBIT;
-static const uint8_t B_C = 1 << CBIT;
 
 int main(){
     using Pokitto::Core;
     using Pokitto::Display;
     using Pokitto::Buttons;
     using Sequence::SeqHack;
+    using Bruteforce::BruteHack;
     
     Core::begin();
     Display::loadRGBPalette(miloslav);
@@ -38,12 +32,9 @@ int main(){
     // set background to blank black tile
     tilemap.setColorTile(0,0);
     
-    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, bruteCount = 0, bruteSelect = B_A, bruteProgress = 0, enemyProgress = 0, enemyTimer = 0, enemySpeed = 0;
+    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0;
     
-    Sprite player, hack, eFill, virus;
-    
-    eFill.play(enemyProgFill, EnemyProgFill::play);
-    virus.play(enemyVirus, EnemyVirus::play);
+    Sprite player, hack;
     
     player.play(hero, Hero::walkSouth);
     hack.play(hackme, Hackme::show);
@@ -60,84 +51,21 @@ int main(){
         if( !Core::update() ) {
             continue;
         }
-        
-        // Poll the button: moved to Sequence.cpp
-        // Buttons::pollButtons();
-        // buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
-        // buttonsPreviousState = Buttons::buttons_state;
-        
+
         switch(state){
         case TUT_BRUT:
             
-            // if(buttonsJustPressed & bruteSelect){
-            //     select++;
-            //     bruteProgress++;
-            // }
-            // if( select == bruteCount ){
-            //     int r = rand()%7;
-            //     switch(r){
-            //         case 0:
-            //             bruteSelect = B_A;
-            //             icons.play(hackIcons, HackIcons::aUp);
-            //             break;
-            //         case 1:
-            //             bruteSelect = B_B;
-            //             icons.play(hackIcons, HackIcons::bUp);
-            //             break;
-            //         case 2:
-            //             bruteSelect = B_C;
-            //             icons.play(hackIcons, HackIcons::cUp);
-            //             break;
-            //         case 3:
-            //             bruteSelect = B_UP;
-            //             icons.play(hackIcons, HackIcons::dUpUp);
-            //             break;
-            //         case 4:
-            //             bruteSelect = B_RIGHT;
-            //             icons.play(hackIcons, HackIcons::dRightUp);
-            //             break;
-            //         case 5:
-            //             bruteSelect = B_DOWN;
-            //             icons.play(hackIcons, HackIcons::dDownUp);
-            //             break;
-            //         case 6:
-            //             bruteSelect = B_LEFT;
-            //             icons.play(hackIcons, HackIcons::dLeftUp);
-            //             break;
-            //     }
-            //     select = 0;
-            // }
+            BruteHack::update();
             
-            // // icon to press
-            // icons.draw(8, 32);
+            BruteHack::render();
             
-            // // player bar
-            // pBar.draw(10,10);
-            // for(int i = 0; i < bruteProgress; ++i){
-            //     pFill.draw(14 + i * 6 , 14);
-            // }
+            if(BruteHack::complete()){
+                state = State::INTRO;
+            }
             
-            
-            // enemyTimer++;
-            // if(enemyTimer == enemySpeed){
-            //     enemyTimer = 0;
-            //     if(enemyProgress < 30){
-            //         enemyProgress++;
-            //     }
-                
-            // }
-            // // enemy bar
-            // pBar.draw(10,150);
-            // for(int i = 0; i < enemyProgress; ++i){
-            //     eFill.draw(190 - i * 6 , 154);
-            // }
-            
-            // virus.draw(190, 130);
-            
-            
-            // if(bruteProgress >= 30){
-            //     state = State::INTRO;
-            // }
+            if(BruteHack::fail()){
+                state = State::INTRO;
+            }
             
             break;
         case TUT_SEQ:
@@ -160,16 +88,8 @@ int main(){
             }
             
             if( Buttons::rightBtn() ){
-                // bruteCount = 5;
-                // select = 0;
-                // bruteSelect = B_A;
-                // bruteProgress = 0;
-                // enemyProgress = 1;
-                // enemySpeed = 15;
-                // enemyTimer = 0;
-                // icons.play(hackIcons, HackIcons::aUp);
-                // srand((unsigned int) time (NULL));
-                // state = State::TUT_BRUT;   
+                BruteHack::init();
+                state = State::TUT_BRUT;   
             }
             
             if( Buttons::cBtn() ){
@@ -306,13 +226,10 @@ int main(){
             // draw hero player
             player.draw(playerX, playerY, false, false, recolor);
             
-            
             Display::setColor(7);
             
             break;
         }
-
     }
-    
     return 0;
 }

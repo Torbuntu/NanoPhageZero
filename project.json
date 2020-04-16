@@ -543,6 +543,18 @@
 		},
 		"/Minigames/Sequence.hpp": {
 			"sdcard": false
+		},
+		"/Minigames/Bruteforce.hpp": {
+			"sdcard": false
+		},
+		"/Minigames/Bruteforce.cpp": {
+			"sdcard": false
+		},
+		"/Player.hpp": {
+			"sdcard": false
+		},
+		"/Player.cpp": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
