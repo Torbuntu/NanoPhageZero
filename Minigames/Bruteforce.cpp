@@ -89,7 +89,6 @@ namespace Bruteforce {
             pFill.draw(14 + i * 6 , 14);
         }
         
-        
         // enemy bar
         pBar.draw(10,150);
         for(int i = 0; i < enemyProgress; ++i){

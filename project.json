@@ -555,6 +555,9 @@
 		},
 		"/Player.cpp": {
 			"sdcard": false
+		},
+		"/maps/citytrail.tmx": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
