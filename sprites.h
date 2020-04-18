@@ -87,6 +87,15 @@ public:
     }
 };
 
+class Door {
+public:
+    enum Animation : std::uint16_t {
+		locked = 0,
+		unlocked = 3,
+		open = 6
+	};
+};
+
 class EnemyProgFill {
 public:
     enum Animation : std::uint16_t {
@@ -179,6 +188,7 @@ public:
 
 // https://stackoverflow.com/a/19591902
 extern "C" {
+extern const Door door;
 extern const EnemyProgFill enemyProgFill;
 extern const EnemyVirus enemyVirus;
 extern const HackIcons hackIcons;

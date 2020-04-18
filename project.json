@@ -558,6 +558,36 @@
 		},
 		"/maps/citytrail.tmx": {
 			"sdcard": false
+		},
+		"/Level.hpp": {
+			"sdcard": false
+		},
+		"/Level.cpp": {
+			"sdcard": false
+		},
+		"/asepriteProjects/Door.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/Door.json": {
+			"sdcard": false
+		},
+		"/sprites/Door.png": {
+			"sdcard": false
+		},
+		"/sprites/Door.bin": {
+			"sdcard": false
+		},
+		"/sprites/Door.h": {
+			"sdcard": false
+		},
+		"/Minigames/RobotProgram.hpp": {
+			"sdcard": false
+		},
+		"/Minigames/RobotProgram.cpp": {
+			"sdcard": false
+		},
+		"/asepriteProjects/Robot.aseprite": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

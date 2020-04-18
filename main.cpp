@@ -9,7 +9,9 @@
 #include "Minigames/Bruteforce.hpp"
 
 enum State{
-    INTRO, BRUTE_FORCE, SEQUENCE, EXPLORE, TUT_BRUT, TUT_SEQ
+    INTRO, BRUTE_FORCE, SEQUENCE,
+    EXPLORE,
+    HALLWAY
 };
 
 int main(){
@@ -18,6 +20,7 @@ int main(){
     using Pokitto::Buttons;
     using Sequence::SeqHack;
     using Bruteforce::BruteHack;
+    using RobotProgram::RoboHack;
     
     Core::begin();
     Display::loadRGBPalette(miloslav);
@@ -30,14 +33,16 @@ int main(){
     }
     
     // set background to blank black tile
-    tilemap.setColorTile(0,0);
+    //tilemap.setColorTile(100,0);
+    tilemap.fillOutOfBounds = 255;
     
-    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0;
+    int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, tileX, tileY, oldX, oldY, doorX, doorY;
     
-    Sprite player, hack;
+    Sprite player, hack, dor;
     
     player.play(hero, Hero::walkSouth);
     hack.play(hackme, Hackme::show);
+    dor.play(door, Door::locked);
     
     auto playerWidth = player.getFrameWidth();
     auto playerHeight = player.getFrameHeight();
@@ -45,60 +50,27 @@ int main(){
     auto playerY = LCDHEIGHT/2 - playerHeight/2;
     
     State state = State::INTRO;
+    State prevState = State::EXPLORE;
     bool hacking = false, doorLocked = true;
-    
+    MapEnum tile;
+    auto getTile = suburbEnum;
     while( Core::isRunning() ){
         if( !Core::update() ) {
             continue;
         }
+        
+        tilemap.draw(-cameraX, -cameraY);
+        dor.draw(doorX, doorY);
+        player.draw(playerX, playerY, false, false, recolor);
 
         switch(state){
-        case TUT_BRUT:
-            
-            BruteHack::update();
-            
-            BruteHack::render();
-            
-            if(BruteHack::complete()){
-                state = State::INTRO;
-            }
-            
-            if(BruteHack::fail()){
-                state = State::INTRO;
-            }
-            
-            break;
-        case TUT_SEQ:
-            SeqHack::update();
-            SeqHack::render();
-            
-            if(SeqHack::complete()){
-                state = State::INTRO;
-            }
-            
-            if(SeqHack::fail()){
-                state = State::INTRO;
-            }
-            break;
         case INTRO:
-            if( Buttons::leftBtn() ){
-                SeqHack::init();
-                SeqHack::shuffle(6);
-                state = State::TUT_SEQ;
-            }
-            
-            if( Buttons::rightBtn() ){
-                BruteHack::init();
-                state = State::TUT_BRUT;   
-            }
             
             if( Buttons::cBtn() ){
                 state = State::EXPLORE;
             }
             
             Display::setColor(7);
-            Display::println("Sequence Tutorial: <-");
-            Display::println("Brute Force Tutorial: ->");
             Display::print("C to start.");
             
             break;
@@ -106,11 +78,6 @@ int main(){
         
             // draw the hacking icon above player
             hack.draw(playerX, playerY-16, false, false);
-             // draw map
-            tilemap.draw(-cameraX, -cameraY);
-            
-            // draw hero player
-            player.draw(playerX, playerY, false, false, recolor);
             
             SeqHack::update();
             
@@ -118,11 +85,12 @@ int main(){
                 //lose
                 state = State::EXPLORE;
                 doorLocked = true;
+                dor.play(door, Door::locked);
             }
 
             if(SeqHack::complete()){
                 doorLocked = false;
-                tilemap.setColorTile(3, 0);
+                dor.play(door, Door::unlocked);
                 state = State::EXPLORE;
             }
             
@@ -134,8 +102,8 @@ int main(){
             break;
         case EXPLORE:
              
-            int oldX = cameraX;
-            int oldY = cameraY;
+            oldX = cameraX;
+            oldY = cameraY;
             
             // We don't poll for movement because it will be held down.
             if(!Buttons::rightBtn() && !Buttons::leftBtn() && !Buttons::upBtn() && !Buttons::downBtn()){
@@ -155,7 +123,7 @@ int main(){
                 }
                 
                 if(doorLocked){
-                    Display::print("How do I get out of here?");
+                    Display::print("What does that button do?");
                 }else {
                     Display::print("The door is open!");
                 }
@@ -191,9 +159,9 @@ int main(){
             }
             
             // get current tile
-            int tileX = (cameraX + playerX + PROJ_TILE_W/2) / PROJ_TILE_W;
-            int tileY = (cameraY + playerY - 8 + playerHeight) / PROJ_TILE_H;
-            auto tile = suburbEnum(tileX, tileY);
+            tileX = (cameraX + playerX + PROJ_TILE_W/2) / PROJ_TILE_W;
+            tileY = (cameraY + playerY - 8 + playerHeight) / PROJ_TILE_H;
+            tile = getTile(tileX, tileY);
     
             if( tile == Hack ){
                 // Eventually play a Hack tone here, draw hack when actually hacking
@@ -210,25 +178,129 @@ int main(){
                 cameraY = oldY;
             }
             
-            if( tile == Door && doorLocked ){
-                if(doorLocked){
+            if( tile == Door ){
+                if(dor.animation == Door::locked){
                     cameraX = oldX;
                     cameraY = oldY;
                     Display::print("The door is locked! Where is the control system?");
+                } else if(dor.animation == Door::unlocked){
+                    dor.play(door, Door::open);
+                }
+            }
+            tileY = (cameraY + playerY + 8 + playerHeight) / PROJ_TILE_H;
+            tile = getTile(tileX, tileY);
+            
+            if(tile==Door){
+                tilemap.set(citytrail[0], citytrail[1], citytrail+2);
+                for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
+                    tilemap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
+                }
+                cameraX = -54;
+                cameraY = 68;
+                getTile = citytrailEnum;
+                dor.play(door, Door::locked);
+                state = State::HALLWAY;
+            }
+            
+            doorX = -cameraX+48;
+            doorY = -cameraY;
+            
+            Display::setColor(7);
+            break;
+        case HALLWAY:
+             
+            oldX = cameraX;
+            oldY = cameraY;
+            
+            // We don't poll for movement because it will be held down.
+            if(!Buttons::rightBtn() && !Buttons::leftBtn() && !Buttons::upBtn() && !Buttons::downBtn()){
+                switch(player.animation){
+                    case Hero::walkEast:
+                        player.play(hero, Hero::idleEast);
+                        break;
+                    case Hero::walkWest:
+                        player.play(hero, Hero::idleWest);
+                        break;
+                    case Hero::walkNorth:
+                        player.play(hero, Hero::idleNorth);
+                        break;
+                    case Hero::walkSouth:
+                        player.play(hero, Hero::idleSouth);
+                        break;
+                }
+                
+                if(doorLocked){
+                    Display::print("What does that button do?");
                 }else {
-                    // if !doorLocked enter next level
+                    Display::print("The door is open!");
                 }
             }
     
-            // draw map
-            tilemap.draw(-cameraX, -cameraY);
+            if(Buttons::leftBtn() || Buttons::rightBtn() ){
+                if(Buttons::rightBtn()){
+                    cameraX += speed;
+                    if(player.animation != Hero::walkEast){
+                        player.play(hero, Hero::walkEast);
+                    }
+                }
+                if(Buttons::leftBtn()){
+                    cameraX -= speed;
+                    if(player.animation != Hero::walkWest){
+                        player.play(hero, Hero::walkWest);
+                    }
+                }
+            }else{
+                
+                if(Buttons::upBtn()){
+                    cameraY -= speed;
+                    if(player.animation != Hero::walkNorth){
+                        player.play(hero, Hero::walkNorth);
+                    }
+                }
+                if(Buttons::downBtn()){
+                    cameraY += speed;
+                    if(player.animation != Hero::walkSouth){
+                        player.play(hero, Hero::walkSouth);
+                    }
+                }
+            }
             
-            // draw hero player
-            player.draw(playerX, playerY, false, false, recolor);
+            // get current tile
+            tileX = (cameraX + playerX + PROJ_TILE_W/2) / PROJ_TILE_W;
+            tileY = (cameraY + playerY - 8 + playerHeight) / PROJ_TILE_H;
+            tile = getTile(tileX, tileY);
+    
+            if( tile == Hack ){
+                // Eventually play a Hack tone here, draw hack when actually hacking
+                // Play hackable notification 
+                if( Buttons::aBtn() ){
+                    SeqHack::init();
+                    SeqHack::shuffle(13);
+                    state = State::SEQUENCE;
+                }
+            }
+            
+            if( tile == Collide ){
+                cameraX = oldX;
+                cameraY = oldY;
+            }
+            
+            if( tile == Door ){
+                if(dor.animation == Door::locked){
+                    cameraX = oldX;
+                    cameraY = oldY;
+                    Display::print("The door is locked! Where is the control system?");
+                } else if(dor.animation == Door::unlocked){
+                    dor.play(door, Door::open);
+                }
+            }
+    
+            
+            doorX = -cameraX+208;
+            doorY = -cameraY+32;
             
             Display::setColor(7);
-            
-            break;
+        break;
         }
     }
     return 0;

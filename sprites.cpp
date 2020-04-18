@@ -1,3 +1,4 @@
+__asm__(".global door\ndoor:\n.incbin \"sprites/Door.bin\"");
 __asm__(".global enemyProgFill\nenemyProgFill:\n.incbin \"sprites/EnemyProgFill.bin\"");
 __asm__(".global enemyVirus\nenemyVirus:\n.incbin \"sprites/EnemyVirus.bin\"");
 __asm__(".global hackIcons\nhackIcons:\n.incbin \"sprites/HackIcons.bin\"");
