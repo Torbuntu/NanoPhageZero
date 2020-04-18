@@ -126,7 +126,8 @@ public:
 		dRightUp = 30,
 		dRightDown = 33,
 		dDownUp = 36,
-		dDownDown = 39
+		dDownDown = 39,
+		empty = 42
 	};
 };
 
@@ -165,6 +166,13 @@ public:
 	};
 };
 
+class Robot {
+public:
+    enum Animation : std::uint16_t {
+		idle = 0
+	};
+};
+
 class Sentinal {
 public:
     enum Animation : std::uint16_t {
@@ -196,6 +204,7 @@ extern const Hackme hackme;
 extern const Hero hero;
 extern const ProgBar progBar;
 extern const ProgFill progFill;
+extern const Robot robot;
 extern const Sentinal sentinal;
 extern const ThreatLevel threatLevel;
 }

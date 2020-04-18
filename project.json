@@ -588,6 +588,30 @@
 		},
 		"/asepriteProjects/Robot.aseprite": {
 			"sdcard": false
+		},
+		"/Robot.hpp": {
+			"sdcard": false
+		},
+		"/Robot.cpp": {
+			"sdcard": false
+		},
+		"/sprites/Robot.json": {
+			"sdcard": false
+		},
+		"/sprites/Robot.png": {
+			"sdcard": false
+		},
+		"/sprites/Robot.h": {
+			"sdcard": false
+		},
+		"/sprites/Robot.bin": {
+			"sdcard": false
+		},
+		"/asepriteProjects/HackIcons.json": {
+			"sdcard": false
+		},
+		"/asepriteProjects/HackIcons.png": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

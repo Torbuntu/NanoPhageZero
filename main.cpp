@@ -7,9 +7,11 @@
 
 #include "Minigames/Sequence.hpp"
 #include "Minigames/Bruteforce.hpp"
+#include "Minigames/RobotProgram.hpp"
 
 enum State{
-    INTRO, BRUTE_FORCE, SEQUENCE,
+    INTRO, 
+    BRUTE_FORCE, SEQUENCE, ROBOPROGRAM,
     EXPLORE,
     HALLWAY
 };
@@ -49,8 +51,9 @@ int main(){
     auto playerX = LCDWIDTH/2 - playerWidth/2;
     auto playerY = LCDHEIGHT/2 - playerHeight/2;
     
-    State state = State::INTRO;
+    State state = State::EXPLORE;
     State prevState = State::EXPLORE;
+    
     bool hacking = false, doorLocked = true;
     MapEnum tile;
     auto getTile = suburbEnum;
@@ -83,7 +86,7 @@ int main(){
             
             if(SeqHack::fail()){
                 //lose
-                state = State::EXPLORE;
+                state = prevState;
                 doorLocked = true;
                 dor.play(door, Door::locked);
             }
@@ -91,7 +94,7 @@ int main(){
             if(SeqHack::complete()){
                 doorLocked = false;
                 dor.play(door, Door::unlocked);
-                state = State::EXPLORE;
+                state = prevState;
             }
             
             SeqHack::render();
@@ -99,6 +102,12 @@ int main(){
             Display::setColor(7);
             Display::print(0, 0, "Hack the planet!");
             
+            break;
+            
+        case ROBOPROGRAM:
+            RoboHack::update();
+            RoboHack::render();
+        
             break;
         case EXPLORE:
              
@@ -168,7 +177,8 @@ int main(){
                 // Play hackable notification 
                 if( Buttons::aBtn() ){
                     SeqHack::init();
-                    SeqHack::shuffle(13);
+                    SeqHack::shuffle(4);
+                    prevState = State::EXPLORE;
                     state = State::SEQUENCE;
                 }
             }
@@ -274,9 +284,9 @@ int main(){
                 // Eventually play a Hack tone here, draw hack when actually hacking
                 // Play hackable notification 
                 if( Buttons::aBtn() ){
-                    SeqHack::init();
-                    SeqHack::shuffle(13);
-                    state = State::SEQUENCE;
+                    RoboHack::init(4, 132, 80);
+                    prevState = State::HALLWAY;
+                    state = State::ROBOPROGRAM;
                 }
             }
             
