@@ -3,6 +3,11 @@
 #include "sprites.h"
 
 namespace Sequence {
+    
+    enum SeqState {
+        READY, RUNNING, COMPLETE
+    };
+    
     class SeqHack {
         public:
         
@@ -23,6 +28,8 @@ namespace Sequence {
             
         private:
             
+            static inline SeqState seqState = SeqState::READY;
+            
             // Size of the sequence
             static inline int seqSize; 
             
@@ -35,6 +42,8 @@ namespace Sequence {
             
             // status of current sequence
             static inline bool orderStatus[13];
+            
+            static inline bool end = false;
             
              // init button state mechanism
             static inline int buttonsPreviousState = 0;

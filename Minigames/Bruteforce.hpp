@@ -3,6 +3,11 @@
 #include "sprites.h"
 
 namespace Bruteforce {
+    
+    enum BrutState{
+        READY, RUNNING, COMPLETE  
+    };
+    
     class BruteHack{
         public:
             static void init();
@@ -29,6 +34,10 @@ namespace Bruteforce {
             static inline int buttonsPreviousState = 0;
             
             static inline int buttonsJustPressed = 0;
+            
+            static inline BrutState brutState = BrutState::READY;
+            
+            static inline bool end;
             
             static inline Sprite icons, pBar, pFill, eFill, virus;
     };

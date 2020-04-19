@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Pokitto.h>
+#include <Tilemap.hpp>
 #include "sprites.h"
 #include "maps.h"
 
@@ -11,7 +12,7 @@ namespace RobotProgram{
     
     class RoboHack{
         public:
-            static void init(int len, int robX, int robY);
+            static void init(int len);
             
             static void update();
             
@@ -29,13 +30,17 @@ namespace RobotProgram{
             
             static void setRobotY(int y);
             
+            
+            
         private:
+        
+            static void restart();
         
             static inline Sprite icons, robo;
             
             static inline int program[13];
             
-            static inline int length, roboX, roboY, inventory, step, speed;
+            static inline int length, roboX, roboY, inventory, step, speed, renderX, renderY;
             
             static inline RoboState roboState = RoboState::READY;
             
@@ -45,7 +50,8 @@ namespace RobotProgram{
             static inline int buttonsJustPressed = 0;
             
             static inline bool end = false; 
-        
+            
+            static inline Tilemap tilemap;
     };
     
     

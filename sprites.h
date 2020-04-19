@@ -152,6 +152,13 @@ public:
 	};
 };
 
+class MinibotField {
+public:
+    enum Animation : std::uint16_t {
+		idle = 0
+	};
+};
+
 class ProgBar {
 public:
     enum Animation : std::uint16_t {
@@ -202,6 +209,7 @@ extern const EnemyVirus enemyVirus;
 extern const HackIcons hackIcons;
 extern const Hackme hackme;
 extern const Hero hero;
+extern const MinibotField minibotField;
 extern const ProgBar progBar;
 extern const ProgFill progFill;
 extern const Robot robot;

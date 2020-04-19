@@ -612,6 +612,30 @@
 		},
 		"/asepriteProjects/HackIcons.png": {
 			"sdcard": false
+		},
+		"/maps/minibotfield.tmx": {
+			"sdcard": false
+		},
+		"/maps/seqIntro.tmx": {
+			"sdcard": false
+		},
+		"/maps/roboIntro.tmx": {
+			"sdcard": false
+		},
+		"/asepriteProjects/MinibotField.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/MinibotField.json": {
+			"sdcard": false
+		},
+		"/sprites/MinibotField.png": {
+			"sdcard": false
+		},
+		"/sprites/MinibotField.bin": {
+			"sdcard": false
+		},
+		"/sprites/MinibotField.h": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

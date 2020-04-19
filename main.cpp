@@ -9,11 +9,11 @@
 #include "Minigames/Bruteforce.hpp"
 #include "Minigames/RobotProgram.hpp"
 
+//TODO: move the EXPLORE and HALLWAY states into the Level class.
 enum State{
     INTRO, 
     BRUTE_FORCE, SEQUENCE, ROBOPROGRAM,
-    EXPLORE,
-    HALLWAY
+    EXPLORE, HALLWAY
 };
 
 int main(){
@@ -29,7 +29,7 @@ int main(){
     
     Tilemap tilemap;
     //0 = 14, 1 = 11, suburb+2 = mapPixelData
-    tilemap.set(suburb[0], suburb[1], suburb+2);
+    tilemap.set(seqIntro[0], seqIntro[1], seqIntro+2);
     for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
         tilemap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
     }
@@ -40,8 +40,9 @@ int main(){
     
     int cameraX = 12, cameraY = 12, speed = 1, recolor = 0, tileX, tileY, oldX, oldY, doorX, doorY;
     
-    Sprite player, hack, dor;
+    Sprite player, hack, dor, botField;
     
+    botField.play(minibotField, MinibotField::idle);
     player.play(hero, Hero::walkSouth);
     hack.play(hackme, Hackme::show);
     dor.play(door, Door::locked);
@@ -56,16 +57,12 @@ int main(){
     
     bool hacking = false, doorLocked = true;
     MapEnum tile;
-    auto getTile = suburbEnum;
+    auto getTile = seqIntroEnum;
     while( Core::isRunning() ){
         if( !Core::update() ) {
             continue;
         }
         
-        tilemap.draw(-cameraX, -cameraY);
-        dor.draw(doorX, doorY);
-        player.draw(playerX, playerY, false, false, recolor);
-
         switch(state){
         case INTRO:
             
@@ -77,8 +74,19 @@ int main(){
             Display::print("C to start.");
             
             break;
+        case BRUTE_FORCE:
+            tilemap.draw(-cameraX, -cameraY);
+            dor.draw(doorX, doorY);
+            player.draw(playerX, playerY, false, false, recolor);
+            
+            BruteHack::update();
+            BruteHack::render();
+            break;
         case SEQUENCE:
-        
+            tilemap.draw(-cameraX, -cameraY);
+            dor.draw(doorX, doorY);
+            player.draw(playerX, playerY, false, false, recolor);
+            
             // draw the hacking icon above player
             hack.draw(playerX, playerY-16, false, false);
             
@@ -99,28 +107,31 @@ int main(){
             
             SeqHack::render();
             
-            Display::setColor(7);
-            Display::print(0, 0, "Hack the planet!");
-            
             break;
             
         case ROBOPROGRAM:
-            hack.draw(playerX, playerY-16, false, false);
             RoboHack::update();
             
-            
             RoboHack::render();
-            
+            tilemap.draw(-RoboHack::getRobotX(), -RoboHack::getRobotY());
 
             if(RoboHack::complete()){
+                doorLocked = false;
+                dor.play(door, Door::unlocked);
+                tilemap.set(roboIntro[0], roboIntro[1], roboIntro+2);
+                for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
+                    tilemap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
+                }
+                getTile = roboIntroEnum;
                 state = prevState;
             }
-            
-            
         
             break;
         case EXPLORE:
-             
+            tilemap.draw(-cameraX, -cameraY);
+            dor.draw(doorX, doorY);
+            player.draw(playerX, playerY, false, false, recolor);
+            
             oldX = cameraX;
             oldY = cameraY;
             
@@ -162,7 +173,6 @@ int main(){
                     }
                 }
             }else{
-                
                 if(Buttons::upBtn()){
                     cameraY -= speed;
                     if(player.animation != Hero::walkNorth){
@@ -211,13 +221,13 @@ int main(){
             tile = getTile(tileX, tileY);
             
             if(tile==Door){
-                tilemap.set(citytrail[0], citytrail[1], citytrail+2);
+                tilemap.set(roboIntro[0], roboIntro[1], roboIntro+2);
                 for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
                     tilemap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
                 }
                 cameraX = -54;
                 cameraY = 68;
-                getTile = citytrailEnum;
+                getTile = roboIntroEnum;
                 dor.play(door, Door::locked);
                 doorLocked = true;
                 state = State::HALLWAY;
@@ -229,6 +239,12 @@ int main(){
             Display::setColor(7);
             break;
         case HALLWAY:
+        
+            tilemap.draw(-cameraX, -cameraY);
+            dor.draw(doorX, doorY);
+            botField.draw(-cameraX+88, -cameraY+88);
+            
+            player.draw(playerX, playerY, false, false, recolor);
              
             oldX = cameraX;
             oldY = cameraY;
@@ -295,8 +311,14 @@ int main(){
                 // Eventually play a Hack tone here, draw hack when actually hacking
                 // Play hackable notification 
                 if( Buttons::aBtn() ){
-                    RoboHack::init(4, 130, 78);
+                    RoboHack::init(4);
                     prevState = State::HALLWAY;
+                    
+                    tilemap.set(minibotfield[0], minibotfield[1], minibotfield+2);
+                    for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
+                        tilemap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
+                    }
+                    getTile = minibotfieldEnum;
                     state = State::ROBOPROGRAM;
                 }
             }
@@ -319,6 +341,9 @@ int main(){
             
             doorX = -cameraX+208;
             doorY = -cameraY+32;
+            
+            
+            
             
             Display::setColor(7);
         break;
