@@ -105,8 +105,18 @@ int main(){
             break;
             
         case ROBOPROGRAM:
+            hack.draw(playerX, playerY-16, false, false);
             RoboHack::update();
+            
+            
             RoboHack::render();
+            
+
+            if(RoboHack::complete()){
+                state = prevState;
+            }
+            
+            
         
             break;
         case EXPLORE:
@@ -209,6 +219,7 @@ int main(){
                 cameraY = 68;
                 getTile = citytrailEnum;
                 dor.play(door, Door::locked);
+                doorLocked = true;
                 state = State::HALLWAY;
             }
             
@@ -240,7 +251,7 @@ int main(){
                 }
                 
                 if(doorLocked){
-                    Display::print("What does that button do?");
+                    Display::print("How do I get the button?");
                 }else {
                     Display::print("The door is open!");
                 }
@@ -284,7 +295,7 @@ int main(){
                 // Eventually play a Hack tone here, draw hack when actually hacking
                 // Play hackable notification 
                 if( Buttons::aBtn() ){
-                    RoboHack::init(4, 132, 80);
+                    RoboHack::init(4, 130, 78);
                     prevState = State::HALLWAY;
                     state = State::ROBOPROGRAM;
                 }

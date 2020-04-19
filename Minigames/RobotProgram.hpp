@@ -2,6 +2,8 @@
 
 #include <Pokitto.h>
 #include "sprites.h"
+#include "maps.h"
+
 namespace RobotProgram{
     enum RoboState{
         READY, PROGRAMMING, RUNNING, COMPLETE
@@ -19,13 +21,21 @@ namespace RobotProgram{
             
             static bool fail();
             
+            static int getRobotX();
+            
+            static int getRobotY();
+            
+            static void setRobotX(int x);
+            
+            static void setRobotY(int y);
+            
         private:
         
             static inline Sprite icons, robo;
             
             static inline int program[13];
             
-            static inline int length, roboX, roboY, inventory, step;
+            static inline int length, roboX, roboY, inventory, step, speed;
             
             static inline RoboState roboState = RoboState::READY;
             
@@ -33,6 +43,8 @@ namespace RobotProgram{
             static inline int buttonsPreviousState = 0;
             
             static inline int buttonsJustPressed = 0;
+            
+            static inline bool end = false; 
         
     };
     
