@@ -639,6 +639,27 @@
 		},
 		"/maps/bruteIntro.tmx": {
 			"sdcard": false
+		},
+		"/asepriteProjects/SecurityDrone.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/SecurityDrone.json": {
+			"sdcard": false
+		},
+		"/sprites/SecurityDrone.png": {
+			"sdcard": false
+		},
+		"/sprites/SecurityDrone.bin": {
+			"sdcard": false
+		},
+		"/sprites/SecurityDrone.h": {
+			"sdcard": false
+		},
+		"/maps/lobby.tmx": {
+			"sdcard": false
+		},
+		"/maps/lvl1.tmx": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

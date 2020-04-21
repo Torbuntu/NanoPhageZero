@@ -10,7 +10,7 @@ namespace Bruteforce {
     
     class BruteHack{
         public:
-            static void init();
+            static void init(int count);
             
             static void update();
             

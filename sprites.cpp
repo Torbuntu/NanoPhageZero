@@ -8,5 +8,6 @@ __asm__(".global minibotField\nminibotField:\n.incbin \"sprites/MinibotField.bin
 __asm__(".global progBar\nprogBar:\n.incbin \"sprites/ProgBar.bin\"");
 __asm__(".global progFill\nprogFill:\n.incbin \"sprites/ProgFill.bin\"");
 __asm__(".global robot\nrobot:\n.incbin \"sprites/Robot.bin\"");
+__asm__(".global securityDrone\nsecurityDrone:\n.incbin \"sprites/SecurityDrone.bin\"");
 __asm__(".global sentinal\nsentinal:\n.incbin \"sprites/Sentinal.bin\"");
 __asm__(".global threatLevel\nthreatLevel:\n.incbin \"sprites/ThreatLevel.bin\"");

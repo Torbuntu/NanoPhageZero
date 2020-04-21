@@ -8,6 +8,14 @@ namespace Level{
         public:
             static void setMap(const uint8_t* map);
             
+            static void setMap();
+            
+            static void addLvl();
+            
+            static void setLvl(int lvl);
+            
+            static int getLvl();
+            
             static void init();
             
             static void update();
@@ -17,6 +25,8 @@ namespace Level{
         private:
         
             static inline Tilemap tilemap;
+            
+            static inline int level;
         
     };
 }

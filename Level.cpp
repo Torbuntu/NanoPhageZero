@@ -10,8 +10,32 @@ namespace Level{
         }
     }
     
+    void LevelManager::setMap(){
+        switch(level){
+            case 0:
+                LevelManager::setMap(lobby);
+                break;
+            case 1:
+                LevelManager::setMap(lvl1);
+                break;
+        }
+    }
+    
+    void LevelManager::addLvl(){
+        level++;
+    }
+    
+    void LevelManager::setLvl(int lvl){
+        level = lvl;
+    }
+    
+    int LevelManager::getLvl(){
+        return level;
+    }
+    
     void LevelManager::init(){
         tilemap.fillOutOfBounds = 255;
+        level = 0;
     }
     
     void LevelManager::update(){

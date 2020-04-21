@@ -180,6 +180,13 @@ public:
 	};
 };
 
+class SecurityDrone {
+public:
+    enum Animation : std::uint16_t {
+		idle = 0
+	};
+};
+
 class Sentinal {
 public:
     enum Animation : std::uint16_t {
@@ -213,6 +220,7 @@ extern const MinibotField minibotField;
 extern const ProgBar progBar;
 extern const ProgFill progFill;
 extern const Robot robot;
+extern const SecurityDrone securityDrone;
 extern const Sentinal sentinal;
 extern const ThreatLevel threatLevel;
 }

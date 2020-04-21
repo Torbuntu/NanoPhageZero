@@ -4,9 +4,9 @@
 #include "sprites.h"
 
 namespace Bruteforce {
-    void BruteHack::init(){
+    void BruteHack::init(int count){
         
-        bruteCount = 5;
+        bruteCount = count;
         select = 0;
         bruteSelect = B_A;
         bruteProgress = 0;
