@@ -636,6 +636,9 @@
 		},
 		"/sprites/MinibotField.h": {
 			"sdcard": false
+		},
+		"/maps/bruteIntro.tmx": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
