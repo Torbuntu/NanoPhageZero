@@ -11,6 +11,7 @@
 
 #include "Level.hpp"
 #include "Player.hpp"
+#include "HackLog.hpp"
 
 //TODO: move the  states into the Level class.
 enum State{
@@ -36,6 +37,8 @@ int main(){
     LevelManager::setMap(seqIntro);
     
     PlayerManager::init();
+    
+    HackLog::HackLogManager::init();
     
     int cameraX = 12, cameraY = 12, recolor = 0, tileX, tileY, oldX, oldY, droneX = 12, droneY = 12, d;
 
@@ -148,6 +151,7 @@ int main(){
                 if(prevState == ROBO_INTRO){
                     LevelManager::setMap(roboIntro);
                     getTile = lastTile;
+                    HackLog::HackLogManager::unlockLog(0);
                 }else {
                     LevelManager::setMap();
                     getTile = lastTile;
@@ -176,18 +180,6 @@ int main(){
                     SeqHack::shuffle(4);
                     prevState = state;
                     state = State::SEQUENCE;
-                }
-            }
-            if( tile == Brute){
-                
-            }
-            if( tile == Robo ){
-                if( Buttons::aBtn() ){
-                    RoboHack::init(4);
-                    LevelManager::setMap(minibotfield);
-                    getTile = minibotfieldEnum;
-                    prevState = state;
-                    state = State::ROBOPROGRAM;
                 }
             }
     

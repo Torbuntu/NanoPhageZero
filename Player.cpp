@@ -2,6 +2,8 @@
 #include <sprites.h>
 #include <Player.hpp>
 
+#include "HackLog.hpp"
+
 namespace Player{
     void PlayerManager::init(){
         w = player.getFrameWidth();
@@ -29,6 +31,10 @@ namespace Player{
     
     void PlayerManager::update(int& cameraX, int& cameraY){
         using Pokitto::Buttons;
+        
+        //tmp
+        using Pokitto::Display;
+        using HackLog::HackLogManager;
         // We don't poll for movement because it will be held down.
         if(!Buttons::rightBtn() && !Buttons::leftBtn() && !Buttons::upBtn() && !Buttons::downBtn()){
             switch(player.animation){
@@ -73,6 +79,10 @@ namespace Player{
                     player.play(hero, Hero::walkSouth);
                 }
             }
+        }
+        
+        if(Buttons::cBtn()){
+            Display::print(0, 32, HackLog::HackLogManager::getLog(0).c_str());
         }
     }
     

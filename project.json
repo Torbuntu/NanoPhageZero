@@ -690,6 +690,12 @@
 		},
 		"/sprites/Button.h": {
 			"sdcard": false
+		},
+		"/HackLog.hpp": {
+			"sdcard": false
+		},
+		"/HackLog.cpp": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
