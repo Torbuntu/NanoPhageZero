@@ -36,11 +36,11 @@ namespace RobotProgram{
         
             static void restart();
         
-            static inline Sprite icons, robo;
+            static inline Sprite icons, robo, keyIcon, buttonIcon;
             
             static inline int program[13];
             
-            static inline int length, roboX, roboY, inventory, step, speed, renderX, renderY;
+            static inline int length, roboX, roboY, step, speed, renderX, renderY, keyX, keyY, btnX, btnY;
             
             static inline RoboState roboState = RoboState::READY;
             
@@ -49,7 +49,7 @@ namespace RobotProgram{
             
             static inline int buttonsJustPressed = 0;
             
-            static inline bool end = false; 
+            static inline bool end = false, hasKey = false, unlocked = false; 
             
             static inline Tilemap tilemap;
     };

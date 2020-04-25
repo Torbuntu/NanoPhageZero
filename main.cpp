@@ -140,7 +140,7 @@ int main(){
             RoboHack::update();
             
             RoboHack::render();
-            LevelManager::render(-RoboHack::getRobotX(), -RoboHack::getRobotY());
+            LevelManager::render(0, 0);
 
             if(RoboHack::complete()){
                 doorLocked = false;
@@ -236,21 +236,11 @@ int main(){
             tileY = (cameraY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
             tile = getTile(tileX, tileY);
 
-            if( tile == Sequ) {
-                if( Buttons::aBtn() ){
-                    SeqHack::init();
-                    SeqHack::shuffle(4);
-                    prevState = state;
-                    state = State::SEQUENCE;
-                }
-            }
-            if( tile == Brute){
-                
-            }
             if( tile == Robo ){
                 if( Buttons::aBtn() ){
-                    RoboHack::init(4);
+                    RoboHack::init(13);
                     LevelManager::setMap(minibotfield);
+                    lastTile = getTile;
                     getTile = minibotfieldEnum;
                     prevState = state;
                     state = State::ROBOPROGRAM;

@@ -9,13 +9,38 @@
 namespace RobotProgram{
     
     void RoboHack::restart(){
-        roboX = -102;
-        roboY = -80;
+        roboX = 0;
+        roboY = 0;
         step = 0;
         
-        renderX = LCDWIDTH/2-8;
-        renderY = LCDHEIGHT/2-8;
-        inventory = 0;
+        keyX = rand()%5;
+        if(keyX == 0) keyX++;
+        
+        keyY = rand()%4;
+        if(keyY == 0) keyY++;
+        
+        btnX = rand()%5;
+        if(btnX == 0 || btnX == keyX) btnX++;
+        if(btnX == 6){
+            if(btnX == keyX){
+                btnX -= 2;
+            }else{
+                btnX--;
+            }
+        }
+        btnY = rand()%4;
+        if(btnY == 0 || btnY == keyY) btnY++;
+        if(btnY == 5){
+            if(btnY == keyY){
+                btnY -= 2;
+            }else{
+                btnY--;
+            }
+        }
+        
+        hasKey = false;
+        unlocked = false;
+        
         for(int i = 0; i < length; ++i){
             program[i] = 10;
         }
@@ -24,6 +49,9 @@ namespace RobotProgram{
     void RoboHack::init(int len){
         icons.play(hackIcons, HackIcons::aUp);
         robo.play(robot, Robot::idle);
+        keyIcon.play(key, Key::idle);
+        buttonIcon.play(button, Button::idle);
+        
         length = len;
         end = false;
         speed = 15;
@@ -45,11 +73,6 @@ namespace RobotProgram{
         Buttons::pollButtons();
         buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
         buttonsPreviousState = Buttons::buttons_state;
-        
-        int tileX = (roboX + renderX + PROJ_TILE_W/2) / PROJ_TILE_W;
-        int tileY = (roboY + renderY) / PROJ_TILE_H;
-        auto tile = minibotfieldEnum(tileX, tileY);
-        
         
         switch(roboState){
             case READY:
@@ -79,25 +102,42 @@ namespace RobotProgram{
                     speed = 15;
                     if(step < length){
                         switch(program[step]){
+                            case B_A:
+                                if(roboX == keyX && roboY == keyY){
+                                    hasKey = true;
+                                }
+                            break;
+                            case B_B:
+                                if(roboX == btnX && roboY == btnY){
+                                    unlocked = true;
+                                }else{
+                                    keyX = roboX;
+                                    keyY = roboY;
+                                    hasKey = false;
+                                }
+                            break;
                             case B_LEFT:
-                                roboX -= 16;
-                                if(roboX < -102){
-                                    roboX = -102;
+                                roboX--;
+                                if(roboX < 0){
+                                    roboX = 0;
                                 }
                             break;
                             case B_RIGHT:
-                                roboX += 16;
+                                roboX++;
+                                if(roboX > 5){
+                                    roboX = 5;
+                                }
                             break;
                             case B_UP:
-                                roboY -= 16;
-                                if(roboY < -80){
-                                    roboY = -80;
+                                roboY--;
+                                if(roboY < 0){
+                                    roboY = 0;
                                 }
                             break;
                             case B_DOWN:
-                                roboY += 16;
-                                if(roboY > 80){
-                                    roboY = 80;
+                                roboY++;
+                                if(roboY > 4){
+                                    roboY = 4;
                                 }
                             break;
                         }
@@ -112,9 +152,12 @@ namespace RobotProgram{
             
             break;
             case COMPLETE:
-                Display::print("> C to restart. B to end");
+                Display::print("> C to restart. ");
+                if(unlocked){
+                    Display::print("B to exit.");
+                }
                 if( buttonsJustPressed == B_B ){
-                    if(tile == Button){
+                    if(unlocked){
                         end = true;
                     }
                 }
@@ -130,6 +173,7 @@ namespace RobotProgram{
     }
     
     void RoboHack::render(){
+        using Pokitto::Display;
         for(int i = 0; i < length; ++i){
             switch(program[i]){
                 case B_A:
@@ -169,9 +213,18 @@ namespace RobotProgram{
             robo.draw(8+step*16, 32);
         }
         
+        if(!unlocked){
+            if(hasKey){
+                keyIcon.draw(16, 128);
+            }else{
+                keyIcon.draw(64 + keyX * 16, 48 + keyY * 16);
+            }
+        }
         
+        buttonIcon.draw(64 + btnX * 16, 48 + btnY * 16);
+        robo.draw(64 + roboX * 16, 48 + roboY * 16);
         
-        robo.draw(renderX, renderY);
+        Display::print(0, 160, "A pickup, B use. C skip.");
     }
     
     bool RoboHack::complete(){

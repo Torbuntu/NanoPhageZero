@@ -660,6 +660,36 @@
 		},
 		"/maps/lvl1.tmx": {
 			"sdcard": false
+		},
+		"/asepriteProjects/Key.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/Key.json": {
+			"sdcard": false
+		},
+		"/sprites/Key.png": {
+			"sdcard": false
+		},
+		"/sprites/Key.h": {
+			"sdcard": false
+		},
+		"/sprites/Key.bin": {
+			"sdcard": false
+		},
+		"/asepriteProjects/Button.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/Button.json": {
+			"sdcard": false
+		},
+		"/sprites/Button.png": {
+			"sdcard": false
+		},
+		"/sprites/Button.bin": {
+			"sdcard": false
+		},
+		"/sprites/Button.h": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
