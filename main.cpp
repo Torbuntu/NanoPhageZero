@@ -34,20 +34,19 @@ int main(){
     Display::loadRGBPalette(miloslav);
     
     LevelManager::init();
-    LevelManager::setMap(seqIntro);
+    LevelManager::setMap(seqIntro, seqIntroEnum);
     
     PlayerManager::init();
     
     HackLog::HackLogManager::init();
     
-    int cameraX = 12, cameraY = 12, recolor = 0, tileX, tileY, oldX, oldY, droneX = 12, droneY = 12, d;
+    int cameraX = 12, cameraY = 12, recolor = 0, tileX, tileY, oldX, oldY, introLevel = 0;
 
     Sprite hack, dor, botField, drone;
     
-    botField.play(minibotField, MinibotField::idle);
+    //botField.play(minibotField, MinibotField::idle);
     hack.play(hackme, Hackme::show);
     dor.play(door, Door::locked);
-    drone.play(securityDrone, SecurityDrone::idle);
     
     State state = State::SEQ_INTRO;
     State prevState = State::SEQ_INTRO;
@@ -149,7 +148,7 @@ int main(){
                 doorLocked = false;
                 dor.play(door, Door::unlocked);
                 if(prevState == ROBO_INTRO){
-                    LevelManager::setMap(roboIntro);
+                    LevelManager::setMap(roboIntro, roboIntroEnum);
                     getTile = lastTile;
                     HackLog::HackLogManager::unlockLog(0);
                 }else {
@@ -161,12 +160,16 @@ int main(){
         
             break;
         case SEQ_INTRO:
+        case ROBO_INTRO:
+        case BRUTE_INTRO:
             LevelManager::render(-cameraX, -cameraY);
             dor.draw(-cameraX+48, -cameraY);
+            
             PlayerManager::render();
             
             oldX = cameraX;
             oldY = cameraY;
+            
             PlayerManager::update(cameraX, cameraY);
             
             // get current tile
@@ -174,12 +177,34 @@ int main(){
             tileY = (cameraY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
             tile = getTile(tileX, tileY);
             
+            if(LevelManager::checkDrone(cameraX - PlayerManager::getX(), cameraY - PlayerManager::getY())){
+                cameraX = -60;
+                cameraY = -70;
+            }
+            
             if( tile == Sequ) {
                 if( Buttons::aBtn() ){
                     SeqHack::init();
                     SeqHack::shuffle(4);
                     prevState = state;
                     state = State::SEQUENCE;
+                }
+            }
+            if( tile == Robo ){
+                if( Buttons::aBtn() ){
+                    RoboHack::init(12);
+                    LevelManager::setMap(minibotfield, minibotfieldEnum);
+                    lastTile = getTile;
+                    getTile = minibotfieldEnum;
+                    prevState = state;
+                    state = State::ROBOPROGRAM;
+                }
+            }
+            if( tile == Brute){
+                if(Buttons::aBtn()){
+                    BruteHack::init(5);
+                    prevState = state;
+                    state = State::BRUTE_FORCE;
                 }
             }
     
@@ -197,151 +222,38 @@ int main(){
                     dor.play(door, Door::open);
                 }
             }
-            tileY = (cameraY + PlayerManager::getY() + 32 + PlayerManager::getH()) / PROJ_TILE_H;
+            tileY = (cameraY + PlayerManager::getY() + 30 + PlayerManager::getH()) / PROJ_TILE_H;
             tile = getTile(tileX, tileY);
             
             if(tile==Door){
-                LevelManager::setMap(roboIntro);
-                cameraX = -58;
+                introLevel++;
+                cameraX = -60;
                 cameraY = -70;
-                getTile = roboIntroEnum;
+                
+                if(introLevel == 1){
+                    LevelManager::setMap(roboIntro, roboIntroEnum);
+                    getTile = roboIntroEnum;
+                    state = State::ROBO_INTRO;
+                }
+                if(introLevel == 2){
+                    LevelManager::setMap(bruteIntro, bruteIntroEnum);
+                    getTile = bruteIntroEnum;
+                    state = State::BRUTE_INTRO;
+                }
+                if(introLevel == 3){
+                    LevelManager::setMap(lobby, lobbyEnum);
+                    getTile = lobbyEnum;
+                    state = State::EXPLORE;
+                    cameraX = 10;
+                    cameraY = 10;
+                }
+                
                 dor.play(door, Door::locked);
                 doorLocked = true;
-                state = State::ROBO_INTRO;
+                
             }
             
             break;
-        case ROBO_INTRO:
-            LevelManager::render(-cameraX, -cameraY);
-            dor.draw(-cameraX+48, -cameraY);
-            botField.draw(-cameraX+88, -cameraY+88);
-            
-            PlayerManager::render();
-            
-            oldX = cameraX;
-            oldY = cameraY;
-            
-            PlayerManager::update(cameraX, cameraY);
-            
-            // get current tile
-            tileX = (cameraX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
-            tileY = (cameraY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
-            tile = getTile(tileX, tileY);
-
-            if( tile == Robo ){
-                if( Buttons::aBtn() ){
-                    RoboHack::init(13);
-                    LevelManager::setMap(minibotfield);
-                    lastTile = getTile;
-                    getTile = minibotfieldEnum;
-                    prevState = state;
-                    state = State::ROBOPROGRAM;
-                }
-            }
-            
-            if( tile == Collide ){
-                cameraX = oldX;
-                cameraY = oldY;
-            }
-            
-            if( tile == Door ){
-                if(dor.animation == Door::locked){
-                    cameraX = oldX;
-                    cameraY = oldY;
-                    Display::print("The door is locked! Where is the control system?");
-                } else if(dor.animation == Door::unlocked){
-                    dor.play(door, Door::open);
-                }
-            }
-            
-            
-            tileY = (cameraY + PlayerManager::getY() + 32 + PlayerManager::getH()) / PROJ_TILE_H;
-            tile = getTile(tileX, tileY);
-            
-            if(tile==Door){
-                LevelManager::setMap(bruteIntro);
-                cameraX = -58;
-                cameraY = -70;
-                getTile = bruteIntroEnum;
-                dor.play(door, Door::locked);
-                doorLocked = true;
-                state = State::BRUTE_INTRO;
-            }
-            
-        break;
-        case BRUTE_INTRO:
-            LevelManager::render(-cameraX, -cameraY);
-            dor.draw(-cameraX+48, -cameraY);
-            
-            drone.draw(droneX - cameraX, droneY - cameraY);
-            
-            PlayerManager::render();
-            
-            oldX = cameraX;
-            oldY = cameraY;
-            
-            PlayerManager::update(cameraX, cameraY);
-            
-            // get current tile
-            tileX = (cameraX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
-            tileY = (cameraY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
-            tile = getTile(tileX, tileY);
-
-            if( tile == Brute){
-                if(Buttons::aBtn()){
-                    BruteHack::init(5);
-                    prevState = state;
-                    state = State::BRUTE_FORCE;
-                }
-            }
-            
-            if( tile == Collide ){
-                cameraX = oldX;
-                cameraY = oldY;
-            }
-            
-            if( tile == Door ){
-                if(dor.animation == Door::locked){
-                    cameraX = oldX;
-                    cameraY = oldY;
-                    Display::print("The door is locked! Where is the control system?");
-                } else if(dor.animation == Door::unlocked){
-                    dor.play(door, Door::open);
-                }
-            }
-            
-            if(doorLocked){
-                d = rand()%4;
-                switch(d){
-                    case 0:
-                        if(cameraX + droneX + 1 < 100)droneX++;
-                        break;
-                    case 1:
-                        if(cameraX + droneX - 1 > -100)droneX--;
-                        break;
-                    case 2:
-                        if(cameraY + droneY + 1 < 80)droneY++;
-                        break;
-                    case 3:
-                        if(cameraY + droneY - 1 > 80)droneY--;
-                        break;
-                }
-            }
-            
-            tileY = (cameraY + PlayerManager::getY() + 32 + PlayerManager::getH()) / PROJ_TILE_H;
-            tile = getTile(tileX, tileY);
-            
-            if(tile==Door){
-                LevelManager::setMap(lobby);
-                cameraX = 10;
-                cameraY = 10;
-                getTile = lobbyEnum;
-                dor.play(door, Door::locked);
-                doorLocked = true;
-                state = State::EXPLORE;
-            }
-        
-        break;
         case EXPLORE:
             LevelManager::render(-cameraX, -cameraY);
             
@@ -375,8 +287,8 @@ int main(){
             }
             if( tile == Robo ){
                 if( Buttons::aBtn() ){
-                    RoboHack::init(8);
-                    LevelManager::setMap(minibotfield);
+                    RoboHack::init(12);
+                    LevelManager::setMap(minibotfield, minibotfieldEnum);
                     lastTile = getTile;
                     getTile = minibotfieldEnum;
                     prevState = state;

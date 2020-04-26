@@ -2,11 +2,15 @@
 
 #include <Pokitto.h>
 #include <Tilemap.hpp>
+#include <sprites.h>
+#include <maps.h>
 
 namespace Level{
     class LevelManager{
         public:
-            static void setMap(const uint8_t* map);
+            using GetEnum = MapEnum (*)(uint32_t, uint32_t);
+            
+            static void setMap(const uint8_t* map, GetEnum num);
             
             static void setMap();
             
@@ -15,6 +19,10 @@ namespace Level{
             static void setLvl(int lvl);
             
             static int getLvl();
+            
+            static void setDroneState(bool active);
+            
+            static bool checkDrone(int playerX, int playerY);
             
             static void init();
             
@@ -26,7 +34,11 @@ namespace Level{
         
             static inline Tilemap tilemap;
             
-            static inline int level;
+            static inline int level, bfX, bfY, dX, dY;
+            
+            static inline Sprite botField, drone;
+            
+            static inline bool hasDrone, hasBotfield, droneActive;
         
     };
 }

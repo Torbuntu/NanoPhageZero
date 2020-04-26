@@ -197,7 +197,8 @@ public:
 class SecurityDrone {
 public:
     enum Animation : std::uint16_t {
-		idle = 0
+		active = 0,
+		inactive = 3
 	};
 };
 

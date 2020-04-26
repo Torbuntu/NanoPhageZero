@@ -1,7 +1,16 @@
 { "frames": [
    {
-    "filename": "SecurityDrone.aseprite",
+    "filename": "SecurityDrone 0.aseprite",
     "frame": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "SecurityDrone 1.aseprite",
+    "frame": { "x": 16, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
@@ -11,13 +20,14 @@
  ],
  "meta": {
   "app": "http://www.aseprite.org/",
-  "version": "1.2.17-x64",
+  "version": "1.2.18-x64",
   "image": "SecurityDrone.png",
   "format": "RGBA8888",
-  "size": { "w": 16, "h": 16 },
+  "size": { "w": 32, "h": 16 },
   "scale": "1",
   "frameTags": [
-   { "name": "idle", "from": 0, "to": 0, "direction": "forward" }
+   { "name": "active", "from": 0, "to": 0, "direction": "forward" },
+   { "name": "inactive", "from": 1, "to": 1, "direction": "forward" }
   ],
   "layers": [
    { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
