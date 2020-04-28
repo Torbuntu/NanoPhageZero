@@ -78,7 +78,7 @@ int main(){
             // tilemap.draw(-cameraX, -cameraY);
             LevelManager::render(-cameraX, -cameraY);
             
-            if(prevState == State::BRUTE_INTRO){
+            if(prevState != State::EXPLORE){
                 dor.draw(-cameraX+48, -cameraY);
             }else {
                 dor.draw(-cameraX+96, -cameraY+80);
@@ -91,23 +91,21 @@ int main(){
             BruteHack::render();
             
             if(BruteHack::complete()){
-                doorLocked = false;
-                dor.play(door, Door::unlocked);
                 state = prevState;
+                LevelManager::setDroneState(false);
             }
             
             if(BruteHack::fail()){
                 //lose
                 state = prevState;
-                doorLocked = true;
-                dor.play(door, Door::locked);
+                LevelManager::setDroneState(true);
             }
             
             break;
         case SEQUENCE:
             LevelManager::render(-cameraX, -cameraY);
             
-            if(prevState == State::SEQ_INTRO){
+            if(prevState != State::EXPLORE){
                 dor.draw(-cameraX+48, -cameraY);
             }else {
                 dor.draw(-cameraX+96, -cameraY+80);
@@ -145,8 +143,6 @@ int main(){
             LevelManager::render(0, 0);
 
             if(RoboHack::complete()){
-                doorLocked = false;
-                dor.play(door, Door::unlocked);
                 if(prevState == ROBO_INTRO){
                     LevelManager::setMap(roboIntro, roboIntroEnum);
                     getTile = lastTile;
@@ -177,7 +173,7 @@ int main(){
             tileY = (cameraY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
             tile = getTile(tileX, tileY);
             
-            if(LevelManager::checkDrone(cameraX - PlayerManager::getX(), cameraY - PlayerManager::getY())){
+            if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
                 cameraX = -60;
                 cameraY = -70;
             }

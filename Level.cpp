@@ -30,7 +30,6 @@ namespace Level{
                 }
             }
         }
-        
     }
 
     void LevelManager::setMap(){
@@ -58,6 +57,11 @@ namespace Level{
     
     void LevelManager::setDroneState(bool active){
         droneActive = active;
+        if(active){
+            drone.play(securityDrone, SecurityDrone::active);
+        }else {
+            drone.play(securityDrone, SecurityDrone::inactive);
+        }
     }
     
     bool LevelManager::checkDrone(int x, int y){
