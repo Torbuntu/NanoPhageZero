@@ -22,7 +22,6 @@ namespace Bruteforce {
         pBar.play(progBar, ProgBar::start);
         eFill.play(enemyProgFill, EnemyProgFill::play);
         pFill.play(progFill, ProgFill::play);
-        virus.play(enemyVirus, EnemyVirus::play);
         
         srand((unsigned int) time (NULL));
     }
@@ -125,7 +124,7 @@ namespace Bruteforce {
                 virus.draw(190, 130);
             break;
             case COMPLETE:
-                Display::print("> Press C to end.");
+                Display::print("> C exit.");
             break;
         }
            

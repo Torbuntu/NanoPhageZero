@@ -30,17 +30,19 @@ namespace RobotProgram{
             
             static void setRobotY(int y);
             
+            static void setIntro(bool tut);
+            
             
             
         private:
         
             static void restart();
         
-            static inline Sprite icons, robo, keyIcon, buttonIcon;
+            static inline Sprite icons, robo, keyIcon, buttonIcon, virus;
             
             static inline int program[13];
             
-            static inline int length, roboX, roboY, step, speed, renderX, renderY, keyX, keyY, btnX, btnY;
+            static inline int length, roboX, roboY, step, speed, renderX, renderY, keyX, keyY, btnX, btnY, vX, vY, vD, vS, keyInitX, keyInitY, vInitX, vInitY;
             
             static inline RoboState roboState = RoboState::READY;
             
@@ -49,9 +51,7 @@ namespace RobotProgram{
             
             static inline int buttonsJustPressed = 0;
             
-            static inline bool end = false, hasKey = false, unlocked = false; 
-            
-            static inline Tilemap tilemap;
+            static inline bool end = false, hasKey = false, unlocked = false, intro; 
     };
     
     

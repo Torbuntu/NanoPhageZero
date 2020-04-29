@@ -40,22 +40,27 @@ int main(){
     
     HackLog::HackLogManager::init();
     
-    int cameraX = 12, cameraY = 12, recolor = 0, tileX, tileY, oldX, oldY, introLevel = 0;
+    int cameraX = 12, cameraY = 12, recolor = 0, tileX, tileY, oldX, oldY, introLevel = 0, zx=30, zy=60, zc = 10, zys = 1, zxs = 1;
 
-    Sprite hack, dor, botField, drone;
+    Sprite hack, dor, botField, drone, keyIcon;//, nano, zero;
     
     //botField.play(minibotField, MinibotField::idle);
     hack.play(hackme, Hackme::show);
     dor.play(door, Door::locked);
+    keyIcon.play(key, Key::idle);
     
-    State state = State::SEQ_INTRO;
+    // nano.play(nanoPhage, NanoPhage::boom);
+    // zero.play(zeroTitle, ZeroTitle::idle);
+    
+    State state = State::INTRO;
     State prevState = State::SEQ_INTRO;
     
-    bool hacking = false, doorLocked = true;
+    bool hacking = false, doorLocked = true, hasKey = false;
     
     MapEnum tile;
     auto getTile = seqIntroEnum;
     auto lastTile = seqIntroEnum;
+    auto lastMap = seqIntro;
     
     
     while( Core::isRunning() ){
@@ -65,20 +70,31 @@ int main(){
         Display::setColor(7);//white
         switch(state){
         case INTRO:
+            // nano.draw(LCDWIDTH/2-nano.getFrameWidth()/2, 10);
+            // nano.onEndAnimation = [](Sprite *nano){nano->play(nanoPhage, NanoPhage::idle); }; 
+            // zero.draw(zx, zy);
+            // zc--;
+            // if(zc == 0) {
+            //     zc = 10;
+            //     zx+=zxs;
+            //     zy+=zys;
+            //     if(zy > 65 || zy < 60) zys = -zys;
+            //     if(zx > 35 || zx < 30) zxs = -zxs;
+            // }
             
             if( Buttons::cBtn() ){
                 state = State::SEQ_INTRO;
             }
             
             Display::setColor(7);
-            Display::print("C to start.");
+            Display::print(30, 140, "C to start.");
             
             break;
         case BRUTE_FORCE:
             // tilemap.draw(-cameraX, -cameraY);
             LevelManager::render(-cameraX, -cameraY);
             
-            if(prevState != State::EXPLORE){
+            if(prevState != EXPLORE){
                 dor.draw(-cameraX+48, -cameraY);
             }else {
                 dor.draw(-cameraX+96, -cameraY+80);
@@ -105,7 +121,7 @@ int main(){
         case SEQUENCE:
             LevelManager::render(-cameraX, -cameraY);
             
-            if(prevState != State::EXPLORE){
+            if(prevState != EXPLORE){
                 dor.draw(-cameraX+48, -cameraY);
             }else {
                 dor.draw(-cameraX+96, -cameraY+80);
@@ -143,8 +159,9 @@ int main(){
             LevelManager::render(0, 0);
 
             if(RoboHack::complete()){
-                if(prevState == ROBO_INTRO){
-                    LevelManager::setMap(roboIntro, roboIntroEnum);
+                hasKey = true;
+                if(prevState != EXPLORE){
+                    LevelManager::setMap(lastMap, lastTile);
                     getTile = lastTile;
                     HackLog::HackLogManager::unlockLog(0);
                 }else {
@@ -168,6 +185,10 @@ int main(){
             
             PlayerManager::update(cameraX, cameraY);
             
+            if(hasKey){
+                keyIcon.draw(16, 128);
+            }
+            
             // get current tile
             tileX = (cameraX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
             tileY = (cameraY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
@@ -180,15 +201,20 @@ int main(){
             
             if( tile == Sequ) {
                 if( Buttons::aBtn() ){
-                    SeqHack::init();
-                    SeqHack::shuffle(4);
-                    prevState = state;
-                    state = State::SEQUENCE;
+                    if((introLevel != 0 && hasKey) || introLevel == 0){
+                        SeqHack::init();
+                        SeqHack::shuffle(4);
+                        prevState = state;
+                        state = State::SEQUENCE;
+                    }else{
+                        Display::print("I need a keycard to access this terminal.");   
+                    }
                 }
             }
             if( tile == Robo ){
                 if( Buttons::aBtn() ){
                     RoboHack::init(12);
+                    RoboHack::setIntro(false);
                     LevelManager::setMap(minibotfield, minibotfieldEnum);
                     lastTile = getTile;
                     getTile = minibotfieldEnum;
@@ -225,19 +251,25 @@ int main(){
                 introLevel++;
                 cameraX = -60;
                 cameraY = -70;
-                
+                hasKey = false;
                 if(introLevel == 1){
+                    lastMap = roboIntro;
                     LevelManager::setMap(roboIntro, roboIntroEnum);
                     getTile = roboIntroEnum;
                     state = State::ROBO_INTRO;
                 }
                 if(introLevel == 2){
+                    lastMap = bruteIntro;
                     LevelManager::setMap(bruteIntro, bruteIntroEnum);
+                    LevelManager::setDroneState(true);
                     getTile = bruteIntroEnum;
                     state = State::BRUTE_INTRO;
+                    
                 }
                 if(introLevel == 3){
+                    lastMap = lobby;
                     LevelManager::setMap(lobby, lobbyEnum);
+                    LevelManager::setDroneState(true);
                     getTile = lobbyEnum;
                     state = State::EXPLORE;
                     cameraX = 10;
@@ -246,7 +278,6 @@ int main(){
                 
                 dor.play(door, Door::locked);
                 doorLocked = true;
-                
             }
             
             break;
@@ -262,16 +293,29 @@ int main(){
             PlayerManager::update(cameraX, cameraY);
             PlayerManager::render();
             
+            if(hasKey){
+                keyIcon.draw(16, 128);
+            }
+            
             tileX = (cameraX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
             tileY = (cameraY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
             tile = getTile(tileX, tileY);
             
+            if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
+                cameraX = 10;
+                cameraY = 10;
+            }
+            
             if( tile == Sequ) {
                 if( Buttons::aBtn() ){
-                    SeqHack::init();
-                    SeqHack::shuffle(8);
-                    prevState = state;
-                    state = State::SEQUENCE;
+                    if(hasKey){
+                        SeqHack::init();
+                        SeqHack::shuffle(8);
+                        prevState = state;
+                        state = State::SEQUENCE;
+                    }else {
+                        Display::print("I need a keycard to access this terminal.");
+                    }
                 }
             }
             if( tile == Brute){
@@ -284,6 +328,7 @@ int main(){
             if( tile == Robo ){
                 if( Buttons::aBtn() ){
                     RoboHack::init(12);
+                    RoboHack::setIntro(false);
                     LevelManager::setMap(minibotfield, minibotfieldEnum);
                     lastTile = getTile;
                     getTile = minibotfieldEnum;
@@ -308,6 +353,7 @@ int main(){
             }
             
             if( tile == Lift ){
+                hasKey = false;
                 prevState = state;
                 state = State::LIFT;
             }
@@ -328,6 +374,7 @@ int main(){
                 dor.play(door, Door::locked);
                 
                 LevelManager::setMap();
+                LevelManager::setDroneState(true);
                 cameraX = 10;
                 cameraY = 10;
                 state = State::EXPLORE;

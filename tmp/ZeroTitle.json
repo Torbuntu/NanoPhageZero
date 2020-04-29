@@ -1,0 +1,47 @@
+{ "frames": [
+   {
+    "filename": "ZeroTitle 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 156, "h": 54 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 156, "h": 54 },
+    "sourceSize": { "w": 156, "h": 54 },
+    "duration": 100
+   },
+   {
+    "filename": "ZeroTitle 1.aseprite",
+    "frame": { "x": 156, "y": 0, "w": 156, "h": 54 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 156, "h": 54 },
+    "sourceSize": { "w": 156, "h": 54 },
+    "duration": 100
+   },
+   {
+    "filename": "ZeroTitle 2.aseprite",
+    "frame": { "x": 312, "y": 0, "w": 156, "h": 54 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 156, "h": 54 },
+    "sourceSize": { "w": 156, "h": 54 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.18-x64",
+  "image": "ZeroTitle.png",
+  "format": "RGBA8888",
+  "size": { "w": 468, "h": 54 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "idle", "from": 0, "to": 2, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" },
+   { "name": "Layer 2", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

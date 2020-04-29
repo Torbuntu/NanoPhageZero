@@ -171,7 +171,7 @@ namespace Sequence {
             break;
             
             case COMPLETE:
-                Display::print("> Press C to end.");
+                Display::print("> C exit.");
             break;
         }
         

@@ -3,8 +3,7 @@
 #include <Tilemap.hpp>
 #include <ButtonMaps.h>
 #include "sprites.h"
-#include "Minigames/RobotProgram.hpp"
-#include "maps.h"
+#include "RobotProgram.hpp"
 
 namespace RobotProgram{
     
@@ -12,25 +11,26 @@ namespace RobotProgram{
         roboX = 0;
         roboY = 0;
         step = 0;
+        srand((unsigned int) time (NULL));
         
-        keyX = rand()%5;
+        keyX = rand()%6;
         if(keyX == 0) keyX++;
         
-        keyY = rand()%4;
+        keyY = rand()%5;
         if(keyY == 0) keyY++;
         
-        btnX = rand()%5;
+        btnX = rand()%6;
         if(btnX == 0 || btnX == keyX) btnX++;
-        if(btnX == 6){
+        if(btnX == 5){
             if(btnX == keyX){
                 btnX -= 2;
             }else{
                 btnX--;
             }
         }
-        btnY = rand()%4;
+        btnY = rand()%5;
         if(btnY == 0 || btnY == keyY) btnY++;
-        if(btnY == 5){
+        if(btnY == 4){
             if(btnY == keyY){
                 btnY -= 2;
             }else{
@@ -38,8 +38,37 @@ namespace RobotProgram{
             }
         }
         
+        vX = rand()%6;
+        if(vX == 0 || vX == keyX) vX++;
+        if(vX == 5){
+            if(vX == keyX){
+                vX -= 2;
+            }else{
+                vX--;
+            }
+        }
+        vY = rand()%5;
+        if(vY == 0 || vY == keyY) vY++;
+        if(vY == 4){
+            if(vY == keyY){
+                vY -= 2;
+            }else{
+                vY--;
+            }
+        }
+        
+        vD = rand()%2;
+        vS = 1;
+        
+        vInitX = vX;
+        vInitY = vY;
+        
+        
         hasKey = false;
         unlocked = false;
+        
+        keyInitX = keyX;
+        keyInitY = keyY;
         
         for(int i = 0; i < length; ++i){
             program[i] = 10;
@@ -51,17 +80,12 @@ namespace RobotProgram{
         robo.play(robot, Robot::idle);
         keyIcon.play(key, Key::idle);
         buttonIcon.play(button, Button::idle);
+        virus.play(enemyVirus, EnemyVirus::play);
         
         length = len;
         end = false;
         speed = 15;
-        
-        //0 = 14, 1 = 11, suburb+2 = mapPixelData
-        tilemap.set(minibotfield[0], minibotfield[1], minibotfield+2);
-        for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
-            tilemap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
-        }
-        
+
         RoboHack::restart();
         roboState = RoboState::READY;
     }
@@ -73,6 +97,54 @@ namespace RobotProgram{
         Buttons::pollButtons();
         buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
         buttonsPreviousState = Buttons::buttons_state;
+        
+        if(!intro && roboState == RoboState::RUNNING){
+            if(speed == 1){
+                if(vD == 0){
+                    vX += vS;
+                    if(vX ==5 || vX == 0){
+                        vS = -vS;
+                    }
+                }else {
+                    vY += vS;
+                    if(vY == 4 || vY == 0){
+                        vS = -vS;
+                    }
+                }
+            }
+
+            if(vX == keyX && vY == keyY){
+                if(vD == 0){
+                    if(vS > 0){
+                        keyX++;
+                    }else {
+                        keyX--;
+                    }
+                }else {
+                    if(vS > 0){
+                        keyY++;
+                    }else {
+                        keyY--;
+                    }
+                }
+            }
+            
+            if(vX == roboX && vY == roboY){
+                if(vD == 0){
+                    if(vS > 0){
+                        roboX++;
+                    }else {
+                        roboX--;
+                    }
+                }else {
+                    if(vS > 0){
+                        roboY++;
+                    }else {
+                        roboY--;
+                    }
+                }
+            }
+        }
         
         switch(roboState){
             case READY:
@@ -152,9 +224,9 @@ namespace RobotProgram{
             
             break;
             case COMPLETE:
-                Display::print("> C to restart. ");
+                Display::print("> C restart. ");
                 if(unlocked){
-                    Display::print("B to exit.");
+                    Display::print("B exit.");
                 }
                 if( buttonsJustPressed == B_B ){
                     if(unlocked){
@@ -163,7 +235,22 @@ namespace RobotProgram{
                 }
                 
                 if( buttonsJustPressed == B_C){
-                    RoboHack::restart();
+                    // RoboHack::restart();
+                    roboX = 0;
+                    roboY = 0;
+                    step = 0;
+                    
+                    vX = 5;
+                    vY = 4;
+                    
+                    keyX = keyInitX;
+                    keyY = keyInitY;
+                    
+                    vX = vInitX;
+                    vY = vInitY;
+                    
+                    hasKey = false;
+                    unlocked = false;
                     roboState = RoboState::PROGRAMMING;
                 }
             break;
@@ -223,6 +310,9 @@ namespace RobotProgram{
         
         buttonIcon.draw(64 + btnX * 16, 48 + btnY * 16);
         robo.draw(64 + roboX * 16, 48 + roboY * 16);
+        if(!intro){
+            virus.draw(64 + vX * 16, 48 + vY * 16);
+        }
         
         Display::print(0, 160, "A pickup, B use. C skip.");
     }
@@ -245,6 +335,10 @@ namespace RobotProgram{
     
     void RoboHack::setRobotY(int y){
         roboY = y;
+    }
+    
+    void RoboHack::setIntro(bool tut){
+        intro = tut;
     }
     
 }

@@ -696,6 +696,69 @@
 		},
 		"/HackLog.cpp": {
 			"sdcard": false
+		},
+		"/asepriteProjects/NanoPhage.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/NanoPhage.json": {
+			"sdcard": false
+		},
+		"/sprites/NanoPhage.png": {
+			"sdcard": false
+		},
+		"/sprites/NanoPhage.bin": {
+			"sdcard": false
+		},
+		"/sprites/NanoPhage.h": {
+			"sdcard": false
+		},
+		"/asepriteProjects/ZeroTitle.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/ZeroTitle.json": {
+			"sdcard": false
+		},
+		"/sprites/ZeroTitle.png": {
+			"sdcard": false
+		},
+		"/sprites/ZeroTitle.h": {
+			"sdcard": false
+		},
+		"/sprites/ZeroTitle.bin": {
+			"sdcard": false
+		},
+		"/tmp": {
+			"sdcard": false
+		},
+		"/tmp/NanoPhage.bin": {
+			"sdcard": false
+		},
+		"/tmp/NanoPhage.h": {
+			"sdcard": false
+		},
+		"/tmp/NanoPhage.json": {
+			"sdcard": false
+		},
+		"/tmp/NanoPhage.png": {
+			"sdcard": false
+		},
+		"/tmp/ZeroTitle.bin": {
+			"sdcard": false
+		},
+		"/tmp/ZeroTitle.h": {
+			"sdcard": false
+		},
+		"/tmp/ZeroTitle.json": {
+			"sdcard": false
+		},
+		"/tmp/ZeroTitle.png": {
+			"sdcard": false
+		},
+		"/maps/minibotfield.tmx.NCsoGB": {
+			"sdcard": false
+		},
+		"/maps/lvl2.tmx": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

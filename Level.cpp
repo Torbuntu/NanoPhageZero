@@ -13,7 +13,6 @@ namespace Level{
         hasBotfield = false;
         hasDrone = false;
         
-        drone.play(securityDrone, SecurityDrone::active);
         for(int x = 0; x < 14; ++x){
             for(int y = 0; y < 11; ++y){
                 auto tile = num(x,y);
@@ -21,7 +20,6 @@ namespace Level{
                     dX = x * POK_TILE_W;
                     dY = y * POK_TILE_H;
                     hasDrone = true;
-                    droneActive = true;
                 }
                 if(tile == Botfield ){
                     bfX = x * POK_TILE_W + 8;
@@ -39,6 +37,9 @@ namespace Level{
                 break;
             case 1:
                 LevelManager::setMap(lvl1, lvl1Enum);
+                break;
+            case 2:
+                LevelManager::setMap(lvl2, lvl2Enum);
                 break;
         }
     }
