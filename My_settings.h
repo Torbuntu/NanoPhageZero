@@ -119,3 +119,5 @@
 // 2-tiles-per-byte (16 tiles maximum) format.
 // Optional. Can be 16 or 256. Default is 16.
 #define MAX_TILE_COUNT 256
+
+#define TASUI

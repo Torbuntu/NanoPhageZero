@@ -2,6 +2,8 @@
 #include "ButtonMaps.h"
 #include <Pokitto.h>
 #include "sprites.h"
+#include <tasui>
+#include <puits_UltimateUtopia.h>
 
 namespace Bruteforce {
     void BruteHack::init(int count){
@@ -100,6 +102,7 @@ namespace Bruteforce {
     
     void BruteHack::render(){
         using Pokitto::Display;
+        using Pokitto::UI;
         
         switch(brutState){
             case READY:

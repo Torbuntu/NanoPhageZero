@@ -16,6 +16,9 @@
 #include "DoorHiss.h"
 #include "Denied.h"
 
+#include <tasui>
+#include <puits_UltimateUtopia.h>
+
 //TODO: move the  states into the Level class.
 enum State{
     INTRO, EXPLORE, LIFT,
@@ -28,6 +31,7 @@ int main(){
     using Pokitto::Display;
     using Pokitto::Buttons;
     using Pokitto::Sound;
+    using Pokitto::UI;
     using Sequence::SeqHack;
     using Bruteforce::BruteHack;
     using RobotProgram::RoboHack;
@@ -44,7 +48,7 @@ int main(){
     
     HackLog::HackLogManager::init();
     
-    int cameraX = 12, cameraY = 12, recolor = 0, tileX, tileY, oldX, oldY, introLevel = 0, zx=30, zy=60, zc = 10, zys = 1, zxs = 1;
+    int cameraX = 12, cameraY = 12, recolor = 0, tileX, tileY, oldX, oldY, introLevel = 0, zx=30, zy=60, zc = 10, zys = 1, zxs = 1, introProg = 0;
 
     Sprite hack, dor, botField, drone, keyIcon;//, nano, zero;
     
@@ -66,6 +70,12 @@ int main(){
     auto lastMap = seqIntro;
     
     
+      // NEW - Select the tileset.
+    UI::setTilesetImage(puits::UltimateUtopia::tileSet);
+    // NEW - Show the Tilemap, the Sprites, then the UI.
+    UI::showTileMapSpritesUI();
+    
+    
     while( Core::isRunning() ){
         if( !Core::update() ) {
             continue;
@@ -73,6 +83,7 @@ int main(){
         Display::setColor(7);//white
         switch(state){
         case INTRO:
+            UI::drawGauge(5, 25, 16, introProg, 100);
             // nano.draw(LCDWIDTH/2-nano.getFrameWidth()/2, 10);
             // nano.onEndAnimation = [](Sprite *nano){nano->play(nanoPhage, NanoPhage::idle); }; 
             // zero.draw(zx, zy);
@@ -86,7 +97,11 @@ int main(){
             // }
             
             if( Buttons::cBtn() ){
-                state = State::SEQ_INTRO;
+                introProg++;
+                if(introProg == 100){
+                    UI::clear();
+                    state = State::SEQ_INTRO;
+                }
             }
             
             Display::setColor(7);
