@@ -21,7 +21,7 @@ namespace RobotProgram{
         
         btnX = rand()%6;
         if(btnX == 0 || btnX == keyX) btnX++;
-        if(btnX == 5){
+        if(btnX >= 5){
             if(btnX == keyX){
                 btnX -= 2;
             }else{
@@ -30,7 +30,7 @@ namespace RobotProgram{
         }
         btnY = rand()%5;
         if(btnY == 0 || btnY == keyY) btnY++;
-        if(btnY == 4){
+        if(btnY >= 4){
             if(btnY == keyY){
                 btnY -= 2;
             }else{
@@ -40,7 +40,7 @@ namespace RobotProgram{
         
         vX = rand()%6;
         if(vX == 0 || vX == keyX) vX++;
-        if(vX == 5){
+        if(vX >= 5){
             if(vX == keyX){
                 vX -= 2;
             }else{
@@ -49,7 +49,7 @@ namespace RobotProgram{
         }
         vY = rand()%5;
         if(vY == 0 || vY == keyY) vY++;
-        if(vY == 4){
+        if(vY >= 4){
             if(vY == keyY){
                 vY -= 2;
             }else{
@@ -297,7 +297,7 @@ namespace RobotProgram{
             }
         }
         if(roboState == RoboState::RUNNING){
-            robo.draw(8+step*16, 32);
+            robo.draw(2+step*16, 32);
         }
         
         if(!unlocked){

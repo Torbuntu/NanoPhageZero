@@ -13,6 +13,9 @@
 #include "Player.hpp"
 #include "HackLog.hpp"
 
+#include "DoorHiss.h"
+#include "Denied.h"
+
 //TODO: move the  states into the Level class.
 enum State{
     INTRO, EXPLORE, LIFT,
@@ -24,6 +27,7 @@ int main(){
     using Pokitto::Core;
     using Pokitto::Display;
     using Pokitto::Buttons;
+    using Pokitto::Sound;
     using Sequence::SeqHack;
     using Bruteforce::BruteHack;
     using RobotProgram::RoboHack;
@@ -44,7 +48,6 @@ int main(){
 
     Sprite hack, dor, botField, drone, keyIcon;//, nano, zero;
     
-    //botField.play(minibotField, MinibotField::idle);
     hack.play(hackme, Hackme::show);
     dor.play(door, Door::locked);
     keyIcon.play(key, Key::idle);
@@ -91,7 +94,6 @@ int main(){
             
             break;
         case BRUTE_FORCE:
-            // tilemap.draw(-cameraX, -cameraY);
             LevelManager::render(-cameraX, -cameraY);
             
             if(prevState != EXPLORE){
@@ -213,7 +215,7 @@ int main(){
             }
             if( tile == Robo ){
                 if( Buttons::aBtn() ){
-                    RoboHack::init(12);
+                    RoboHack::init(13);
                     RoboHack::setIntro(false);
                     LevelManager::setMap(minibotfield, minibotfieldEnum);
                     lastTile = getTile;
@@ -239,8 +241,10 @@ int main(){
                 if(dor.animation == Door::locked){
                     cameraX = oldX;
                     cameraY = oldY;
+                    Sound::playSFX(Denied, sizeof(Denied));
                     Display::print("The door is locked! Where is the control system?");
                 } else if(dor.animation == Door::unlocked){
+                    Sound::playSFX(DoorHiss, sizeof(DoorHiss));
                     dor.play(door, Door::open);
                 }
             }
@@ -327,7 +331,7 @@ int main(){
             }
             if( tile == Robo ){
                 if( Buttons::aBtn() ){
-                    RoboHack::init(12);
+                    RoboHack::init(13);
                     RoboHack::setIntro(false);
                     LevelManager::setMap(minibotfield, minibotfieldEnum);
                     lastTile = getTile;
@@ -348,6 +352,7 @@ int main(){
                     cameraY = oldY;
                     Display::print("The door is locked! Where is the control system?");
                 } else if(dor.animation == Door::unlocked){
+                    
                     dor.play(door, Door::open);
                 }
             }

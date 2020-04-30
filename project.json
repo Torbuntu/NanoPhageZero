@@ -759,6 +759,24 @@
 		},
 		"/maps/lvl2.tmx": {
 			"sdcard": false
+		},
+		"/doorHiss.wav": {
+			"sdcard": false
+		},
+		"/doorHiss.h": {
+			"sdcard": false
+		},
+		"/Denied.wav": {
+			"sdcard": false
+		},
+		"/DoorHiss.wav": {
+			"sdcard": false
+		},
+		"/DoorHiss.h": {
+			"sdcard": false
+		},
+		"/Denied.h": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
