@@ -50,6 +50,6 @@ namespace Sequence {
             
             static inline int buttonsJustPressed = 0;
             
-            static inline Sprite icons, tLevel, sent, pBar, pFill, virus;
+            static inline Sprite icons, tLevel, sent, virus;
     };
 }

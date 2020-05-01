@@ -1,8 +1,9 @@
-#include "Minigames/Sequence.hpp"
-#include "ButtonMaps.h"
+#include "src/Minigames/Sequence.hpp"
+#include "src/ButtonMaps.h"
 #include <Pokitto.h>
 #include "sprites.h"
-
+#include <tasui>
+#include <puits_UltimateUtopia.h>
 
 namespace Sequence {
     void SeqHack::shuffle(int size) {
@@ -51,17 +52,13 @@ namespace Sequence {
         icons.play(hackIcons, HackIcons::bUp);
         tLevel.play(threatLevel, ThreatLevel::zero);
         sent.play(sentinal, Sentinal::scanning);
-        pBar.play(progBar, ProgBar::start);
-        pFill.play(progFill, ProgFill::play);
         tLevel.play(threatLevel, ThreatLevel::zero);
         
         select = 0;
         threat = 0;
         
         end = false;
-        
         seqState = SeqState::READY;
-        
     }
     
     void SeqHack::update() {
@@ -112,7 +109,7 @@ namespace Sequence {
                 }
                 break;
             case COMPLETE:
-                if(buttonsJustPressed == B_C){
+                if(buttonsJustPressed == B_B){
                     end = true;
                 }
                 break;
@@ -130,6 +127,7 @@ namespace Sequence {
     // TODO: Don't worry too much about ugly prog bar. Will replace with TASUI Gauge
     void SeqHack::render(){
         using Pokitto::Display;
+        using Pokitto::UI;
         
         switch(seqState){
             case READY:
@@ -162,16 +160,16 @@ namespace Sequence {
                     }
                     icons.draw(8 + x * 16, 32);
                 }
-                pBar.draw(10, 10);
-                for(int i = 0; i < select * 2; ++i){
-                    pFill.draw(14 + i * 15, 14);
-                }
                 sent.draw(200, 50);
                 tLevel.draw(200, 70);
+                
+                UI::drawGauge(1, 34, 2, select, seqSize);
+                
             break;
             
             case COMPLETE:
-                Display::print("> C exit.");
+                UI::drawGauge(1, 34, 2, select, seqSize);
+                Display::print("> B exit.");
             break;
         }
         

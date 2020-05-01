@@ -5,25 +5,35 @@
 #include "sprites.h"
 #include "maps.h"
 
-#include "Minigames/Sequence.hpp"
-#include "Minigames/Bruteforce.hpp"
-#include "Minigames/RobotProgram.hpp"
+#include "src/Minigames/Sequence.hpp"
+#include "src/Minigames/Bruteforce.hpp"
+#include "src/Minigames/RobotProgram.hpp"
 
-#include "Level.hpp"
-#include "Player.hpp"
-#include "HackLog.hpp"
+#include "src/Level.hpp"
+#include "src/Player.hpp"
+#include "src/HackLog.hpp"
 
-#include "DoorHiss.h"
-#include "Denied.h"
+#include "audio/DoorHiss.h"
+#include "audio/Denied.h"
+#include "audio/Comp.h"
+#include "audio/Unlock.h"
 
 #include <tasui>
 #include <puits_UltimateUtopia.h>
 
-//TODO: move the  states into the Level class.
 enum State{
     INTRO, EXPLORE, LIFT,
     BRUTE_FORCE, SEQUENCE, ROBOPROGRAM,
-    SEQ_INTRO, ROBO_INTRO, BRUTE_INTRO
+    SEQ_INTRO, ROBO_INTRO, BRUTE_INTRO,
+    HACK_LOG
+};
+
+struct UIVariants{
+    static constexpr unsigned standard = 0;
+    static constexpr unsigned blackBG = 8;
+    static constexpr unsigned halfBlackBG = 16;
+    static constexpr unsigned red = 24;
+    static constexpr unsigned green = 32;
 };
 
 int main(){
@@ -37,6 +47,8 @@ int main(){
     using RobotProgram::RoboHack;
     using Level::LevelManager;
     using Player::PlayerManager;
+    
+    
     
     Core::begin();
     Display::loadRGBPalette(miloslav);
@@ -69,18 +81,39 @@ int main(){
     auto lastTile = seqIntroEnum;
     auto lastMap = seqIntro;
     
+    char* message = "";
+    bool displayMessage = false;
     
-      // NEW - Select the tileset.
+    
+    // NEW - Select the tileset.
     UI::setTilesetImage(puits::UltimateUtopia::tileSet);
     // NEW - Show the Tilemap, the Sprites, then the UI.
     UI::showTileMapSpritesUI();
+    int messageX = 2, messageY = 24;
     
     
     while( Core::isRunning() ){
         if( !Core::update() ) {
             continue;
         }
-        Display::setColor(7);//white
+        // 7 == white;
+        Display::setColor(7);
+        
+        //display global message
+        if(displayMessage){
+            UI::clear();
+            UI::drawBox(messageX, messageY, 32, messageY + 4);
+            UI::setCursorBoundingBox(messageX + 1, messageY + 1, 32 - 1, messageY + 4 - 1);
+            UI::setCursor(messageX + 1, messageY + 1);
+            UI::setCursorDelta(UIVariants::standard);
+            UI::printString(message);
+            if(Buttons::cBtn()){
+                displayMessage = false;
+                UI::clear();
+            }
+        }
+        
+        
         switch(state){
         case INTRO:
             UI::drawGauge(5, 25, 16, introProg, 100);
@@ -124,6 +157,8 @@ int main(){
             BruteHack::render();
             
             if(BruteHack::complete()){
+                message = "That sentry shold be inactive now.";
+                displayMessage = true;
                 state = prevState;
                 LevelManager::setDroneState(false);
             }
@@ -152,17 +187,25 @@ int main(){
             
             SeqHack::update();
             
-            if(SeqHack::fail()){
-                //lose
-                state = prevState;
-                doorLocked = true;
-                dor.play(door, Door::locked);
-            }
-
             if(SeqHack::complete()){
+                UI::clear();
+                message = "The door is unlocked!";
+                displayMessage = true;
                 doorLocked = false;
+                Sound::playSFX(Unlock, sizeof(Unlock));
                 dor.play(door, Door::unlocked);
                 state = prevState;
+            }
+            
+            if(SeqHack::fail()){
+                //lose
+                UI::clear();
+                state = prevState;
+                doorLocked = true;
+                displayMessage = true;
+                message = "Ugh! I need to be careful. \nThe computer took my keycard!";
+                hasKey = false;
+                dor.play(door, Door::locked);
             }
             
             SeqHack::render();
@@ -177,6 +220,8 @@ int main(){
 
             if(RoboHack::complete()){
                 hasKey = true;
+                message = "I got the keycard!";
+                displayMessage = true;
                 if(prevState != EXPLORE){
                     LevelManager::setMap(lastMap, lastTile);
                     getTile = lastTile;
@@ -214,22 +259,30 @@ int main(){
             if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
                 cameraX = -60;
                 cameraY = -70;
+                message = "Arg! The sentry returned me to the exit.";
+                displayMessage = true;
             }
             
             if( tile == Sequ) {
                 if( Buttons::aBtn() ){
                     if((introLevel != 0 && hasKey) || introLevel == 0){
+                        Sound::playSFX(Comp, sizeof(Comp));
                         SeqHack::init();
                         SeqHack::shuffle(4);
                         prevState = state;
                         state = State::SEQUENCE;
                     }else{
-                        Display::print("I need a keycard to access this terminal.");   
+                        Sound::playSFX(Denied, sizeof(Denied));
+                        message = "I need a keycard to access this terminal.";
+                        displayMessage = true;
                     }
                 }
             }
             if( tile == Robo ){
                 if( Buttons::aBtn() ){
+                    UI::clear();
+                    displayMessage = false;
+                    Sound::playSFX(Comp, sizeof(Comp));
                     RoboHack::init(13);
                     RoboHack::setIntro(false);
                     LevelManager::setMap(minibotfield, minibotfieldEnum);
@@ -241,6 +294,7 @@ int main(){
             }
             if( tile == Brute){
                 if(Buttons::aBtn()){
+                    Sound::playSFX(Comp, sizeof(Comp));
                     BruteHack::init(5);
                     prevState = state;
                     state = State::BRUTE_FORCE;
@@ -257,7 +311,8 @@ int main(){
                     cameraX = oldX;
                     cameraY = oldY;
                     Sound::playSFX(Denied, sizeof(Denied));
-                    Display::print("The door is locked! Where is the control system?");
+                    message = "The door is locked! Where is the control system?";
+                    displayMessage = true;
                 } else if(dor.animation == Door::unlocked){
                     Sound::playSFX(DoorHiss, sizeof(DoorHiss));
                     dor.play(door, Door::open);
@@ -268,6 +323,8 @@ int main(){
             
             if(tile==Door){
                 introLevel++;
+                displayMessage = false;
+                UI::clear();
                 cameraX = -60;
                 cameraY = -70;
                 hasKey = false;
@@ -312,6 +369,11 @@ int main(){
             PlayerManager::update(cameraX, cameraY);
             PlayerManager::render();
             
+            if(Buttons::cBtn()){
+                prevState = state;
+                state = HACK_LOG;
+            }
+            
             if(hasKey){
                 keyIcon.draw(16, 128);
             }
@@ -323,22 +385,28 @@ int main(){
             if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
                 cameraX = 10;
                 cameraY = 10;
+                message = "Arg!\nThe sentry returned me to the exit.";
+                displayMessage = true;
             }
             
             if( tile == Sequ) {
                 if( Buttons::aBtn() ){
                     if(hasKey){
+                        Sound::playSFX(Comp, sizeof(Comp));
                         SeqHack::init();
                         SeqHack::shuffle(8);
                         prevState = state;
                         state = State::SEQUENCE;
                     }else {
-                        Display::print("I need a keycard to access this terminal.");
+                        Sound::playSFX(Denied, sizeof(Denied));
+                        message = "I need a keycard to access\nthis terminal.";
+                        displayMessage = true;
                     }
                 }
             }
             if( tile == Brute){
                 if(Buttons::aBtn()){
+                    Sound::playSFX(Comp, sizeof(Comp));
                     BruteHack::init(5);
                     prevState = state;
                     state = State::BRUTE_FORCE;
@@ -346,6 +414,9 @@ int main(){
             }
             if( tile == Robo ){
                 if( Buttons::aBtn() ){
+                    UI::clear();
+                    displayMessage = false;
+                    Sound::playSFX(Comp, sizeof(Comp));
                     RoboHack::init(13);
                     RoboHack::setIntro(false);
                     LevelManager::setMap(minibotfield, minibotfieldEnum);
@@ -365,14 +436,18 @@ int main(){
                 if(dor.animation == Door::locked){
                     cameraX = oldX;
                     cameraY = oldY;
-                    Display::print("The door is locked! Where is the control system?");
+                    Sound::playSFX(Denied, sizeof(Denied));
+                    message = "The door is locked! Where is the control system?";
+                    displayMessage = true;
                 } else if(dor.animation == Door::unlocked){
-                    
+                    Sound::playSFX(DoorHiss, sizeof(DoorHiss));
                     dor.play(door, Door::open);
                 }
             }
             
             if( tile == Lift ){
+                displayMessage = false;
+                UI::clear();
                 hasKey = false;
                 prevState = state;
                 state = State::LIFT;
@@ -398,6 +473,19 @@ int main(){
                 cameraX = 10;
                 cameraY = 10;
                 state = State::EXPLORE;
+            }
+        break;
+        case HACK_LOG:
+            UI::clear();
+            UI::drawBox(1, 1, 32, 24);
+            UI::setCursorBoundingBox(2, 2, 32 - 1, 24 - 1);
+            UI::setCursor(2, 2);
+            UI::setCursorDelta(UIVariants::standard);
+            UI::printString("Hack Log: ");
+            
+            if(Buttons::bBtn()){
+                UI::clear();
+                state = prevState;
             }
         break;
         }

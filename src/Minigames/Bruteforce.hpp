@@ -29,6 +29,7 @@ namespace Bruteforce {
             static inline int enemyProgress = 0;
             static inline int enemyTimer = 0;
             static inline int enemySpeed = 0;
+            static inline int bruteFill = 30;
         
             // init button state mechanism
             static inline int buttonsPreviousState = 0;
@@ -39,6 +40,6 @@ namespace Bruteforce {
             
             static inline bool end;
             
-            static inline Sprite icons, pBar, pFill, eFill, virus;
+            static inline Sprite icons, virus;
     };
 }

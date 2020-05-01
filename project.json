@@ -110,7 +110,7 @@
 			"-O3"
 		],
 		"Pokitto": [
-			"-D_OSC=2",
+			"-D_OSCT=2",
 			"-I${projectPath}",
 			"-DPOKITTO",
 			"-Wno-pointer-arith",
@@ -776,6 +776,90 @@
 			"sdcard": false
 		},
 		"/Denied.h": {
+			"sdcard": false
+		},
+		"/Comp.wav": {
+			"sdcard": false
+		},
+		"/Comp.h": {
+			"sdcard": false
+		},
+		"/src": {
+			"sdcard": false
+		},
+		"/src/sprites": {
+			"sdcard": false
+		},
+		"/src/Level.cpp": {
+			"sdcard": false
+		},
+		"/src/Level.hpp": {
+			"sdcard": false
+		},
+		"/src/Player.cpp": {
+			"sdcard": false
+		},
+		"/src/Player.hpp": {
+			"sdcard": false
+		},
+		"/src/HackLog.cpp": {
+			"sdcard": false
+		},
+		"/src/HackLog.hpp": {
+			"sdcard": false
+		},
+		"/src/main.cpp": {
+			"sdcard": false
+		},
+		"/audio": {
+			"sdcard": false
+		},
+		"/audio/Comp.wav": {
+			"sdcard": false
+		},
+		"/audio/Denied.wav": {
+			"sdcard": false
+		},
+		"/audio/DoorHiss.wav": {
+			"sdcard": false
+		},
+		"/audio/Comp.h": {
+			"sdcard": false
+		},
+		"/audio/Denied.h": {
+			"sdcard": false
+		},
+		"/audio/DoorHiss.h": {
+			"sdcard": false
+		},
+		"/src/ButtonMaps.h": {
+			"sdcard": false
+		},
+		"/src/Minigames": {
+			"sdcard": false
+		},
+		"/src/Minigames/Bruteforce.cpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/Bruteforce.hpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/RobotProgram.hpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/RobotProgram.cpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/Sequence.cpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/Sequence.hpp": {
+			"sdcard": false
+		},
+		"/audio/Unlock.wav": {
+			"sdcard": false
+		},
+		"/audio/Unlock.h": {
 			"sdcard": false
 		}
 	},

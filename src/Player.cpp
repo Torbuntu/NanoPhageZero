@@ -1,8 +1,8 @@
 #include <Pokitto.h>
 #include <sprites.h>
-#include <Player.hpp>
+#include <src/Player.hpp>
 
-#include "HackLog.hpp"
+#include "src/HackLog.hpp"
 
 namespace Player{
     void PlayerManager::init(){
@@ -79,10 +79,6 @@ namespace Player{
                     player.play(hero, Hero::walkSouth);
                 }
             }
-        }
-        
-        if(Buttons::cBtn()){
-            Display::print(0, 32, HackLog::HackLogManager::getLog(0).c_str());
         }
     }
     

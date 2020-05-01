@@ -1,9 +1,9 @@
 
 #include <Pokitto.h>
 #include <Tilemap.hpp>
-#include <ButtonMaps.h>
+#include <src/ButtonMaps.h>
+#include "src/Minigames/RobotProgram.hpp"
 #include "sprites.h"
-#include "RobotProgram.hpp"
 
 namespace RobotProgram{
     
@@ -58,6 +58,7 @@ namespace RobotProgram{
         }
         
         vD = rand()%2;
+        vDInit = vD;
         vS = 1;
         
         vInitX = vX;
@@ -73,6 +74,7 @@ namespace RobotProgram{
         for(int i = 0; i < length; ++i){
             program[i] = 10;
         }
+        roboState = RoboState::READY;
     }
 
     void RoboHack::init(int len){
@@ -87,7 +89,6 @@ namespace RobotProgram{
         speed = 15;
 
         RoboHack::restart();
-        roboState = RoboState::READY;
     }
     
     void RoboHack::update(){
@@ -224,7 +225,7 @@ namespace RobotProgram{
             
             break;
             case COMPLETE:
-                Display::print("> C restart. ");
+                Display::print("> C restart. A new. ");
                 if(unlocked){
                     Display::print("B exit.");
                 }
@@ -232,6 +233,9 @@ namespace RobotProgram{
                     if(unlocked){
                         end = true;
                     }
+                }
+                if( buttonsJustPressed == B_A){
+                    RoboHack::restart();
                 }
                 
                 if( buttonsJustPressed == B_C){
@@ -248,6 +252,8 @@ namespace RobotProgram{
                     
                     vX = vInitX;
                     vY = vInitY;
+                    
+                    vD = vDInit;
                     
                     hasKey = false;
                     unlocked = false;
@@ -297,7 +303,7 @@ namespace RobotProgram{
             }
         }
         if(roboState == RoboState::RUNNING){
-            robo.draw(2+step*16, 32);
+            robo.draw(8+step*16, 32);
         }
         
         if(!unlocked){

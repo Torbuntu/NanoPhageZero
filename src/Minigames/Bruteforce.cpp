@@ -1,5 +1,5 @@
-#include "Minigames/Bruteforce.hpp"
-#include "ButtonMaps.h"
+#include "src/Minigames/Bruteforce.hpp"
+#include "src/ButtonMaps.h"
 #include <Pokitto.h>
 #include "sprites.h"
 #include <tasui>
@@ -21,9 +21,7 @@ namespace Bruteforce {
         brutState = BrutState::READY;
         
         icons.play(hackIcons, HackIcons::aUp);
-        pBar.play(progBar, ProgBar::start);
-        eFill.play(enemyProgFill, EnemyProgFill::play);
-        pFill.play(progFill, ProgFill::play);
+        virus.play(enemyVirus, EnemyVirus::play);
         
         srand((unsigned int) time (NULL));
     }
@@ -84,16 +82,16 @@ namespace Bruteforce {
                 enemyTimer++;
                 if(enemyTimer == enemySpeed){
                     enemyTimer = 0;
-                    if(enemyProgress < 30){
+                    if(enemyProgress < bruteFill){
                         enemyProgress++;
                     }
                 }
-                if(bruteProgress >= 30){
+                if(bruteProgress >= bruteFill){
                     brutState = BrutState::COMPLETE;   
                 }
             break;
             case COMPLETE:
-                if(buttonsJustPressed == B_C){
+                if(buttonsJustPressed == B_B){
                     end = true;
                 }
             break;
@@ -112,22 +110,21 @@ namespace Bruteforce {
                 // icon to press
                 icons.draw(8, 32);
                 
-                // player bar
-                pBar.draw(10,10);
-                for(int i = 0; i < bruteProgress; ++i){
-                    pFill.draw(14 + i * 6 , 14);
-                }
-                
-                // enemy bar
-                pBar.draw(10,150);
-                for(int i = 0; i < enemyProgress; ++i){
-                    eFill.draw(190 - i * 6 , 154);
-                }
-                
                 virus.draw(190, 130);
+                
+                // player bar
+                UI::drawGauge(1, 34, 2, bruteProgress, bruteFill);
+                
+                // virus bar
+                UI::drawGauge(1, 34, 20, enemyProgress, bruteFill);
             break;
             case COMPLETE:
-                Display::print("> C exit.");
+                // player bar
+                UI::drawGauge(1, 34, 2, bruteProgress, bruteFill);
+                
+                // virus bar
+                UI::drawGauge(1, 34, 20, enemyProgress, bruteFill);
+                Display::print("> B exit.");
             break;
         }
            

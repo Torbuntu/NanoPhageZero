@@ -103,13 +103,6 @@ public:
 	};
 };
 
-class EnemyProgFill {
-public:
-    enum Animation : std::uint16_t {
-		play = 0
-	};
-};
-
 class EnemyVirus {
 public:
     enum Animation : std::uint16_t {
@@ -173,20 +166,6 @@ public:
 	};
 };
 
-class ProgBar {
-public:
-    enum Animation : std::uint16_t {
-		start = 0
-	};
-};
-
-class ProgFill {
-public:
-    enum Animation : std::uint16_t {
-		play = 0
-	};
-};
-
 class Robot {
 public:
     enum Animation : std::uint16_t {
@@ -227,15 +206,12 @@ public:
 extern "C" {
 extern const Button button;
 extern const Door door;
-extern const EnemyProgFill enemyProgFill;
 extern const EnemyVirus enemyVirus;
 extern const HackIcons hackIcons;
 extern const Hackme hackme;
 extern const Hero hero;
 extern const Key key;
 extern const MinibotField minibotField;
-extern const ProgBar progBar;
-extern const ProgFill progFill;
 extern const Robot robot;
 extern const SecurityDrone securityDrone;
 extern const Sentinal sentinal;
