@@ -4,6 +4,8 @@
 #include <Tilemap.hpp>
 #include "sprites.h"
 #include "maps.h"
+#include <tasui>
+#include <puits_UltimateUtopia.h>
 
 namespace RobotProgram{
     enum RoboState{
@@ -37,6 +39,8 @@ namespace RobotProgram{
         private:
         
             static void restart();
+            
+            static void drawUI();
         
             static inline Sprite icons, robo, keyIcon, buttonIcon, virus;
             

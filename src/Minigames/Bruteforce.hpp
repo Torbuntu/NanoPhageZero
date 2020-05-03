@@ -21,6 +21,8 @@ namespace Bruteforce {
             static bool fail();
         
         private:
+            static void drawUI();
+        
             static inline int select = 0;
         
             static inline int bruteCount = 0;

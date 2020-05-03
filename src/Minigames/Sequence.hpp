@@ -14,7 +14,7 @@ namespace Sequence {
             // initializes a new random sequence
             static void shuffle(int size);
             
-            static void init();
+            static void init(int dt);
             
             static void update();
             
@@ -27,6 +27,8 @@ namespace Sequence {
             static int getSelect();
             
         private:
+        
+            static void drawUI();
             
             static inline SeqState seqState = SeqState::READY;
             
@@ -35,7 +37,7 @@ namespace Sequence {
             
             static inline int threat;
             
-            static inline int select = 0;
+            static inline int select = 0, detectTime = 10, detectSpeed;
                 
             // the sequence order
             static inline int order[13];

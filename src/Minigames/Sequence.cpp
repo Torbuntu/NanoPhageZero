@@ -6,6 +6,14 @@
 #include <puits_UltimateUtopia.h>
 
 namespace Sequence {
+    using Pokitto::UI;
+    struct UIVariants{
+        static constexpr unsigned standard = 0;
+        static constexpr unsigned blackBG = 8;
+        static constexpr unsigned halfBlackBG = 16;
+        static constexpr unsigned red = 24;
+        static constexpr unsigned green = 32;
+    };
     void SeqHack::shuffle(int size) {
         // init hacking sequence variables.
         seqSize = size;
@@ -48,7 +56,7 @@ namespace Sequence {
         return select;
     }
     
-    void SeqHack::init(){
+    void SeqHack::init(int dt){
         icons.play(hackIcons, HackIcons::bUp);
         tLevel.play(threatLevel, ThreatLevel::zero);
         sent.play(sentinal, Sentinal::scanning);
@@ -56,9 +64,15 @@ namespace Sequence {
         
         select = 0;
         threat = 0;
+        detectTime = dt;
+        detectSpeed = dt;
         
         end = false;
         seqState = SeqState::READY;
+        
+        UI::setTilesetImage(puits::UltimateUtopia::tileSet);
+        // NEW - Show the Tilemap, the Sprites, then the UI.
+        UI::showTileMapSpritesUI();
     }
     
     void SeqHack::update() {
@@ -81,6 +95,12 @@ namespace Sequence {
                     orderStatus[select] = true;
                     select++;
                 } else if (buttonsJustPressed != 0) {
+                    threat++;
+                }
+                
+                detectSpeed--;
+                if(detectSpeed < 0){
+                    detectSpeed = detectTime;
                     threat++;
                 }
                 
@@ -121,19 +141,27 @@ namespace Sequence {
     }
     
     bool SeqHack::fail(){
-        return threat > 8;
+        return threat > 5;
+    }
+    
+    void SeqHack::drawUI(){
+        UI::clear();
+        UI::drawBox(1, 1, 32, 3);
+        UI::setCursorBoundingBox(2, 2, 31, 1);
+        UI::setCursor(2, 2);
+        UI::setCursorDelta(UIVariants::standard);
     }
     
     // TODO: Don't worry too much about ugly prog bar. Will replace with TASUI Gauge
     void SeqHack::render(){
-        using Pokitto::Display;
-        using Pokitto::UI;
-        
         switch(seqState){
             case READY:
-                Display::print("> Press C to hack!");
+                // Display::print("> Press C to hack!");
+                SeqHack::drawUI();
+                UI::printText("> Press C to hack!");
             break;
             case RUNNING:
+                UI::clear();
                 for(int x = 0; x < seqSize; ++x){
                     switch(order[x]){
                         case B_A:
@@ -163,13 +191,14 @@ namespace Sequence {
                 sent.draw(200, 50);
                 tLevel.draw(200, 70);
                 
-                UI::drawGauge(1, 34, 2, select, seqSize);
+                UI::drawGauge(1, 34, 4, select, seqSize);
                 
             break;
             
             case COMPLETE:
-                UI::drawGauge(1, 34, 2, select, seqSize);
-                Display::print("> B exit.");
+                UI::drawGauge(1, 34, 4, select, seqSize);
+                SeqHack::drawUI();
+                UI::printText("> Press B to exit.");
             break;
         }
         

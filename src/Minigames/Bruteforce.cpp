@@ -6,6 +6,22 @@
 #include <puits_UltimateUtopia.h>
 
 namespace Bruteforce {
+    using Pokitto::UI;
+    struct UIVariants{
+        static constexpr unsigned standard = 0;
+        static constexpr unsigned blackBG = 8;
+        static constexpr unsigned halfBlackBG = 16;
+        static constexpr unsigned red = 24;
+        static constexpr unsigned green = 32;
+    };
+    void BruteHack::drawUI(){
+        UI::clear();
+        UI::drawBox(1, 1, 32, 3);
+        UI::setCursorBoundingBox(2, 2, 31, 1);
+        UI::setCursor(2, 2);
+        UI::setCursorDelta(UIVariants::standard);
+    }
+    
     void BruteHack::init(int count){
         
         bruteCount = count;
@@ -99,32 +115,36 @@ namespace Bruteforce {
     }
     
     void BruteHack::render(){
-        using Pokitto::Display;
         using Pokitto::UI;
         
         switch(brutState){
             case READY:
-                Display::print("> Press C to hack!");
+                BruteHack::drawUI();
+                UI::printText("> Press C to hack!");
             break;
             case RUNNING:
+                UI::clear();
                 // icon to press
-                icons.draw(8, 32);
+                icons.draw(8, 40);
                 
                 virus.draw(190, 130);
                 
                 // player bar
-                UI::drawGauge(1, 34, 2, bruteProgress, bruteFill);
+                UI::drawGauge(1, 34, 5, bruteProgress, bruteFill);
                 
                 // virus bar
                 UI::drawGauge(1, 34, 20, enemyProgress, bruteFill);
             break;
             case COMPLETE:
+                BruteHack::drawUI();
+                UI::printText("> B exit.");
                 // player bar
-                UI::drawGauge(1, 34, 2, bruteProgress, bruteFill);
+                UI::drawGauge(1, 34, 5, bruteProgress, bruteFill);
                 
                 // virus bar
                 UI::drawGauge(1, 34, 20, enemyProgress, bruteFill);
-                Display::print("> B exit.");
+                
+               
             break;
         }
            

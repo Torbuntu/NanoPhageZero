@@ -4,8 +4,26 @@
 #include <src/ButtonMaps.h>
 #include "src/Minigames/RobotProgram.hpp"
 #include "sprites.h"
+#include <tasui>
+#include <puits_UltimateUtopia.h>
 
 namespace RobotProgram{
+    using Pokitto::UI;
+    struct UIVariants{
+        static constexpr unsigned standard = 0;
+        static constexpr unsigned blackBG = 8;
+        static constexpr unsigned halfBlackBG = 16;
+        static constexpr unsigned red = 24;
+        static constexpr unsigned green = 32;
+    };
+    
+    void RoboHack::drawUI(){
+        UI::clear();
+        UI::drawBox(1, 0, 32, 2);
+        UI::setCursorBoundingBox(2, 1, 31, 1);
+        UI::setCursor(1, 1);
+        UI::setCursorDelta(UIVariants::standard);
+    }
     
     void RoboHack::restart(){
         roboX = 0;
@@ -93,7 +111,6 @@ namespace RobotProgram{
     
     void RoboHack::update(){
         using Pokitto::Buttons;
-        using Pokitto::Display;
         // Poll the button
         Buttons::pollButtons();
         buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
@@ -149,14 +166,17 @@ namespace RobotProgram{
         
         switch(roboState){
             case READY:
-                Display::print("> Press C to program robot");
+                RoboHack::drawUI();
+                UI::printText("> Press C to program robot");
+                // Display::print("> Press C to program robot");
                 if( buttonsJustPressed == B_C ){
                     roboState = RoboState::PROGRAMMING;
                 }
             
             break;
             case PROGRAMMING:
-                Display::print("> Programming...");
+                RoboHack::drawUI();
+                UI::printText("> Programming...");
                 if( buttonsJustPressed != 0 && step < length ){
                     program[step] = buttonsJustPressed;
                     step++;
@@ -168,7 +188,8 @@ namespace RobotProgram{
                 }
             break;
             case RUNNING:
-                Display::print("> Running...");
+                RoboHack::drawUI();
+                UI::printText("> Running...");
                 speed--;
                 
                 if(speed == 0){
@@ -225,9 +246,10 @@ namespace RobotProgram{
             
             break;
             case COMPLETE:
-                Display::print("> C restart. A new. ");
+                RoboHack::drawUI();
+                UI::printText("> C restart. A new. ");
                 if(unlocked){
-                    Display::print("B exit.");
+                    UI::printText("B exit.");
                 }
                 if( buttonsJustPressed == B_B ){
                     if(unlocked){
@@ -261,49 +283,46 @@ namespace RobotProgram{
                 }
             break;
         }
-        
-        
     }
     
     void RoboHack::render(){
-        using Pokitto::Display;
         for(int i = 0; i < length; ++i){
             switch(program[i]){
                 case B_A:
                     icons.play(hackIcons, HackIcons::aUp);
-                    icons.draw(8 + i * 16, 16);
+                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_B:
                     icons.play(hackIcons, HackIcons::bUp);
-                    icons.draw(8 + i * 16, 16);
+                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_C:
                     icons.play(hackIcons, HackIcons::cUp);
-                    icons.draw(8 + i * 16, 16);
+                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_UP:
                     icons.play(hackIcons, HackIcons::dUpUp);
-                    icons.draw(8 + i * 16, 16);
+                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_DOWN:
                     icons.play(hackIcons,  HackIcons::dDownUp);
-                    icons.draw(8 + i * 16, 16);
+                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_LEFT:
                     icons.play(hackIcons, HackIcons::dLeftUp);
-                    icons.draw(8 + i * 16, 16);
+                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_RIGHT:
                     icons.play(hackIcons,  HackIcons::dRightUp);
-                    icons.draw(8 + i * 16, 16);
+                    icons.draw(4 + i * 16, 18);
                     break;
                 default:
                     icons.play(hackIcons, HackIcons::empty);
-                    icons.draw(8 + i * 16, 16);
+                    icons.draw(4 + i * 16, 18);
             }
         }
         if(roboState == RoboState::RUNNING){
-            robo.draw(8+step*16, 32);
+            robo.draw(4+step*18, 32);
         }
         
         if(!unlocked){
@@ -320,7 +339,11 @@ namespace RobotProgram{
             virus.draw(64 + vX * 16, 48 + vY * 16);
         }
         
-        Display::print(0, 160, "A pickup, B use. C skip.");
+        UI::drawBox(1, 24, 32, 26);
+        UI::setCursorBoundingBox(2, 2, 31, 25);
+        UI::setCursor(2, 25);
+        UI::setCursorDelta(UIVariants::standard);
+        UI::printText("A pickup, B use. C skip.");
     }
     
     bool RoboHack::complete(){
