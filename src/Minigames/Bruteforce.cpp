@@ -39,7 +39,7 @@ namespace Bruteforce {
         icons.play(hackIcons, HackIcons::aUp);
         virus.play(enemyVirus, EnemyVirus::play);
         
-        srand((unsigned int) time (NULL));
+        // srand((unsigned int) time (NULL));
     }
     
     void BruteHack::update(){

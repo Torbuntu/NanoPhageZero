@@ -29,7 +29,7 @@ namespace RobotProgram{
         roboX = 0;
         roboY = 0;
         step = 0;
-        srand((unsigned int) time (NULL));
+        // srand((unsigned int) time (NULL));
         
         keyX = rand()%6;
         if(keyX == 0) keyX++;

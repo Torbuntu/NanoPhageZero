@@ -2,8 +2,6 @@
 #include <sprites.h>
 #include <src/Player.hpp>
 
-#include "src/HackLog.hpp"
-
 namespace Player{
     void PlayerManager::init(){
         w = player.getFrameWidth();
@@ -31,10 +29,6 @@ namespace Player{
     
     void PlayerManager::update(int& cameraX, int& cameraY){
         using Pokitto::Buttons;
-        
-        //tmp
-        using Pokitto::Display;
-        using HackLog::HackLogManager;
         // We don't poll for movement because it will be held down.
         if(!Buttons::rightBtn() && !Buttons::leftBtn() && !Buttons::upBtn() && !Buttons::downBtn()){
             switch(player.animation){

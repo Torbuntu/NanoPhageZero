@@ -17,7 +17,7 @@ namespace Sequence {
     void SeqHack::shuffle(int size) {
         // init hacking sequence variables.
         seqSize = size;
-        srand((unsigned int) time (NULL));
+        // srand((unsigned int) time (NULL));
         
         for(int i = 0; i < seqSize; ++i){
             int r = rand()%7;

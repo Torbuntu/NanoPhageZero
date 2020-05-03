@@ -281,7 +281,7 @@
 			"$objectFiles"
 		]
 	},
-	"target": "Pokitto",
+	"target": "linux",
 	"pipelines": {
 		"Pokitto": [
 			"img-to-c",
@@ -919,6 +919,12 @@
 			"sdcard": false
 		},
 		"/audio/Unlock.h": {
+			"sdcard": false
+		},
+		"/NanoPhageZero": {
+			"sdcard": false
+		},
+		"/EEP.ROM": {
 			"sdcard": false
 		}
 	},
