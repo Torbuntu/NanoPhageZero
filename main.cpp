@@ -249,7 +249,7 @@ void update(){
         
         // get current tile
         tileX = (camX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
-        tileY = (camY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
+        tileY = (camY + PlayerManager::getY() - 8 + PlayerManager::getH()) / PROJ_TILE_H;
         tile = getTile(tileX, tileY);
         
         if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
@@ -314,7 +314,7 @@ void update(){
                 dor.play(door, Door::open);
             }
         }
-        tileY = (camY + PlayerManager::getY() + 30 + PlayerManager::getH()) / PROJ_TILE_H;
+        tileY = (camY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
         tile = getTile(tileX, tileY);
         
         if(tile==Door){
@@ -375,7 +375,7 @@ void update(){
         }
         
         tileX = (camX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
-        tileY = (camY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
+        tileY = (camY + PlayerManager::getY() - 8 + PlayerManager::getH()) / PROJ_TILE_H;
         tile = getTile(tileX, tileY);
         
         if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){

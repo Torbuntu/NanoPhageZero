@@ -1,9 +1,12 @@
-#include "src/Minigames/Sequence.hpp"
-#include "src/ButtonMaps.h"
+
 #include <Pokitto.h>
 #include "sprites.h"
 #include <tasui>
 #include <puits_UltimateUtopia.h>
+#include "src/Minigames/Sequence.hpp"
+#include "src/ButtonMaps.h"
+
+#include <LibLog>
 
 namespace Sequence {
     using Pokitto::UI;
@@ -81,8 +84,7 @@ namespace Sequence {
         Buttons::pollButtons();
         buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
         buttonsPreviousState = Buttons::buttons_state;
-        
-        
+        LOG(Buttons::buttons_state);
         switch(seqState){
             case READY:
                 if(buttonsJustPressed == B_C){

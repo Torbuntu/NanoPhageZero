@@ -23,6 +23,8 @@ namespace Bruteforce {
     }
     
     void BruteHack::init(int count){
+        icons.play(hackIcons, HackIcons::aUp);
+        virus.play(enemyVirus, EnemyVirus::play);
         
         bruteCount = count;
         select = 0;
@@ -35,11 +37,6 @@ namespace Bruteforce {
         end = false;
         
         brutState = BrutState::READY;
-        
-        icons.play(hackIcons, HackIcons::aUp);
-        virus.play(enemyVirus, EnemyVirus::play);
-        
-        // srand((unsigned int) time (NULL));
     }
     
     void BruteHack::update(){

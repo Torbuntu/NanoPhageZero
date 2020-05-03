@@ -4,14 +4,14 @@
 
 namespace Player{
     void PlayerManager::init(){
-        w = player.getFrameWidth();
-        h = player.getFrameHeight();
+        player.play(hero, Hero::walkSouth);
+        
+        w = 16;
+        h = 16;
         x = LCDWIDTH/2 - w/2;
         y = LCDHEIGHT/2 - h/2;
         
         speed = 1;
-        
-        player.play(hero, Hero::walkSouth);
     }
     
     int PlayerManager::getX(){
