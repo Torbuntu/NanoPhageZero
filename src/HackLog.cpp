@@ -1,8 +1,13 @@
+#include <Pokitto.h>
+
 #include "HackLog.hpp"
 #include "sprites.h"
 
-using namespace std; 
+#include "src/structs.h"
+#include "src/ButtonMaps.h"
 
+#include <tasui>
+#include <puits_UltimateUtopia.h>
 
 namespace HackLog {
     char* HackLogManager::getLog(int id){
@@ -20,16 +25,16 @@ namespace HackLog {
     void HackLogManager::unlockLog(int id){
         unlocked[id] = true;
     }
-    
-    bool HackLogManager::checkUnlocked(int x, int y){
-        return unlocked[x + y * 7];
-    }
-    
+
     void HackLogManager::init(){
         lock.play(lockIcon, LockIcon::idle);
         logging.play(logIcon, LogIcon::idle);
+        cursorIcon.play(cursor, Cursor::idle);
         //logs
         logs[0] = "What happened?! My arm feels heavy and cold and my vision... I can't... see... What are these outlines? I need to get out of here...";
+        logs[1] = "I feel drawn to these terminals. My arm... like a magnet... If I just touch them, it is like I can tell whem what I want them to do... I must... hack them.";
+        logs[2] = "These minibots are used to run tasks on the processing facility servers. They aren't that useful yet, but I can task them with printing keycards for accessing locked terminals.";
+        logs[3] = "The facility has very powerful sentry drones that gaurd certain floors. When I look at them now they are glowing red... They must be infected with some virus... I should hack the control system.";
         
         for(int i = 0; i < 35; ++i){
             unlocked[i] = false;
@@ -37,12 +42,83 @@ namespace HackLog {
         unlockLog(0);
     }
     
-    void HackLogManager::render(int x, int y){
-        if(unlocked[x + y * 7]){
-            logging.draw(23 + x * 24, 25 + y * 24);
-        }else {
-            lock.draw(20 + x * 24, 24 + y * 24);
+    void HackLogManager::update(){
+        using Pokitto::Buttons;
+        Buttons::pollButtons();
+        btnJustPressed = Buttons::buttons_state & (~btnPrevState);
+        btnPrevState = Buttons::buttons_state;
+        
+        
+        if(btnJustPressed == B_RIGHT){
+            if(logCursorX < 6) logCursorX++;
         }
+        if(btnJustPressed == B_LEFT){
+            if(logCursorX > 0) logCursorX--;
+        }
+        if(btnJustPressed == B_DOWN){
+            if(logCursorY < 4) logCursorY++;
+        }
+        if(btnJustPressed == B_UP){
+            if(logCursorY > 0) logCursorY--;
+        }
+            
+        cursorTimer++;
+        if(cursorTimer > 15) {
+            showCursor = !showCursor;
+            cursorTimer = 0;
+        }
+        
+        if(btnJustPressed == B_A){
+            if(unlocked[logCursorX + logCursorY * 7]){
+                showLog = true;
+            }
+        }
+        
+        if(!showLog && btnJustPressed == B_B){
+            end = true;
+        }
+        
+    }
+    
+    void HackLogManager::render(){
+        using Pokitto::UI;
+        UI::clear();
+        UI::showTileMapUISprites();
+        UI::drawBox(1, 1, 32, 24);
+        UI::setCursorBoundingBox(2, 2, 32 - 1, 24 - 1);
+        UI::setCursor(2, 2);
+        UI::setCursorDelta(UIVariants::standard);
+        UI::printString("Hack Log: ");
+        
+        if(!showLog){
+            for(int x = 0; x < 7; ++x){
+                for(int y = 0; y < 5; ++y){
+                    if(unlocked[x + y * 7]){
+                        logging.draw(23 + x * 24, 25 + y * 24);
+                    }else {
+                        lock.draw(20 + x * 24, 24 + y * 24);
+                    }
+                }
+            }
+            if(showCursor) cursorIcon.draw(17 + logCursorX * 24, 30 + logCursorY * 24);
+        }else {
+            if(btnJustPressed == B_B) showLog = false;
+            UI::drawBox(4, 4, 28, 20);
+            UI::setCursorBoundingBox(6, 6, 28 - 1, 20 - 1);
+            UI::setCursor(6, 6);
+            UI::setCursorDelta(UIVariants::standard);
+            UI::printText(HackLogManager::getLog(logCursorX, logCursorY));
+        }
+    }
+    
+    void HackLogManager::setShouldEnd(bool should){
+        logCursorX = 0;
+        logCursorY = 0;
+        end = should;
+    }
+    
+    bool HackLogManager::shouldEnd(){
+        return end;
     }
         
 }

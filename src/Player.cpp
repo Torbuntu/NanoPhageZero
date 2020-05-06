@@ -14,6 +14,23 @@ namespace Player{
         speed = 1;
     }
     
+    void PlayerManager::setDir(int d){
+        switch(d){
+            case 0:
+                player.play(hero, Hero::idleEast);
+                break;
+            case 1:
+                player.play(hero, Hero::idleWest);
+                break;
+            case 2:
+                player.play(hero, Hero::idleNorth);
+                break;
+            case 3:
+                player.play(hero, Hero::idleSouth);
+                break;
+        }
+    }
+    
     int PlayerManager::getX(){
         return x;
     }

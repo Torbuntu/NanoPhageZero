@@ -4,16 +4,10 @@
 #include "sprites.h"
 #include <tasui>
 #include <puits_UltimateUtopia.h>
+#include "src/structs.h"
 
 namespace Bruteforce {
     using Pokitto::UI;
-    struct UIVariants{
-        static constexpr unsigned standard = 0;
-        static constexpr unsigned blackBG = 8;
-        static constexpr unsigned halfBlackBG = 16;
-        static constexpr unsigned red = 24;
-        static constexpr unsigned green = 32;
-    };
     void BruteHack::drawUI(){
         UI::clear();
         UI::drawBox(1, 1, 32, 3);
@@ -31,7 +25,7 @@ namespace Bruteforce {
         bruteSelect = B_A;
         bruteProgress = 0;
         enemyProgress = 1;
-        enemySpeed = 15;
+        enemySpeed = 25;
         enemyTimer = 0;
         
         end = false;
@@ -117,7 +111,7 @@ namespace Bruteforce {
         switch(brutState){
             case READY:
                 BruteHack::drawUI();
-                UI::printText("> Press C to hack!");
+                UI::printText("> C to hack drone!");
             break;
             case RUNNING:
                 UI::clear();

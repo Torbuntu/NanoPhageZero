@@ -47,10 +47,8 @@ namespace Sequence {
             
             static inline bool end = false;
             
-             // init button state mechanism
-            static inline int buttonsPreviousState = 0;
-            
-            static inline int buttonsJustPressed = 0;
+            // init button state mechanism
+            static inline int buttonsPreviousState = 0, buttonsJustPressed = 0;
             
             static inline Sprite icons, tLevel, sent, virus;
     };

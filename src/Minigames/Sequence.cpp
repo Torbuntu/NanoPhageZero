@@ -5,18 +5,11 @@
 #include <puits_UltimateUtopia.h>
 #include "src/Minigames/Sequence.hpp"
 #include "src/ButtonMaps.h"
-
+#include "src/structs.h"
 #include <LibLog>
 
 namespace Sequence {
     using Pokitto::UI;
-    struct UIVariants{
-        static constexpr unsigned standard = 0;
-        static constexpr unsigned blackBG = 8;
-        static constexpr unsigned halfBlackBG = 16;
-        static constexpr unsigned red = 24;
-        static constexpr unsigned green = 32;
-    };
     void SeqHack::shuffle(int size) {
         // init hacking sequence variables.
         seqSize = size;
@@ -84,7 +77,7 @@ namespace Sequence {
         Buttons::pollButtons();
         buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
         buttonsPreviousState = Buttons::buttons_state;
-        LOG(Buttons::buttons_state);
+
         switch(seqState){
             case READY:
                 if(buttonsJustPressed == B_C){
@@ -160,7 +153,7 @@ namespace Sequence {
             case READY:
                 // Display::print("> Press C to hack!");
                 SeqHack::drawUI();
-                UI::printText("> Press C to hack!");
+                UI::printText("> C to hack door terminal!");
             break;
             case RUNNING:
                 UI::clear();

@@ -9,6 +9,8 @@ namespace Player{
             static void update(int& x, int& y);
             static void render();
             
+            static void setDir(int d);
+            
             static int getX();
             static int getY();
             static int getW();

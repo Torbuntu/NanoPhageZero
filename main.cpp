@@ -1,39 +1,10 @@
-#include <Pokitto.h>
+#include "global.h"
 #include <miloslav.h>
-#include <Tilemap.hpp>
-
-#include "sprites.h"
-#include "maps.h"
-
-#include "src/Minigames/Sequence.hpp"
-#include "src/Minigames/Bruteforce.hpp"
-#include "src/Minigames/RobotProgram.hpp"
-
-#include "src/Level.hpp"
-#include "src/Player.hpp"
-#include "src/HackLog.hpp"
-#include "src/ButtonMaps.h"
 
 #include "audio/DoorHiss.h"
 #include "audio/Denied.h"
 #include "audio/Comp.h"
 #include "audio/Unlock.h"
-
-#include <tasui>
-#include <puits_UltimateUtopia.h>
-
-using Pokitto::Core;
-using Pokitto::Display;
-using Pokitto::Buttons;
-using Pokitto::Sound;
-using Pokitto::UI;
-using Sequence::SeqHack;
-using Bruteforce::BruteHack;
-using RobotProgram::RoboHack;
-using Level::LevelManager;
-using Player::PlayerManager;
-using HackLog::HackLogManager;
-
 
 enum State{
     INTRO, EXPLORE, LIFT,
@@ -42,31 +13,16 @@ enum State{
     HACK_LOG
 };
 
-struct UIVariants{
-    static constexpr unsigned standard = 0;
-    static constexpr unsigned blackBG = 8;
-    static constexpr unsigned halfBlackBG = 16;
-    static constexpr unsigned red = 24;
-    static constexpr unsigned green = 32;
-};
+State state = State::INTRO;
+State prevState = State::SEQ_INTRO;
 
-
-
-int camX, camY, recolor = 0, tileX, tileY, oldX, oldY, introLevel = 0, zx=30, zy=60, zc = 10, zys = 1, zxs = 1, introProg = 0;
+int camX, camY, tileX, tileY, oldX, oldY, introLevel = 0, zx=30, zy=60, zc = 10, zys = 1, zxs = 1, introProg = 0;
 int messageX, messageY;
-int logCursorX, logCursorY, cursorTimer = 0;
-bool showCursor = true, showLog = false;
 
-int buttonsPreviousState = 0;
-int buttonsJustPressed = 0;
-
-Sprite hack, dor, botField, drone, keyIcon, lock, cursorIcon;//, nano, zero;
+Sprite hack, dor, keyIcon;//, nano, zero;
 
 // nano.play(nanoPhage, NanoPhage::boom);
 // zero.play(zeroTitle, ZeroTitle::idle);
-
-State state = State::INTRO;
-State prevState = State::SEQ_INTRO;
 
 bool hacking = false, doorLocked = true, hasKey = false;
 
@@ -78,16 +34,70 @@ auto lastMap = seqIntro;
 char* message = "";
 bool displayMessage = false;
 
+void checkRobo(){
+    if( tile == Robo ){
+        if( Buttons::aBtn() ){
+            UI::clear();
+            displayMessage = false;
+            Sound::playSFX(Comp, sizeof(Comp));
+            RoboHack::init(13);
+            RoboHack::setIntro(false);
+            LevelManager::setMap(minibotfield, minibotfieldEnum);
+            lastTile = getTile;
+            getTile = minibotfieldEnum;
+            prevState = state;
+            state = State::ROBOPROGRAM;
+        }
+    }
+}
+
+void checkBrute(){
+    if( tile == Brute){
+        hack.draw(PlayerManager::getX(), PlayerManager::getY()-16, false, false);
+        if(Buttons::aBtn()){
+            Sound::playSFX(Comp, sizeof(Comp));
+            BruteHack::init(5);
+            prevState = state;
+            state = State::BRUTE_FORCE;
+        }
+    }
+}
+
+void checkSequ(){
+    if( tile == Sequ) {
+        hack.draw(PlayerManager::getX(), PlayerManager::getY()-16, false, false);
+        if( Buttons::aBtn() ){
+            if((introLevel != 0 && hasKey) || introLevel == 0){
+                Sound::playSFX(Comp, sizeof(Comp));
+                if(introLevel < 3) {
+                    SeqHack::init(60);
+                    SeqHack::shuffle(6);
+                }else{
+                    SeqHack::init(40);
+                    SeqHack::shuffle(10);
+                }
+                prevState = state;
+                state = State::SEQUENCE;
+            }else{
+                Sound::playSFX(Denied, sizeof(Denied));
+                message = "I need a keycard to access\nthis terminal.";
+                if(state == ROBO_INTRO) HackLogManager::unlockLog(2);
+                displayMessage = true;
+            }
+        }
+    }
+}
 
 void init(){
     camX = 12;
     camY = 12;
+    
+    zx = 0;
+    zy = 160;
+    
     hack.play(hackme, Hackme::show);
     dor.play(door, Door::locked);
     keyIcon.play(key, Key::idle);
-    lock.play(lockIcon, LockIcon::idle);
-    cursorIcon.play(cursor, Cursor::idle);
-    
     
     Display::loadRGBPalette(miloslav);
     LevelManager::init();
@@ -99,11 +109,11 @@ void init(){
     // NEW - Show the Tilemap, the Sprites, then the UI.
     UI::showTileMapUISprites();
     messageX = 2, messageY = 24;
+    
+    Sound::playMusicStream("music/t.raw", 0);
 }
 
 void update(){
-    // 7 == white;
-    Display::setColor(7);
     
     //display global message
     if(displayMessage){
@@ -119,10 +129,10 @@ void update(){
         }
     }
     
-    
+    Sound::playMusicStream();
     switch(state){
     case INTRO:
-        UI::drawGauge(5, 25, 16, introProg, 100);
+        UI::drawGauge(8, 28, 17, introProg, 100);
         // nano.draw(LCDWIDTH/2-nano.getFrameWidth()/2, 10);
         // nano.onEndAnimation = [](Sprite *nano){nano->play(nanoPhage, NanoPhage::idle); }; 
         // zero.draw(zx, zy);
@@ -142,9 +152,24 @@ void update(){
                 state = State::SEQ_INTRO;
             }
         }
+            // 7 == white;
+            // 207 == Green
+        
+        Display::setColor(135);
+        Display::print(zx, 80, "Nano");
+        
+        Display::setColor(207);
+        Display::print(zy, 80, "Phage");
+        
+        if(zx < (LCDWIDTH - 64)/2)zx++;
+        if(zy > LCDWIDTH/2 + 4)zy--;
+        if(zx == (LCDWIDTH - 64)/2 && zy == LCDWIDTH/2 + 4){
+            Display::setColor(5);
+            Display::print((LCDWIDTH - 32)/2, 90, "ZERO");
+        }
         
         Display::setColor(7);
-        Display::print(30, 140, "C to start.");
+        Display::print((LCDWIDTH - strlen("C to start")*8)/2, 140, "C to start.");
         
         break;
     case BRUTE_FORCE:
@@ -194,6 +219,9 @@ void update(){
         SeqHack::update();
         
         if(SeqHack::complete()){
+            if(prevState == SEQ_INTRO){
+                HackLogManager::unlockLog(1);
+            }
             UI::clear();
             message = "The door is unlocked!";
             displayMessage = true;
@@ -255,8 +283,7 @@ void update(){
         if(Buttons::cBtn()){
             prevState = state;
             state = HACK_LOG;
-            logCursorX = 0;
-            logCursorY = 0;
+            HackLogManager::setShouldEnd(false);
         }
         
         if(hasKey){
@@ -272,46 +299,13 @@ void update(){
             camX = -60;
             camY = -70;
             message = "Arg!\nThe sentry returned me to the exit.";
+            if(state == BRUTE_INTRO) HackLogManager::unlockLog(3);
             displayMessage = true;
         }
         
-        if( tile == Sequ) {
-            if( Buttons::aBtn() ){
-                if((introLevel != 0 && hasKey) || introLevel == 0){
-                    Sound::playSFX(Comp, sizeof(Comp));
-                    SeqHack::init(60);
-                    SeqHack::shuffle(6);
-                    prevState = state;
-                    state = State::SEQUENCE;
-                }else{
-                    Sound::playSFX(Denied, sizeof(Denied));
-                    message = "I need a keycard to access\nthis terminal.";
-                    displayMessage = true;
-                }
-            }
-        }
-        if( tile == Robo ){
-            if( Buttons::aBtn() ){
-                UI::clear();
-                displayMessage = false;
-                Sound::playSFX(Comp, sizeof(Comp));
-                RoboHack::init(13);
-                RoboHack::setIntro(false);
-                LevelManager::setMap(minibotfield, minibotfieldEnum);
-                lastTile = getTile;
-                getTile = minibotfieldEnum;
-                prevState = state;
-                state = State::ROBOPROGRAM;
-            }
-        }
-        if( tile == Brute){
-            if(Buttons::aBtn()){
-                Sound::playSFX(Comp, sizeof(Comp));
-                BruteHack::init(5);
-                prevState = state;
-                state = State::BRUTE_FORCE;
-            }
-        }
+        checkSequ();
+        checkBrute();
+        checkRobo();
 
         if( tile == Collide ){
             camX = oldX;
@@ -340,6 +334,7 @@ void update(){
             camX = -60;
             camY = -70;
             hasKey = false;
+            PlayerManager::setDir(3);//face south
             if(introLevel == 1){
                 lastMap = roboIntro;
                 LevelManager::setMap(roboIntro, roboIntroEnum);
@@ -384,8 +379,7 @@ void update(){
         if(Buttons::cBtn()){
             prevState = state;
             state = HACK_LOG;
-            logCursorX = 0;
-            logCursorY = 0;
+            HackLogManager::setShouldEnd(false);
         }
         
         if(hasKey){
@@ -403,44 +397,10 @@ void update(){
             displayMessage = true;
         }
         
-        if( tile == Sequ) {
-            if( Buttons::aBtn() ){
-                if(hasKey){
-                    Sound::playSFX(Comp, sizeof(Comp));
-                    SeqHack::init(40);
-                    SeqHack::shuffle(10);
-                    prevState = state;
-                    state = State::SEQUENCE;
-                }else {
-                    Sound::playSFX(Denied, sizeof(Denied));
-                    message = "I need a keycard to access\nthis terminal.";
-                    displayMessage = true;
-                }
-            }
-        }
-        if( tile == Brute){
-            if(Buttons::aBtn()){
-                Sound::playSFX(Comp, sizeof(Comp));
-                BruteHack::init(5);
-                prevState = state;
-                state = State::BRUTE_FORCE;
-            }
-        }
-        if( tile == Robo ){
-            if( Buttons::aBtn() ){
-                UI::clear();
-                displayMessage = false;
-                Sound::playSFX(Comp, sizeof(Comp));
-                RoboHack::init(13);
-                RoboHack::setIntro(false);
-                LevelManager::setMap(minibotfield, minibotfieldEnum);
-                lastTile = getTile;
-                getTile = minibotfieldEnum;
-                prevState = state;
-                state = State::ROBOPROGRAM;
-            }
-        }
-
+        checkSequ();
+        checkBrute();
+        checkRobo();
+        
         if( tile == Collide ){
             camX = oldX;
             camY = oldY;
@@ -465,6 +425,7 @@ void update(){
             hasKey = false;
             prevState = state;
             state = State::LIFT;
+            PlayerManager::setDir(3);//face south
         }
     break;
     case LIFT:
@@ -490,66 +451,14 @@ void update(){
         }
     break;
     case HACK_LOG:
-        UI::clear();
-        UI::showTileMapUISprites();
-        UI::drawBox(1, 1, 32, 24);
-        UI::setCursorBoundingBox(2, 2, 32 - 1, 24 - 1);
-        UI::setCursor(2, 2);
-        UI::setCursorDelta(UIVariants::standard);
-        UI::printString("Hack Log: ");
+        HackLogManager::update();
+        HackLogManager::render();
         
-        if(!showLog){
-            for(int i = 0; i < 7; ++i){
-                for(int j = 0; j < 5; ++j){
-                    HackLogManager::render(i, j);
-                }
-            }
-        }
-        
-        Buttons::pollButtons();
-        buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
-        buttonsPreviousState = Buttons::buttons_state;
-        
-        if(buttonsJustPressed == B_RIGHT){
-            if(logCursorX < 6) logCursorX++;
-        }
-        if(buttonsJustPressed == B_LEFT){
-            if(logCursorX > 0) logCursorX--;
-        }
-        if(buttonsJustPressed == B_DOWN){
-            if(logCursorY < 4) logCursorY++;
-        }
-        if(buttonsJustPressed == B_UP){
-            if(logCursorY > 0) logCursorY--;
-        }
-            
-        cursorTimer++;
-        if(cursorTimer > 15) {
-            showCursor = !showCursor;
-            cursorTimer = 0;
-        }
-        if(showCursor) cursorIcon.draw(17 + logCursorX * 24, 30 + logCursorY * 24);
-        
-        if(buttonsJustPressed == B_A){
-            if(HackLogManager::checkUnlocked(logCursorX, logCursorY)){
-                showLog = true;
-            }
-        }
-        
-        if(!showLog && buttonsJustPressed == B_B){
+        if(HackLogManager::shouldEnd()){
             UI::clear();
             state = prevState;
         }
-        
-        if(showLog){
-            if(buttonsJustPressed == B_B) showLog = false;
-            UI::drawBox(4, 4, 28, 20);
-            UI::setCursorBoundingBox(6, 6, 28 - 1, 20 - 1);
-            UI::setCursor(6, 6);
-            UI::setCursorDelta(UIVariants::standard);
-            UI::printText(HackLogManager::getLog(logCursorX, logCursorY));
-        }
-        
+
     break;
     }
 }

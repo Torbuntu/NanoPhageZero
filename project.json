@@ -281,7 +281,7 @@
 			"$objectFiles"
 		]
 	},
-	"target": "Pokitto",
+	"target": "linux",
 	"pipelines": {
 		"Pokitto": [
 			"img-to-c",
@@ -837,118 +837,22 @@
 		"/Denied.h": {
 			"sdcard": false
 		},
-		"/Comp.wav": {
-			"sdcard": false
-		},
-		"/Comp.h": {
-			"sdcard": false
-		},
-		"/src": {
-			"sdcard": false
-		},
-		"/src/sprites": {
-			"sdcard": false
-		},
-		"/src/Level.cpp": {
-			"sdcard": false
-		},
-		"/src/Level.hpp": {
-			"sdcard": false
-		},
-		"/src/Player.cpp": {
-			"sdcard": false
-		},
-		"/src/Player.hpp": {
-			"sdcard": false
-		},
-		"/src/HackLog.cpp": {
-			"sdcard": false
-		},
-		"/src/HackLog.hpp": {
-			"sdcard": false
-		},
-		"/src/main.cpp": {
-			"sdcard": false
-		},
-		"/audio": {
-			"sdcard": false
-		},
-		"/audio/Comp.wav": {
-			"sdcard": false
-		},
-		"/audio/Denied.wav": {
-			"sdcard": false
-		},
-		"/audio/DoorHiss.wav": {
-			"sdcard": false
-		},
-		"/audio/Comp.h": {
-			"sdcard": false
-		},
-		"/audio/Denied.h": {
-			"sdcard": false
-		},
-		"/audio/DoorHiss.h": {
-			"sdcard": false
-		},
-		"/src/ButtonMaps.h": {
-			"sdcard": false
-		},
-		"/src/Minigames": {
-			"sdcard": false
-		},
-		"/src/Minigames/Bruteforce.cpp": {
-			"sdcard": false
-		},
-		"/src/Minigames/Bruteforce.hpp": {
-			"sdcard": false
-		},
-		"/src/Minigames/RobotProgram.hpp": {
-			"sdcard": false
-		},
-		"/src/Minigames/RobotProgram.cpp": {
-			"sdcard": false
-		},
-		"/src/Minigames/Sequence.cpp": {
-			"sdcard": false
-		},
-		"/src/Minigames/Sequence.hpp": {
-			"sdcard": false
-		},
-		"/audio/Unlock.wav": {
-			"sdcard": false
-		},
-		"/audio/Unlock.h": {
+		"/EEP.ROM": {
 			"sdcard": false
 		},
 		"/NanoPhageZero": {
 			"sdcard": false
 		},
-		"/EEP.ROM": {
+		"/asepriteProjects/Cursor.aseprite": {
 			"sdcard": false
 		},
 		"/asepriteProjects/LockIcon.aseprite": {
 			"sdcard": false
 		},
-		"/sprites/LockIcon.json": {
+		"/asepriteProjects/LogIcon.aseprite": {
 			"sdcard": false
 		},
-		"/sprites/LockIcon.png": {
-			"sdcard": false
-		},
-		"/sprites/LockIcon.bin": {
-			"sdcard": false
-		},
-		"/sprites/LockIcon.h": {
-			"sdcard": false
-		},
-		"/asepriteProjects/Cursor.aseprite": {
-			"sdcard": false
-		},
-		"/sprites/Cursor.json": {
-			"sdcard": false
-		},
-		"/sprites/Cursor.png": {
+		"/audio": {
 			"sdcard": false
 		},
 		"/sprites/Cursor.bin": {
@@ -957,7 +861,28 @@
 		"/sprites/Cursor.h": {
 			"sdcard": false
 		},
-		"/asepriteProjects/LogIcon.aseprite": {
+		"/sprites/Cursor.json": {
+			"sdcard": false
+		},
+		"/sprites/Cursor.png": {
+			"sdcard": false
+		},
+		"/sprites/LockIcon.bin": {
+			"sdcard": false
+		},
+		"/sprites/LockIcon.h": {
+			"sdcard": false
+		},
+		"/sprites/LockIcon.json": {
+			"sdcard": false
+		},
+		"/sprites/LockIcon.png": {
+			"sdcard": false
+		},
+		"/sprites/LogIcon.bin": {
+			"sdcard": false
+		},
+		"/sprites/LogIcon.h": {
 			"sdcard": false
 		},
 		"/sprites/LogIcon.json": {
@@ -966,10 +891,94 @@
 		"/sprites/LogIcon.png": {
 			"sdcard": false
 		},
-		"/sprites/LogIcon.bin": {
+		"/src": {
 			"sdcard": false
 		},
-		"/sprites/LogIcon.h": {
+		"/audio/Comp.h": {
+			"sdcard": false
+		},
+		"/audio/Comp.wav": {
+			"sdcard": false
+		},
+		"/audio/Denied.h": {
+			"sdcard": false
+		},
+		"/audio/Denied.wav": {
+			"sdcard": false
+		},
+		"/audio/DoorHiss.h": {
+			"sdcard": false
+		},
+		"/audio/DoorHiss.wav": {
+			"sdcard": false
+		},
+		"/audio/Unlock.h": {
+			"sdcard": false
+		},
+		"/audio/Unlock.wav": {
+			"sdcard": false
+		},
+		"/src/ButtonMaps.h": {
+			"sdcard": false
+		},
+		"/src/HackLog.cpp": {
+			"sdcard": false
+		},
+		"/src/HackLog.hpp": {
+			"sdcard": false
+		},
+		"/src/Level.cpp": {
+			"sdcard": false
+		},
+		"/src/Level.hpp": {
+			"sdcard": false
+		},
+		"/src/Minigames": {
+			"sdcard": false
+		},
+		"/src/Player.cpp": {
+			"sdcard": false
+		},
+		"/src/Player.hpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/Bruteforce.cpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/Bruteforce.hpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/RobotProgram.cpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/RobotProgram.hpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/Sequence.cpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/Sequence.hpp": {
+			"sdcard": false
+		},
+		"/title.wav": {
+			"sdcard": false
+		},
+		"/title.raw": {
+			"sdcard": false
+		},
+		"/music": {
+			"sdcard": true
+		},
+		"/music/title.raw": {
+			"sdcard": false
+		},
+		"/music/t.raw": {
+			"sdcard": false
+		},
+		"/src/structs.h": {
+			"sdcard": false
+		},
+		"/global.h": {
 			"sdcard": false
 		}
 	},
