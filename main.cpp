@@ -12,6 +12,7 @@
 #include "src/Level.hpp"
 #include "src/Player.hpp"
 #include "src/HackLog.hpp"
+#include "src/ButtonMaps.h"
 
 #include "audio/DoorHiss.h"
 #include "audio/Denied.h"
@@ -31,6 +32,7 @@ using Bruteforce::BruteHack;
 using RobotProgram::RoboHack;
 using Level::LevelManager;
 using Player::PlayerManager;
+using HackLog::HackLogManager;
 
 
 enum State{
@@ -52,7 +54,13 @@ struct UIVariants{
 
 int camX, camY, recolor = 0, tileX, tileY, oldX, oldY, introLevel = 0, zx=30, zy=60, zc = 10, zys = 1, zxs = 1, introProg = 0;
 int messageX, messageY;
-Sprite hack, dor, botField, drone, keyIcon;//, nano, zero;
+int logCursorX, logCursorY, cursorTimer = 0;
+bool showCursor = true, showLog = false;
+
+int buttonsPreviousState = 0;
+int buttonsJustPressed = 0;
+
+Sprite hack, dor, botField, drone, keyIcon, lock, cursorIcon;//, nano, zero;
 
 // nano.play(nanoPhage, NanoPhage::boom);
 // zero.play(zeroTitle, ZeroTitle::idle);
@@ -77,6 +85,8 @@ void init(){
     hack.play(hackme, Hackme::show);
     dor.play(door, Door::locked);
     keyIcon.play(key, Key::idle);
+    lock.play(lockIcon, LockIcon::idle);
+    cursorIcon.play(cursor, Cursor::idle);
     
     
     Display::loadRGBPalette(miloslav);
@@ -87,7 +97,7 @@ void init(){
     // NEW - Select the tileset.
     UI::setTilesetImage(puits::UltimateUtopia::tileSet);
     // NEW - Show the Tilemap, the Sprites, then the UI.
-    UI::showTileMapSpritesUI();
+    UI::showTileMapUISprites();
     messageX = 2, messageY = 24;
 }
 
@@ -153,7 +163,7 @@ void update(){
         BruteHack::render();
         
         if(BruteHack::complete()){
-            message = "That sentry shold be inactive now.";
+            message = "That sentry should be inactive now.";
             displayMessage = true;
             state = prevState;
             LevelManager::setDroneState(false);
@@ -236,12 +246,18 @@ void update(){
         LevelManager::render(-camX, -camY);
         dor.draw(-camX+48, -camY);
         
-        PlayerManager::render();
-        
         oldX = camX;
         oldY = camY;
         
         PlayerManager::update(camX, camY);
+        PlayerManager::render();
+        
+        if(Buttons::cBtn()){
+            prevState = state;
+            state = HACK_LOG;
+            logCursorX = 0;
+            logCursorY = 0;
+        }
         
         if(hasKey){
             keyIcon.draw(16, 128);
@@ -255,7 +271,7 @@ void update(){
         if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
             camX = -60;
             camY = -70;
-            message = "Arg! The sentry returned me to the exit.";
+            message = "Arg!\nThe sentry returned me to the exit.";
             displayMessage = true;
         }
         
@@ -263,13 +279,13 @@ void update(){
             if( Buttons::aBtn() ){
                 if((introLevel != 0 && hasKey) || introLevel == 0){
                     Sound::playSFX(Comp, sizeof(Comp));
-                    SeqHack::init(50);
+                    SeqHack::init(60);
                     SeqHack::shuffle(6);
                     prevState = state;
                     state = State::SEQUENCE;
                 }else{
                     Sound::playSFX(Denied, sizeof(Denied));
-                    message = "I need a keycard to access this terminal.";
+                    message = "I need a keycard to access\nthis terminal.";
                     displayMessage = true;
                 }
             }
@@ -368,6 +384,8 @@ void update(){
         if(Buttons::cBtn()){
             prevState = state;
             state = HACK_LOG;
+            logCursorX = 0;
+            logCursorY = 0;
         }
         
         if(hasKey){
@@ -389,7 +407,7 @@ void update(){
             if( Buttons::aBtn() ){
                 if(hasKey){
                     Sound::playSFX(Comp, sizeof(Comp));
-                    SeqHack::init(30);
+                    SeqHack::init(40);
                     SeqHack::shuffle(10);
                     prevState = state;
                     state = State::SEQUENCE;
@@ -473,16 +491,65 @@ void update(){
     break;
     case HACK_LOG:
         UI::clear();
+        UI::showTileMapUISprites();
         UI::drawBox(1, 1, 32, 24);
         UI::setCursorBoundingBox(2, 2, 32 - 1, 24 - 1);
         UI::setCursor(2, 2);
         UI::setCursorDelta(UIVariants::standard);
         UI::printString("Hack Log: ");
         
-        if(Buttons::bBtn()){
+        if(!showLog){
+            for(int i = 0; i < 7; ++i){
+                for(int j = 0; j < 5; ++j){
+                    HackLogManager::render(i, j);
+                }
+            }
+        }
+        
+        Buttons::pollButtons();
+        buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
+        buttonsPreviousState = Buttons::buttons_state;
+        
+        if(buttonsJustPressed == B_RIGHT){
+            if(logCursorX < 6) logCursorX++;
+        }
+        if(buttonsJustPressed == B_LEFT){
+            if(logCursorX > 0) logCursorX--;
+        }
+        if(buttonsJustPressed == B_DOWN){
+            if(logCursorY < 4) logCursorY++;
+        }
+        if(buttonsJustPressed == B_UP){
+            if(logCursorY > 0) logCursorY--;
+        }
+            
+        cursorTimer++;
+        if(cursorTimer > 15) {
+            showCursor = !showCursor;
+            cursorTimer = 0;
+        }
+        if(showCursor) cursorIcon.draw(17 + logCursorX * 24, 30 + logCursorY * 24);
+        
+        if(buttonsJustPressed == B_A){
+            if(HackLogManager::checkUnlocked(logCursorX, logCursorY)){
+                showLog = true;
+            }
+        }
+        
+        if(!showLog && buttonsJustPressed == B_B){
             UI::clear();
             state = prevState;
         }
+        
+        if(showLog){
+            if(buttonsJustPressed == B_B) showLog = false;
+            UI::drawBox(4, 4, 28, 20);
+            UI::setCursorBoundingBox(6, 6, 28 - 1, 20 - 1);
+            UI::setCursor(6, 6);
+            UI::setCursorDelta(UIVariants::standard);
+            UI::printText(HackLogManager::getLog(logCursorX, logCursorY));
+        }
+        
     break;
     }
 }

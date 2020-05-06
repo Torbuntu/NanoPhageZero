@@ -281,7 +281,7 @@
 			"$objectFiles"
 		]
 	},
-	"target": "linux",
+	"target": "Pokitto",
 	"pipelines": {
 		"Pokitto": [
 			"img-to-c",
@@ -925,6 +925,51 @@
 			"sdcard": false
 		},
 		"/EEP.ROM": {
+			"sdcard": false
+		},
+		"/asepriteProjects/LockIcon.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/LockIcon.json": {
+			"sdcard": false
+		},
+		"/sprites/LockIcon.png": {
+			"sdcard": false
+		},
+		"/sprites/LockIcon.bin": {
+			"sdcard": false
+		},
+		"/sprites/LockIcon.h": {
+			"sdcard": false
+		},
+		"/asepriteProjects/Cursor.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/Cursor.json": {
+			"sdcard": false
+		},
+		"/sprites/Cursor.png": {
+			"sdcard": false
+		},
+		"/sprites/Cursor.bin": {
+			"sdcard": false
+		},
+		"/sprites/Cursor.h": {
+			"sdcard": false
+		},
+		"/asepriteProjects/LogIcon.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/LogIcon.json": {
+			"sdcard": false
+		},
+		"/sprites/LogIcon.png": {
+			"sdcard": false
+		},
+		"/sprites/LogIcon.bin": {
+			"sdcard": false
+		},
+		"/sprites/LogIcon.h": {
 			"sdcard": false
 		}
 	},

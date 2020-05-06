@@ -94,6 +94,13 @@ public:
 	};
 };
 
+class Cursor {
+public:
+    enum Animation : std::uint16_t {
+		idle = 0
+	};
+};
+
 class Door {
 public:
     enum Animation : std::uint16_t {
@@ -159,6 +166,20 @@ public:
 	};
 };
 
+class LockIcon {
+public:
+    enum Animation : std::uint16_t {
+		idle = 0
+	};
+};
+
+class LogIcon {
+public:
+    enum Animation : std::uint16_t {
+		idle = 0
+	};
+};
+
 class MinibotField {
 public:
     enum Animation : std::uint16_t {
@@ -205,12 +226,15 @@ public:
 // https://stackoverflow.com/a/19591902
 extern "C" {
 extern const Button button;
+extern const Cursor cursor;
 extern const Door door;
 extern const EnemyVirus enemyVirus;
 extern const HackIcons hackIcons;
 extern const Hackme hackme;
 extern const Hero hero;
 extern const Key key;
+extern const LockIcon lockIcon;
+extern const LogIcon logIcon;
 extern const MinibotField minibotField;
 extern const Robot robot;
 extern const SecurityDrone securityDrone;
