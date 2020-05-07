@@ -186,7 +186,7 @@ void init(){
     UI::showTileMapUISprites();
     messageX = 2, messageY = 24;
     
-    Sound::playMusicStream("music/t.raw", 0);
+    Sound::playMusicStream("music/npz-t.raw", 0);
 }
 
 void update(){
@@ -205,9 +205,10 @@ void update(){
         }
     }
     
-    Sound::playMusicStream();
+    
     switch(state){
     case INTRO:
+        Sound::playMusicStream();
         UI::drawGauge(8, 28, 17, introProg, 100);
 
         if( Buttons::cBtn() ){
@@ -414,6 +415,13 @@ void update(){
                     break;
                 case 2:
                     getTile = lvl2Enum;
+                    break;
+                case 3:
+                
+                    break;
+                    
+                case 4: //final boss
+                
                     break;
             }
             doorLocked = true;

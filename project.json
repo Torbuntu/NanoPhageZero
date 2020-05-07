@@ -281,7 +281,7 @@
 			"$objectFiles"
 		]
 	},
-	"target": "linux",
+	"target": "Pokitto",
 	"pipelines": {
 		"Pokitto": [
 			"img-to-c",
@@ -979,6 +979,9 @@
 			"sdcard": false
 		},
 		"/global.h": {
+			"sdcard": false
+		},
+		"/music/npz-t.raw": {
 			"sdcard": false
 		}
 	},
