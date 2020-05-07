@@ -33,8 +33,12 @@ namespace HackLog {
         //logs
         logs[0] = "What happened?! My arm feels heavy and cold and my vision... I can't... see... What are these outlines? I need to get out of here...";
         logs[1] = "I feel drawn to these terminals. My arm... like a magnet... If I just touch them, it is like I can tell whem what I want them to do... I must... hack them.";
-        logs[2] = "These minibots are used to run tasks on the processing facility servers. They aren't that useful yet, but I can task them with printing keycards for accessing locked terminals.";
-        logs[3] = "The facility has very powerful sentry drones that gaurd certain floors. When I look at them now they are glowing red... They must be infected with some virus... I should hack the control system.";
+        logs[2] = "The minibot fields look strange. It seems they have been infected with some virus... I will have to be careful with how I program the minibot in order to bypass the wandering viruses.";
+        logs[3] = "The sentry drones have been compromised. Every time I try to get by they force me back to the enterance. The drones used to be around to protect the facility merchandise. I wonder what happened to them.";
+        logs[4] = "The conveyor belt brings in scraps for sorting. My job was to collect valuables and put them in the crates for delivery. Green Scraps go for the highest prices, how was I to know I would get infected...";
+        logs[5] = "These minibots are used to run tasks on the processing facility servers. They aren't that useful yet, but I can program them for printing keycards to access locked terminals.";
+        logs[6] = "The facility has very powerful sentry drones that gaurd certain floors. When I look at them now they are glowing red... They must be infected with some virus... I should hack the control system.";
+        logs[7] = "The tower lobby... I see they use the same tech as the reclemation facility. My arm is starting to ache. The Green Scrap in use here must be much stronger than the scraps at the facility. I must be close.";
         
         for(int i = 0; i < 35; ++i){
             unlocked[i] = false;

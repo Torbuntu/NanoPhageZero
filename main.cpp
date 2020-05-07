@@ -21,9 +21,6 @@ int messageX, messageY;
 
 Sprite hack, dor, keyIcon;//, nano, zero;
 
-// nano.play(nanoPhage, NanoPhage::boom);
-// zero.play(zeroTitle, ZeroTitle::idle);
-
 bool hacking = false, doorLocked = true, hasKey = false;
 
 MapEnum tile;
@@ -88,6 +85,85 @@ void checkSequ(){
     }
 }
 
+void checkDroneActive(){
+    if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
+        if(state != EXPLORE){
+            camX = -60;
+            camY = -70;
+        }else{
+            camX = 10;
+            camY = 10;
+        }
+        message = "Arg!\nThe sentry returned me to the exit.";
+        if(state == BRUTE_INTRO) HackLogManager::unlockLog(3);
+        displayMessage = true;
+    }
+}
+
+void checkDoor(){
+    if( tile == Door ){
+        if(dor.animation == Door::locked){
+            camX = oldX;
+            camY = oldY;
+            Sound::playSFX(Denied, sizeof(Denied));
+            message = "The door is locked! Where is the control system?";
+            displayMessage = true;
+        } else if(dor.animation == Door::unlocked){
+            Sound::playSFX(DoorHiss, sizeof(DoorHiss));
+            dor.play(door, Door::open);
+        }
+    }
+}
+
+void checkCollide(){
+    if( tile == Collide ){
+        camX = oldX;
+        camY = oldY;
+    }
+}
+
+void openHackLog(){
+    if(Buttons::cBtn()){
+        prevState = state;
+        state = HACK_LOG;
+        HackLogManager::setShouldEnd(false);
+    }
+}
+
+void primaryUpdate(){
+    oldX = camX;
+    oldY = camY;
+    
+    PlayerManager::update(camX, camY);
+    PlayerManager::render();
+    
+    openHackLog();
+    
+    if(hasKey){
+        keyIcon.draw(16, 128);
+    }
+    
+    tileX = (camX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
+    tileY = (camY + PlayerManager::getY() - 8 + PlayerManager::getH()) / PROJ_TILE_H;
+    tile = getTile(tileX, tileY);
+    
+    if(tile == Log){
+        switch(state){
+            case SEQ_INTRO:
+                HackLogManager::unlockLog(4);
+                break;
+        }
+        
+    }
+    
+    checkDroneActive();
+    checkSequ();
+    checkBrute();
+    checkRobo();
+    checkCollide();
+    checkDoor();
+}
+
 void init(){
     camX = 12;
     camY = 12;
@@ -133,27 +209,17 @@ void update(){
     switch(state){
     case INTRO:
         UI::drawGauge(8, 28, 17, introProg, 100);
-        // nano.draw(LCDWIDTH/2-nano.getFrameWidth()/2, 10);
-        // nano.onEndAnimation = [](Sprite *nano){nano->play(nanoPhage, NanoPhage::idle); }; 
-        // zero.draw(zx, zy);
-        // zc--;
-        // if(zc == 0) {
-        //     zc = 10;
-        //     zx+=zxs;
-        //     zy+=zys;
-        //     if(zy > 65 || zy < 60) zys = -zys;
-        //     if(zx > 35 || zx < 30) zxs = -zxs;
-        // }
-        
+
         if( Buttons::cBtn() ){
             introProg++;
             if(introProg == 100){
                 UI::clear();
                 state = State::SEQ_INTRO;
+                Sound::pauseMusicStream();
             }
         }
-            // 7 == white;
-            // 207 == Green
+        // 7 == white;
+        // 207 == Green
         
         Display::setColor(135);
         Display::print(zx, 80, "Nano");
@@ -274,56 +340,8 @@ void update(){
         LevelManager::render(-camX, -camY);
         dor.draw(-camX+48, -camY);
         
-        oldX = camX;
-        oldY = camY;
+        primaryUpdate();
         
-        PlayerManager::update(camX, camY);
-        PlayerManager::render();
-        
-        if(Buttons::cBtn()){
-            prevState = state;
-            state = HACK_LOG;
-            HackLogManager::setShouldEnd(false);
-        }
-        
-        if(hasKey){
-            keyIcon.draw(16, 128);
-        }
-        
-        // get current tile
-        tileX = (camX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
-        tileY = (camY + PlayerManager::getY() - 8 + PlayerManager::getH()) / PROJ_TILE_H;
-        tile = getTile(tileX, tileY);
-        
-        if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
-            camX = -60;
-            camY = -70;
-            message = "Arg!\nThe sentry returned me to the exit.";
-            if(state == BRUTE_INTRO) HackLogManager::unlockLog(3);
-            displayMessage = true;
-        }
-        
-        checkSequ();
-        checkBrute();
-        checkRobo();
-
-        if( tile == Collide ){
-            camX = oldX;
-            camY = oldY;
-        }
-        
-        if( tile == Door ){
-            if(dor.animation == Door::locked){
-                camX = oldX;
-                camY = oldY;
-                Sound::playSFX(Denied, sizeof(Denied));
-                message = "The door is locked! Where is the control system?";
-                displayMessage = true;
-            } else if(dor.animation == Door::unlocked){
-                Sound::playSFX(DoorHiss, sizeof(DoorHiss));
-                dor.play(door, Door::open);
-            }
-        }
         tileY = (camY + PlayerManager::getY() + 8 + PlayerManager::getH()) / PROJ_TILE_H;
         tile = getTile(tileX, tileY);
         
@@ -336,12 +354,14 @@ void update(){
             hasKey = false;
             PlayerManager::setDir(3);//face south
             if(introLevel == 1){
+                HackLogManager::unlockLog(5);
                 lastMap = roboIntro;
                 LevelManager::setMap(roboIntro, roboIntroEnum);
                 getTile = roboIntroEnum;
                 state = State::ROBO_INTRO;
             }
             if(introLevel == 2){
+                HackLogManager::unlockLog(6);
                 lastMap = bruteIntro;
                 LevelManager::setMap(bruteIntro, bruteIntroEnum);
                 LevelManager::setDroneState(true);
@@ -350,6 +370,7 @@ void update(){
                 
             }
             if(introLevel == 3){
+                HackLogManager::unlockLog(7);
                 lastMap = lobby;
                 LevelManager::setMap(lobby, lobbyEnum);
                 LevelManager::setDroneState(true);
@@ -366,58 +387,10 @@ void update(){
         break;
     case EXPLORE:
         LevelManager::render(-camX, -camY);
-        
         dor.draw(-camX+96, -camY+80);
         dor.draw(-camX+112, -camY+80);
         
-        oldX = camX;
-        oldY = camY;
-        
-        PlayerManager::update(camX, camY);
-        PlayerManager::render();
-        
-        if(Buttons::cBtn()){
-            prevState = state;
-            state = HACK_LOG;
-            HackLogManager::setShouldEnd(false);
-        }
-        
-        if(hasKey){
-            keyIcon.draw(16, 128);
-        }
-        
-        tileX = (camX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
-        tileY = (camY + PlayerManager::getY() - 8 + PlayerManager::getH()) / PROJ_TILE_H;
-        tile = getTile(tileX, tileY);
-        
-        if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
-            camX = 10;
-            camY = 10;
-            message = "Arg!\nThe sentry returned me to the exit.";
-            displayMessage = true;
-        }
-        
-        checkSequ();
-        checkBrute();
-        checkRobo();
-        
-        if( tile == Collide ){
-            camX = oldX;
-            camY = oldY;
-        }
-        
-        if( tile == Door ){
-            if(dor.animation == Door::locked){
-                camX = oldX;
-                camY = oldY;
-                Sound::playSFX(Denied, sizeof(Denied));
-                message = "The door is locked! Where is the control system?";
-                displayMessage = true;
-            } else if(dor.animation == Door::unlocked){
-                Sound::playSFX(DoorHiss, sizeof(DoorHiss));
-                dor.play(door, Door::open);
-            }
-        }
+        primaryUpdate();
         
         if( tile == Lift ){
             displayMessage = false;
@@ -439,6 +412,9 @@ void update(){
                 case 1:
                     getTile = lvl1Enum;
                     break;
+                case 2:
+                    getTile = lvl2Enum;
+                    break;
             }
             doorLocked = true;
             dor.play(door, Door::locked);
@@ -447,6 +423,7 @@ void update(){
             LevelManager::setDroneState(true);
             camX = 10;
             camY = 10;
+            PlayerManager::setDir(3);//face south
             state = State::EXPLORE;
         }
     break;
@@ -456,6 +433,7 @@ void update(){
         
         if(HackLogManager::shouldEnd()){
             UI::clear();
+            UI::showTileMapSpritesUI();
             state = prevState;
         }
 

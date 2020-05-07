@@ -9,7 +9,8 @@ enum MapEnum {
 	Drone = 1 << 4,
 	Botfield = 1 << 5,
 	Robo = 1 << 6,
-	Lift = 1 << 7
+	Lift = 1 << 7,
+	Log = 1 << 8
 };
 inline const uint8_t bruteIntro[] = {
 14, 11,
@@ -641,7 +642,7 @@ static const MapEnum parameters[] = {
 	EMPTY,
 	EMPTY,
 	EMPTY,
-	EMPTY,
+	Sequ,
 	EMPTY,
 	Collide,
 	EMPTY,
@@ -1185,7 +1186,7 @@ static const MapEnum parameters[] = {
 	EMPTY,
 	EMPTY,
 	EMPTY,
-	EMPTY,
+	Log,
 	Collide,
 	EMPTY,
 	EMPTY,
