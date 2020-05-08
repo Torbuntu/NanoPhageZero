@@ -19,17 +19,18 @@ namespace HackLog {
             static bool shouldEnd();
             static void setShouldEnd(bool should);
             
+            static bool getPlayMusic();
+            static void animateLog(int pos);
+            
         private:
             static inline char* logs[35];
             static inline bool unlocked[35];
             static inline Sprite lock, logging, cursorIcon;
-            static inline int logCursorX, logCursorY, cursorTimer = 0;
+            static inline int logCursorX, logCursorY, cursorTimer = 0, enterCooldown = 5;
             
-            static inline bool showLog = false, end = false, showCursor = true;
+            static inline bool showLog = false, end = false, showCursor = true, playMusic = true;
             
             // init button state mechanism
             static inline int btnPrevState = 0, btnJustPressed = 0;
-            
-        
     };
 }

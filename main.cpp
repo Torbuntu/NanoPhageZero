@@ -21,7 +21,7 @@ int messageX, messageY;
 
 Sprite hack, dor, keyIcon;//, nano, zero;
 
-bool hacking = false, doorLocked = true, hasKey = false;
+bool hacking = false, doorLocked = true, hasKey = false, playMusic = true;
 
 MapEnum tile;
 auto getTile = seqIntroEnum;
@@ -30,6 +30,12 @@ auto lastMap = seqIntro;
 
 char* message = "";
 bool displayMessage = false;
+
+int logAnimation = 0, logTimer = 0;
+
+void unlockedLogAnimation(int y){
+    HackLogManager::animateLog(y);
+}
 
 void checkRobo(){
     if( tile == Robo ){
@@ -78,7 +84,11 @@ void checkSequ(){
             }else{
                 Sound::playSFX(Denied, sizeof(Denied));
                 message = "I need a keycard to access\nthis terminal.";
-                if(state == ROBO_INTRO) HackLogManager::unlockLog(2);
+                if(state == ROBO_INTRO) {
+                    HackLogManager::unlockLog(2);
+                    logAnimation = 16;
+                    logTimer = 50;
+                }
                 displayMessage = true;
             }
         }
@@ -95,7 +105,11 @@ void checkDroneActive(){
             camY = 10;
         }
         message = "Arg!\nThe sentry returned me to the exit.";
-        if(state == BRUTE_INTRO) HackLogManager::unlockLog(3);
+        if(state == BRUTE_INTRO) {
+            HackLogManager::unlockLog(3);
+            logAnimation = 16;
+            logTimer = 50;
+        }
         displayMessage = true;
     }
 }
@@ -151,6 +165,8 @@ void primaryUpdate(){
         switch(state){
             case SEQ_INTRO:
                 HackLogManager::unlockLog(4);
+                logAnimation = 16;
+                logTimer = 50;
                 break;
         }
         
@@ -179,7 +195,7 @@ void init(){
     LevelManager::init();
     LevelManager::setMap(seqIntro, seqIntroEnum);
     PlayerManager::init();
-    HackLog::HackLogManager::init();
+    HackLogManager::init();
     // NEW - Select the tileset.
     UI::setTilesetImage(puits::UltimateUtopia::tileSet);
     // NEW - Show the Tilemap, the Sprites, then the UI.
@@ -205,10 +221,19 @@ void update(){
         }
     }
     
+    if(logAnimation > 0){
+        if(logTimer > 0) logTimer--;
+        if(logTimer == 0){
+            logAnimation--;
+        }
+        unlockedLogAnimation(logAnimation);
+    }
     
+    if(playMusic)Sound::playMusicStream();
+    else Sound::pauseMusicStream();
     switch(state){
     case INTRO:
-        Sound::playMusicStream();
+        
         UI::drawGauge(8, 28, 17, introProg, 100);
 
         if( Buttons::cBtn() ){
@@ -216,7 +241,7 @@ void update(){
             if(introProg == 100){
                 UI::clear();
                 state = State::SEQ_INTRO;
-                Sound::pauseMusicStream();
+                Sound::playMusicStream("music/npz-a.raw", 0);
             }
         }
         // 7 == white;
@@ -288,6 +313,8 @@ void update(){
         if(SeqHack::complete()){
             if(prevState == SEQ_INTRO){
                 HackLogManager::unlockLog(1);
+                logAnimation = 16;
+                logTimer = 50;
             }
             UI::clear();
             message = "The door is unlocked!";
@@ -326,7 +353,9 @@ void update(){
             if(prevState != EXPLORE){
                 LevelManager::setMap(lastMap, lastTile);
                 getTile = lastTile;
-                HackLog::HackLogManager::unlockLog(0);
+                HackLogManager::unlockLog(0);
+                logAnimation = 16;
+                logTimer = 50;
             }else {
                 LevelManager::setMap();
                 getTile = lastTile;
@@ -356,6 +385,8 @@ void update(){
             PlayerManager::setDir(3);//face south
             if(introLevel == 1){
                 HackLogManager::unlockLog(5);
+                logAnimation = 16;
+                logTimer = 50;
                 lastMap = roboIntro;
                 LevelManager::setMap(roboIntro, roboIntroEnum);
                 getTile = roboIntroEnum;
@@ -363,6 +394,8 @@ void update(){
             }
             if(introLevel == 2){
                 HackLogManager::unlockLog(6);
+                logAnimation = 16;
+                logTimer = 50;
                 lastMap = bruteIntro;
                 LevelManager::setMap(bruteIntro, bruteIntroEnum);
                 LevelManager::setDroneState(true);
@@ -372,6 +405,8 @@ void update(){
             }
             if(introLevel == 3){
                 HackLogManager::unlockLog(7);
+                logAnimation = 16;
+                logTimer = 50;
                 lastMap = lobby;
                 LevelManager::setMap(lobby, lobbyEnum);
                 LevelManager::setDroneState(true);
@@ -379,6 +414,7 @@ void update(){
                 state = State::EXPLORE;
                 camX = 10;
                 camY = 10;
+                Sound::playMusicStream("music/npz-e.raw", 0);
             }
             
             dor.play(door, Door::locked);
@@ -417,7 +453,7 @@ void update(){
                     getTile = lvl2Enum;
                     break;
                 case 3:
-                
+                    getTile = lvl3Enum;
                     break;
                     
                 case 4: //final boss
@@ -442,6 +478,7 @@ void update(){
         if(HackLogManager::shouldEnd()){
             UI::clear();
             UI::showTileMapSpritesUI();
+            playMusic = HackLogManager::getPlayMusic();
             state = prevState;
         }
 

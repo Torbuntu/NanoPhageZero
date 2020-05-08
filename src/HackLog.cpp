@@ -51,8 +51,7 @@ namespace HackLog {
         Buttons::pollButtons();
         btnJustPressed = Buttons::buttons_state & (~btnPrevState);
         btnPrevState = Buttons::buttons_state;
-        
-        
+
         if(btnJustPressed == B_RIGHT){
             if(logCursorX < 6) logCursorX++;
         }
@@ -82,6 +81,10 @@ namespace HackLog {
             end = true;
         }
         
+        if(enterCooldown > 0)enterCooldown--;
+        if(btnJustPressed == B_C && enterCooldown == 0){
+            playMusic = !playMusic;
+        }
     }
     
     void HackLogManager::render(){
@@ -93,7 +96,9 @@ namespace HackLog {
         UI::setCursor(2, 2);
         UI::setCursorDelta(UIVariants::standard);
         UI::printString("Hack Log: ");
-        
+        UI::setCursor(2, 32 - 2);
+        if(playMusic)UI::printText("> C to toggle music: true");
+        else UI::printText("> C to toggle music: false");
         if(!showLog){
             for(int x = 0; x < 7; ++x){
                 for(int y = 0; y < 5; ++y){
@@ -118,11 +123,20 @@ namespace HackLog {
     void HackLogManager::setShouldEnd(bool should){
         logCursorX = 0;
         logCursorY = 0;
+        enterCooldown = 5;
         end = should;
     }
     
     bool HackLogManager::shouldEnd(){
         return end;
+    }
+    
+    bool HackLogManager::getPlayMusic(){
+        return playMusic;
+    }
+    
+    void HackLogManager::animateLog(int pos){
+        logging.draw(16, pos);
     }
         
 }

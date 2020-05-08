@@ -983,6 +983,24 @@
 		},
 		"/music/npz-t.raw": {
 			"sdcard": false
+		},
+		"/music/ambi.raw": {
+			"sdcard": false
+		},
+		"/music/npz-a.raw": {
+			"sdcard": false
+		},
+		"/music/uexpo.raw": {
+			"sdcard": false
+		},
+		"/music/npz-e.raw": {
+			"sdcard": false
+		},
+		"/maps/lvl2 (copy).tmx": {
+			"sdcard": false
+		},
+		"/maps/lvl3.tmx": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
