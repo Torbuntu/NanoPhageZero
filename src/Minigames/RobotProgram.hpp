@@ -46,7 +46,7 @@ namespace RobotProgram{
             
             static inline int program[13];
             
-            static inline int length, roboX, roboY, step, speed, renderX, renderY, keyX, keyY, btnX, btnY, vX, vY, vD, vDInit, vS, keyInitX, keyInitY, vInitX, vInitY;
+            static inline int length, roboX, roboY, step, speed, renderX, renderY, keyX, keyY, btnX, btnY, vX, vY, vD, vDInit, vS, keyInitX, keyInitY, vInitX, vInitY, iconOffset;
             
             static inline RoboState roboState = RoboState::READY;
             

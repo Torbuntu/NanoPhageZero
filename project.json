@@ -1001,6 +1001,78 @@
 		},
 		"/maps/lvl3.tmx": {
 			"sdcard": false
+		},
+		"/sprites/GreenScrap.json": {
+			"sdcard": false
+		},
+		"/sprites/GreenScrap.png": {
+			"sdcard": false
+		},
+		"/asepriteProjects/GreenScrap.aseprite": {
+			"sdcard": false
+		},
+		"/maps/lobby (copy).tmx": {
+			"sdcard": false
+		},
+		"/maps/final.tmx": {
+			"sdcard": false
+		},
+		"/asepriteProjects/FinalBoss.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/FinalBoss.json": {
+			"sdcard": false
+		},
+		"/sprites/FinalBoss.png": {
+			"sdcard": false
+		},
+		"/sprites/FinalBoss.bin": {
+			"sdcard": false
+		},
+		"/src/Minigames/BossBattle.hpp": {
+			"sdcard": false
+		},
+		"/src/Minigames/BossBattle.cpp": {
+			"sdcard": false
+		},
+		"/sprites/FinalBoss.h": {
+			"sdcard": false
+		},
+		"/maps/minibotfield (copy).tmx": {
+			"sdcard": false
+		},
+		"/maps/lift.tmx": {
+			"sdcard": false
+		},
+		"/asepriteProjects/LiftSelector.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/LiftSelector.json": {
+			"sdcard": false
+		},
+		"/sprites/LiftSelector.png": {
+			"sdcard": false
+		},
+		"/asepriteProjects/FloorNumbers.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/FloorNumbers.json": {
+			"sdcard": false
+		},
+		"/sprites/FloorNumbers.png": {
+			"sdcard": false
+		},
+		"/sprites/LiftSelector.h": {
+			"sdcard": false
+		},
+		"/sprites/FloorNumbers.h": {
+			"sdcard": false
+		},
+		"/sprites/FloorNumbers.bin": {
+			"sdcard": false
+		},
+		"/sprites/LiftSelector.bin": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

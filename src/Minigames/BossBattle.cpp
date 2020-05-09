@@ -1,4 +1,4 @@
-#include "src/Minigames/Bruteforce.hpp"
+#include "src/Minigames/BossBattle.hpp"
 #include "src/ButtonMaps.h"
 #include <Pokitto.h>
 #include "sprites.h"
@@ -6,34 +6,40 @@
 #include <puits_UltimateUtopia.h>
 #include "src/structs.h"
 
-namespace Bruteforce {
+namespace BossBattle {
     using Pokitto::UI;
-    void BruteHack::drawUI(){
+    void BossFight::drawUI(){
         UI::clear();
-        UI::drawBox(1, 1, 32, 3);
-        UI::setCursorBoundingBox(2, 2, 31, 1);
-        UI::setCursor(2, 2);
+        UI::drawBox(1, 24, 35, 24 + 4);
+        UI::setCursorBoundingBox(1 + 1, 24 + 1, 35 - 1, 24 + 4 - 1);
+        UI::setCursor(1 + 1, 24 + 1);
         UI::setCursorDelta(UIVariants::standard);
     }
     
-    void BruteHack::init(int count){
+    void BossFight::init(int count){
         icons.play(hackIcons, HackIcons::aUp);
-        virus.play(enemyVirus, EnemyVirus::play);
         
         bruteCount = count;
         select = 0;
         setSelect();
         bruteProgress = 0;
         enemyProgress = 1;
-        enemySpeed = 25;
+        enemySpeed = 5;
         enemyTimer = 0;
         
         end = false;
+        victory = false;
+        
+        dialog[0] = "I've been expecting you.";
+        dialog[1] = "You don't think that Green Scrap at the facility was accidental, right?";
+        dialog[2] = "It was supposed to completely consume you. But here you are... unconsumed.";
+        dialog[3] = "I was human once. But I've since been upgraded. As you can see, I'm now far superior.";
+        dialog[4] = "You have a choice. Join me, and be superior. Or defeat me, and receive the cure.";
         
         brutState = BrutState::READY;
     }
     
-    void BruteHack::update(){
+    void BossFight::update(){
         using Pokitto::Buttons;
         // Poll the button
         Buttons::pollButtons();
@@ -42,9 +48,12 @@ namespace Bruteforce {
         
         switch(brutState){
             case READY:
-                if(buttonsJustPressed == B_C){
-                    brutState = BrutState::RUNNING;
-                }
+                if(buttonsJustPressed == B_A && dialogPos < 5) dialogPos++;
+                if(dialogPos == 5) brutState = CHOICE;
+            break;
+            case CHOICE:
+                if(buttonsJustPressed == B_B) brutState = COMPLETE;
+                if(buttonsJustPressed == B_C) brutState = RUNNING;
             break;
             case RUNNING:
                 if(buttonsJustPressed & bruteSelect){
@@ -63,19 +72,26 @@ namespace Bruteforce {
                         enemyProgress++;
                     }
                 }
+                
+                if( enemyProgress >= bruteFill ){
+                    brutState = PAUSE;
+                }
+                
                 if(bruteProgress >= bruteFill){
+                    victory = true;
                     brutState = BrutState::COMPLETE;   
                 }
             break;
+            case PAUSE:
+            
+            break;
             case COMPLETE:
-                if(buttonsJustPressed == B_B){
-                    end = true;
-                }
+                end = true;
             break;
         }
     }
     
-    void BruteHack::setSelect(){
+    void BossFight::setSelect(){
         int r = rand()%7;
         switch(r){
             case 0:
@@ -109,48 +125,66 @@ namespace Bruteforce {
         }
     }
     
-    void BruteHack::render(){
+    void BossFight::render(){
         using Pokitto::UI;
         
         switch(brutState){
             case READY:
-                BruteHack::drawUI();
-                UI::printText("> C to hack drone!");
+                drawUI();
+                UI::printText(dialog[dialogPos]);
+            break;
+            case CHOICE:
+                drawUI();
+                UI::printText("> B - join cyber race\n> C - battle cyborg CEO");
             break;
             case RUNNING:
                 UI::clear();
                 // icon to press
                 icons.draw(8, 40);
                 
-                virus.draw(190, 130);
-                
                 // player bar
                 UI::drawGauge(1, 34, 5, bruteProgress, bruteFill);
                 
                 // virus bar
                 UI::drawGauge(1, 34, 20, enemyProgress, bruteFill);
+            break;
+            case PAUSE:
+                UI::clear();
             break;
             case COMPLETE:
-                BruteHack::drawUI();
-                UI::printText("> B exit.");
-                // player bar
-                UI::drawGauge(1, 34, 5, bruteProgress, bruteFill);
-                
-                // virus bar
-                UI::drawGauge(1, 34, 20, enemyProgress, bruteFill);
-                
-               
-            break;
+                UI::clear();
+                break;
         }
            
     }
     
-    bool BruteHack::complete(){
+    void BossFight::resume(){
+        enemyProgress = 0;
+        brutState = RUNNING;
+    }
+    
+    bool BossFight::complete(){
         return end;
     }
     
     // TODO: Actually implement failure.
-    bool BruteHack::fail(){
+    bool BossFight::fail(){
         return enemyProgress >= 30;
+    }
+    
+    bool BossFight::running(){
+        return brutState == RUNNING;
+    }
+    
+    bool BossFight::getVictory(){
+        return victory;
+    }
+    
+    void BossFight::endLoop(){
+        loopcheck = false;
+    }
+    
+    bool BossFight::loop(){
+        return loopcheck;
     }
 }

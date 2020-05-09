@@ -10,6 +10,7 @@
 #include "src/Minigames/Sequence.hpp"
 #include "src/Minigames/Bruteforce.hpp"
 #include "src/Minigames/RobotProgram.hpp"
+#include "src/Minigames/BossBattle.hpp"
 
 #include "src/Level.hpp"
 #include "src/Player.hpp"
@@ -30,6 +31,8 @@ using Pokitto::UI;
 using Sequence::SeqHack;
 using Bruteforce::BruteHack;
 using RobotProgram::RoboHack;
+
+using BossBattle::BossFight;
 
 // Managers
 using Level::LevelManager;

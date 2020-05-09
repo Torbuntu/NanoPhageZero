@@ -13,8 +13,8 @@ namespace RobotProgram{
     
     void RoboHack::drawUI(){
         UI::clear();
-        UI::drawBox(1, 0, 32, 2);
-        UI::setCursorBoundingBox(2, 1, 31, 1);
+        UI::drawBox(1, 0, 35, 2);
+        UI::setCursorBoundingBox(2, 1, 34, 1);
         UI::setCursor(1, 1);
         UI::setCursorDelta(UIVariants::standard);
     }
@@ -99,6 +99,7 @@ namespace RobotProgram{
         length = len;
         end = false;
         speed = 15;
+        iconOffset = 7;
 
         RoboHack::restart();
     }
@@ -284,39 +285,32 @@ namespace RobotProgram{
             switch(program[i]){
                 case B_A:
                     icons.play(hackIcons, HackIcons::aUp);
-                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_B:
                     icons.play(hackIcons, HackIcons::bUp);
-                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_C:
                     icons.play(hackIcons, HackIcons::cUp);
-                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_UP:
                     icons.play(hackIcons, HackIcons::dUpUp);
-                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_DOWN:
                     icons.play(hackIcons,  HackIcons::dDownUp);
-                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_LEFT:
                     icons.play(hackIcons, HackIcons::dLeftUp);
-                    icons.draw(4 + i * 16, 18);
                     break;
                 case B_RIGHT:
                     icons.play(hackIcons,  HackIcons::dRightUp);
-                    icons.draw(4 + i * 16, 18);
                     break;
                 default:
                     icons.play(hackIcons, HackIcons::empty);
-                    icons.draw(4 + i * 16, 18);
             }
+            icons.draw(iconOffset + i * 16, 18);
         }
         if(roboState == RoboState::RUNNING){
-            robo.draw(4+step*18, 32);
+            robo.draw(iconOffset+step*16, 32);
         }
         
         if(!unlocked){
@@ -333,8 +327,8 @@ namespace RobotProgram{
             virus.draw(64 + vX * 16, 48 + vY * 16);
         }
         
-        UI::drawBox(1, 24, 32, 26);
-        UI::setCursorBoundingBox(2, 2, 31, 25);
+        UI::drawBox(1, 24, 35, 26);
+        UI::setCursorBoundingBox(2, 2, 34, 25);
         UI::setCursor(2, 25);
         UI::setCursorDelta(UIVariants::standard);
         UI::printText("A pickup, B use. C skip.");

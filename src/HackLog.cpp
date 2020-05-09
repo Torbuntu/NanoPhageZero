@@ -22,6 +22,10 @@ namespace HackLog {
         return getLog(x + y * 7);
     }
     
+    bool HackLogManager::checkUnlocked(int id){
+        return id <= 35 ? unlocked[id] : false;
+    }
+    
     void HackLogManager::unlockLog(int id){
         unlocked[id] = true;
     }
@@ -30,20 +34,61 @@ namespace HackLog {
         lock.play(lockIcon, LockIcon::idle);
         logging.play(logIcon, LogIcon::idle);
         cursorIcon.play(cursor, Cursor::idle);
-        //logs
+        //BEGIN Intro Level Logs
         logs[0] = "What happened?! My arm feels heavy and cold and my vision... I can't... see... What are these outlines? I need to get out of here...";
         logs[1] = "I feel drawn to these terminals. My arm... like a magnet... If I just touch them, it is like I can tell whem what I want them to do... I must... hack them.";
-        logs[2] = "The minibot fields look strange. It seems they have been infected with some virus... I will have to be careful with how I program the minibot in order to bypass the wandering viruses.";
-        logs[3] = "The sentry drones have been compromised. Every time I try to get by they force me back to the enterance. The drones used to be around to protect the facility merchandise. I wonder what happened to them.";
-        logs[4] = "The conveyor belt brings in scraps for sorting. My job was to collect valuables and put them in the crates for delivery. Green Scraps go for the highest prices, how was I to know I would get infected...";
-        logs[5] = "These minibots are used to run tasks on the processing facility servers. They aren't that useful yet, but I can program them for printing keycards to access locked terminals.";
-        logs[6] = "The facility has very powerful sentry drones that gaurd certain floors. When I look at them now they are glowing red... They must be infected with some virus... I should hack the control system.";
+        logs[2] = "The conveyor belt brings in scraps for sorting. My job was to collect valuables and put them in the crates for delivery. Green Scraps go for the highest prices, how was I to know I would get infected...";
+        
+        logs[3] = "These minibots are used to run tasks on the processing facility servers. They aren't that useful yet, but I can program them for printing keycards to access locked terminals.";
+        logs[4] = "The minibot fields look strange. It seems they have been infected with some virus... I will have to be careful with how I program the minibot in order to bypass the wandering viruses.";
+        
+        logs[5] = "The facility has very powerful sentry drones that gaurd certain floors. When I look at them now they are glowing red... They must be infected with some virus... If I get close enough maybe I can hack them.";
+        logs[6] = "The sentry drones have been compromised. Every time I try to get by they force me back to the enterance. The drones used to be around to protect the facility merchandise. I wonder what happened to them.";
+        
+        logs[9] = "Someone must have been experimenting in here with some of the reclaimed electronics. Could that have been the cause of the Minibot Fields being infected?";
+        // END Intro Level Logs
+        
+        //Lobby Logs
         logs[7] = "The tower lobby... I see they use the same tech as the reclemation facility. My arm is starting to ache. The Green Scrap in use here must be much stronger than the scraps at the facility. I must be close.";
+        logs[8] = "This chip... it glows with an ominous red haze. My arm aches as I stare at it... Were they experimenting with the virus I found in the reclemation facility? Did they create the virus? What's going on?";
+        logs[10] = "These computer systems were typically run in a text terminal. It looks like these ones were all upgraded with a fancy GUI Desktop system. It doesn't change the underlying systems however, I can still hack.";
+        //END Lobby Logs
+        
+        //LVL1 Logs
+        logs[11] = "It is weird that there aren't any employees around. So far all I've run into are some infected sentry drones... I wonder what has happened to everyone. Everything is locked down, so someone must be here.";
+        logs[12] = "Each hack feels more and more natural. I am starting to enjoy it... The pain in my arm is starting to feel like a comfort. I still don't quite understand what is happening to me...";
+        logs[13] = "This system has encrypted files talking about a strange VIRUS... or PHAGE... The logs mention Green Scraps. but it seems like someone has been trying to tamper with or delete these files... strange.";
+        //END lvl1 Logs
+        
+        //LVL2 Logs
+        logs[14] = "";
+        logs[15] = "";
+        logs[16] = "";
+        logs[17] = "";
+        logs[18] = "";
+        logs[19] = "";
+        logs[20] = "";
+        logs[21] = "";
+        logs[22] = "";
+        logs[23] = "";
+        logs[24] = "";
+        logs[25] = "";
+        logs[26] = "";
+        logs[27] = "";
+        logs[28] = "";
+        logs[29] = "";
+        logs[30] = "";
+        logs[31] = "";
+        logs[32] = "";
+        logs[33] = "";
+        logs[34] = "";
+        logs[35] = "";
+        
+        
         
         for(int i = 0; i < 35; ++i){
             unlocked[i] = false;
         }
-        unlockLog(0);
     }
     
     void HackLogManager::update(){

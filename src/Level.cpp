@@ -41,6 +41,12 @@ namespace Level{
             case 2:
                 LevelManager::setMap(lvl2, lvl2Enum);
                 break;
+            case 3:
+                LevelManager::setMap(lvl3, lvl3Enum);
+                break;
+            case 4:
+                LevelManager::setMap(final, finalEnum);
+                break;
         }
     }
     

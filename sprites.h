@@ -117,6 +117,27 @@ public:
 	};
 };
 
+class FinalBoss {
+public:
+    enum Animation : std::uint16_t {
+		idle = 0
+	};
+};
+
+class FloorNumbers {
+public:
+    enum Animation : std::uint16_t {
+		one = 0,
+		oneActive = 3,
+		two = 6,
+		twoActive = 9,
+		three = 12,
+		threeActive = 15,
+		ground = 18,
+		groundActive = 21
+	};
+};
+
 class HackIcons {
 public:
     enum Animation : std::uint16_t {
@@ -163,6 +184,14 @@ class Key {
 public:
     enum Animation : std::uint16_t {
 		idle = 0
+	};
+};
+
+class LiftSelector {
+public:
+    enum Animation : std::uint16_t {
+		idle = 0,
+		hover = 3
 	};
 };
 
@@ -229,10 +258,13 @@ extern const Button button;
 extern const Cursor cursor;
 extern const Door door;
 extern const EnemyVirus enemyVirus;
+extern const FinalBoss finalBoss;
+extern const FloorNumbers floorNumbers;
 extern const HackIcons hackIcons;
 extern const Hackme hackme;
 extern const Hero hero;
 extern const Key key;
+extern const LiftSelector liftSelector;
 extern const LockIcon lockIcon;
 extern const LogIcon logIcon;
 extern const MinibotField minibotField;

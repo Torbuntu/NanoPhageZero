@@ -14,7 +14,7 @@ namespace HackLog {
             static char* getLog(int id);
             static char* getLog(int x, int y);
             static void unlockLog(int id);
-            static bool checkUnlocked(int x, int y);
+            static bool checkUnlocked(int id);
             
             static bool shouldEnd();
             static void setShouldEnd(bool should);

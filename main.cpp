@@ -10,18 +10,21 @@ enum State{
     INTRO, EXPLORE, LIFT,
     BRUTE_FORCE, SEQUENCE, ROBOPROGRAM,
     SEQ_INTRO, ROBO_INTRO, BRUTE_INTRO,
-    HACK_LOG
+    HACK_LOG, 
+    FINAL_BOSS, END_GAME
 };
 
-State state = State::INTRO;
-State prevState = State::SEQ_INTRO;
+State state = INTRO;
+State prevState = SEQ_INTRO;
 
-int camX, camY, tileX, tileY, oldX, oldY, introLevel = 0, zx=30, zy=60, zc = 10, zys = 1, zxs = 1, introProg = 0;
+int camX, camY, tileX, tileY, oldX, oldY, introLevel = 0, zx=30, zy=60, zc = 10, zys = 1, zxs = 1, introProg = 0, lvlSelect = 0;
 int messageX, messageY;
+int lrTop = 72, lrBottom=136, lrRight=144, lrLeft = 64;
 
-Sprite hack, dor, keyIcon;//, nano, zero;
+Sprite hack, dor, keyIcon, boss, num1,num2,num3,numG, liftRing, activeLiftRing;//, nano, zero;
 
-bool hacking = false, doorLocked = true, hasKey = false, playMusic = true;
+bool hacking = false, doorLocked = true, hasKey = false, playMusic = true, hackLogUnlocked = false;
+bool lvlLock[5];
 
 MapEnum tile;
 auto getTile = seqIntroEnum;
@@ -31,10 +34,45 @@ auto lastMap = seqIntro;
 char* message = "";
 bool displayMessage = false;
 
-int logAnimation = 0, logTimer = 0;
+int logAnimation = -36, logTimer = 0;
+
+void debugFinalBoss(){
+    getTile = finalEnum;
+    BossFight::init(10);
+    LevelManager::setLvl(4);
+    camX = 10;
+    camY = 10;
+    PlayerManager::setDir(3);//face south
+    LevelManager::setMap();
+    state = FINAL_BOSS;
+}
 
 void unlockedLogAnimation(int y){
     HackLogManager::animateLog(y);
+}
+
+void gotoLift(){
+    //TODO: lift music
+    displayMessage = false;
+    UI::clear();
+    hasKey = false;
+    prevState = state;
+    PlayerManager::setDir(3);//face south
+    LevelManager::setMap(lift, liftEnum);
+    if(getTile == lobbyEnum) lvlLock[1] = false;
+    if(getTile == lvl1Enum) lvlLock[2] = false;
+    if(getTile == lvl2Enum) lvlLock[3] = false;
+    if(getTile == lvl3Enum) lvlLock[4] = false;
+    state = LIFT;
+}
+
+void gotoLevel(int id){
+    if(lvlLock[id+1]){
+        doorLocked = true;
+        dor.play(door, Door::locked);
+    }
+    LevelManager::setLvl(id);
+    LevelManager::setMap();
 }
 
 void checkRobo(){
@@ -49,7 +87,7 @@ void checkRobo(){
             lastTile = getTile;
             getTile = minibotfieldEnum;
             prevState = state;
-            state = State::ROBOPROGRAM;
+            state = ROBOPROGRAM;
         }
     }
 }
@@ -61,7 +99,7 @@ void checkBrute(){
             Sound::playSFX(Comp, sizeof(Comp));
             BruteHack::init(5);
             prevState = state;
-            state = State::BRUTE_FORCE;
+            state = BRUTE_FORCE;
         }
     }
 }
@@ -80,15 +118,10 @@ void checkSequ(){
                     SeqHack::shuffle(10);
                 }
                 prevState = state;
-                state = State::SEQUENCE;
+                state = SEQUENCE;
             }else{
                 Sound::playSFX(Denied, sizeof(Denied));
                 message = "I need a keycard to access\nthis terminal.";
-                if(state == ROBO_INTRO) {
-                    HackLogManager::unlockLog(2);
-                    logAnimation = 16;
-                    logTimer = 50;
-                }
                 displayMessage = true;
             }
         }
@@ -104,12 +137,8 @@ void checkDroneActive(){
             camX = 10;
             camY = 10;
         }
+        Sound::playSFX(Denied, sizeof(Denied));
         message = "Arg!\nThe sentry returned me to the exit.";
-        if(state == BRUTE_INTRO) {
-            HackLogManager::unlockLog(3);
-            logAnimation = 16;
-            logTimer = 50;
-        }
         displayMessage = true;
     }
 }
@@ -151,25 +180,107 @@ void primaryUpdate(){
     PlayerManager::update(camX, camY);
     PlayerManager::render();
     
-    openHackLog();
+    if(hackLogUnlocked) openHackLog();
     
-    if(hasKey){
-        keyIcon.draw(16, 128);
-    }
+    if(hasKey) keyIcon.draw(16, 128);
+    
     
     tileX = (camX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
     tileY = (camY + PlayerManager::getY() - 8 + PlayerManager::getH()) / PROJ_TILE_H;
     tile = getTile(tileX, tileY);
     
-    if(tile == Log){
+    if(tile == UnlockLogs){
+        if(!hackLogUnlocked){
+            HackLogManager::unlockLog(0);
+            hackLogUnlocked = true;
+            logAnimation = 16;
+            logTimer = 50;
+            message = "<BLIP!> What's this? My arm... (Press C to access logs)";
+            displayMessage = true;
+        }
+    }
+    
+    if(tile == Log && Buttons::aBtn()){
         switch(state){
             case SEQ_INTRO:
-                HackLogManager::unlockLog(4);
+                HackLogManager::unlockLog(2);
                 logAnimation = 16;
                 logTimer = 50;
+                message = "This is the piece of Green Scrap that exploded in my face...";
+                displayMessage = true;
                 break;
+            case BRUTE_INTRO:
+                HackLogManager::unlockLog(9);
+                logAnimation = 16;
+                logTimer = 50;
+                message = "This chip shouldn't be in here... What's going on?";
+                displayMessage = true;
+            break;
+            case EXPLORE:
+                if(getTile == lobbyEnum){
+                    HackLogManager::unlockLog(7);
+                    logAnimation = 16;
+                    logTimer = 50;
+                    message = "This must be the right place. The tech looks familiar...";
+                    displayMessage = true;
+                }
+                if(getTile == lvl1Enum){
+                    HackLogManager::unlockLog(11);
+                    logAnimation = 16;
+                    logTimer = 50;
+                    message = "Where is everybody? Lights are on but nobody is home.";
+                    displayMessage = true;
+                }
+                if(getTile == lvl2Enum){
+                    HackLogManager::unlockLog(12);
+                    logAnimation = 16;
+                    logTimer = 50;
+                    message = "Is it... a bad thing that I am starting to like this?";
+                    displayMessage = true;
+                }
+                if(getTile == lvl3Enum){
+                    
+                }
+            break;
         }
-        
+    }
+    
+    if(tile == Log2 && Buttons::aBtn()){
+        switch(state){
+            case EXPLORE:
+                if(getTile == lobbyEnum){
+                    HackLogManager::unlockLog(8);
+                    logAnimation = 16;
+                    logTimer = 50;
+                    message = "This red glowing chip looks... evil... What happened here...";
+                    displayMessage = true;
+                }
+                if(getTile == lvl1Enum){
+                    HackLogManager::unlockLog(13);
+                    logAnimation = 16;
+                    logTimer = 50;
+                    message = "These systems are encrypted, but I can still read them somehow.";
+                    displayMessage = true;
+                }
+                if(getTile == lvl2Enum){
+                    
+                }
+                if(getTile == lvl3Enum){
+                    
+                }
+                
+            break;
+        }
+    }
+    
+    if(tile == Ubuntu && Buttons::aBtn()){
+        message = "Snap! These computers have been updated to use a GUI Desktop. That is Fancy.";
+        displayMessage = true;
+        if(!HackLogManager::checkUnlocked(10)){
+            HackLogManager::unlockLog(10);
+            logAnimation = 16;
+            logTimer = 50;  
+        }
     }
     
     checkDroneActive();
@@ -190,6 +301,19 @@ void init(){
     hack.play(hackme, Hackme::show);
     dor.play(door, Door::locked);
     keyIcon.play(key, Key::idle);
+    boss.play(finalBoss, FinalBoss::idle);
+    
+    liftRing.play(liftSelector, LiftSelector::idle);
+    activeLiftRing.play(liftSelector, LiftSelector::hover);
+    
+    num1.play(floorNumbers, FloorNumbers::one);
+    num2.play(floorNumbers, FloorNumbers::two);
+    num3.play(floorNumbers, FloorNumbers::three);
+    numG.play(floorNumbers, FloorNumbers::ground);
+    
+    for(int i = 0; i < 5; ++i){
+        lvlLock[i] = true;
+    }
     
     Display::loadRGBPalette(miloslav);
     LevelManager::init();
@@ -221,18 +345,30 @@ void update(){
         }
     }
     
-    if(logAnimation > 0){
+    if(logAnimation > -20){
         if(logTimer > 0) logTimer--;
-        if(logTimer == 0){
-            logAnimation--;
-        }
+        
+        if(logTimer == 0) logAnimation--;
+        
         unlockedLogAnimation(logAnimation);
     }
     
     if(playMusic)Sound::playMusicStream();
     else Sound::pauseMusicStream();
+    
     switch(state){
     case INTRO:
+        if(Buttons::downBtn()){
+            debugFinalBoss();
+            return;
+        }
+        if(Buttons::upBtn()){
+            for(int i = 0; i < 5; ++i){
+                lvlLock[i] = false;
+            }
+            gotoLift();
+            return;
+        }
         
         UI::drawGauge(8, 28, 17, introProg, 100);
 
@@ -240,7 +376,7 @@ void update(){
             introProg++;
             if(introProg == 100){
                 UI::clear();
-                state = State::SEQ_INTRO;
+                state = SEQ_INTRO;
                 Sound::playMusicStream("music/npz-a.raw", 0);
             }
         }
@@ -280,6 +416,27 @@ void update(){
         BruteHack::render();
         
         if(BruteHack::complete()){
+            if(prevState == BRUTE_INTRO){
+                HackLogManager::unlockLog(5);
+                logAnimation = 16;
+                logTimer = 50;
+            }
+            if(getTile == lvl1Enum){
+                HackLogManager::unlockLog(12);
+                logAnimation = 16;
+                logTimer = 50;
+            }
+            if(getTile == lvl2Enum){
+                HackLogManager::unlockLog(12);
+                logAnimation = 16;
+                logTimer = 50;
+            }
+            if(getTile == lvl3Enum){
+                HackLogManager::unlockLog(12);
+                logAnimation = 16;
+                logTimer = 50;
+            }
+            Sound::playSFX(Unlock, sizeof(Unlock));
             message = "That sentry should be inactive now.";
             displayMessage = true;
             state = prevState;
@@ -316,6 +473,16 @@ void update(){
                 logAnimation = 16;
                 logTimer = 50;
             }
+            if(prevState == ROBO_INTRO){
+                HackLogManager::unlockLog(4);
+                logAnimation = 16;
+                logTimer = 50;
+            }
+            if(prevState == BRUTE_INTRO){
+                HackLogManager::unlockLog(6);
+                logAnimation = 16;
+                logTimer = 50;
+            }
             UI::clear();
             message = "The door is unlocked!";
             displayMessage = true;
@@ -345,15 +512,23 @@ void update(){
         
         RoboHack::render();
         LevelManager::render(0, 0);
+        
+        for(int i = 0; i < 6; ++i){
+            hack.draw(12, 40 + i*16);
+        }
+        for(int i = 0; i < 6; ++i){
+            hack.draw(LCDWIDTH-26, 40 + i*16);
+        }
 
         if(RoboHack::complete()){
+            Sound::playSFX(Unlock, sizeof(Unlock));
             hasKey = true;
             message = "I got the keycard!";
             displayMessage = true;
             if(prevState != EXPLORE){
                 LevelManager::setMap(lastMap, lastTile);
                 getTile = lastTile;
-                HackLogManager::unlockLog(0);
+                HackLogManager::unlockLog(3);
                 logAnimation = 16;
                 logTimer = 50;
             }else {
@@ -384,36 +559,28 @@ void update(){
             hasKey = false;
             PlayerManager::setDir(3);//face south
             if(introLevel == 1){
-                HackLogManager::unlockLog(5);
-                logAnimation = 16;
-                logTimer = 50;
                 lastMap = roboIntro;
                 LevelManager::setMap(roboIntro, roboIntroEnum);
                 getTile = roboIntroEnum;
-                state = State::ROBO_INTRO;
+                state = ROBO_INTRO;
             }
             if(introLevel == 2){
-                HackLogManager::unlockLog(6);
-                logAnimation = 16;
-                logTimer = 50;
                 lastMap = bruteIntro;
                 LevelManager::setMap(bruteIntro, bruteIntroEnum);
                 LevelManager::setDroneState(true);
                 getTile = bruteIntroEnum;
-                state = State::BRUTE_INTRO;
+                state = BRUTE_INTRO;
                 
             }
             if(introLevel == 3){
-                HackLogManager::unlockLog(7);
-                logAnimation = 16;
-                logTimer = 50;
                 lastMap = lobby;
                 LevelManager::setMap(lobby, lobbyEnum);
                 LevelManager::setDroneState(true);
                 getTile = lobbyEnum;
-                state = State::EXPLORE;
+                state = EXPLORE;
                 camX = 10;
                 camY = 10;
+                lvlLock[0] = false;
                 Sound::playMusicStream("music/npz-e.raw", 0);
             }
             
@@ -430,46 +597,101 @@ void update(){
         primaryUpdate();
         
         if( tile == Lift ){
-            displayMessage = false;
-            UI::clear();
-            hasKey = false;
-            prevState = state;
-            state = State::LIFT;
-            PlayerManager::setDir(3);//face south
+            gotoLift();
         }
     break;
     case LIFT:
-        Display::print("Press C to continue.");
-        if(Buttons::cBtn()){
-            LevelManager::addLvl();
-            switch(LevelManager::getLvl()){
-                case 0:
-                    getTile = lobbyEnum;
-                    break;
-                case 1:
-                    getTile = lvl1Enum;
-                    break;
-                case 2:
-                    getTile = lvl2Enum;
-                    break;
-                case 3:
-                    getTile = lvl3Enum;
-                    break;
-                    
-                case 4: //final boss
-                
-                    break;
+        LevelManager::render(0, 0);
+        
+        if(Buttons::aBtn()){
+            if(!lvlLock[lvlSelect]){
+                gotoLevel(lvlSelect);
+                camX = 10;
+                camY = 10;
+                PlayerManager::setDir(3);//face south
+                    switch(lvlSelect){
+                        case 0:
+                            getTile = lobbyEnum;
+                            break;
+                        case 1:
+                            getTile = lvl1Enum;
+                            break;
+                        case 2:
+                            getTile = lvl2Enum;
+                            break;
+                        case 3:
+                            getTile = lvl3Enum;
+                            break;
+                        case 4: //final room
+                            getTile = finalEnum;
+                            BossFight::init(10);
+                            break;
+                    }
+                if(LevelManager::getLvl() < 4){
+                    LevelManager::setDroneState(true);
+                    state = EXPLORE;
+                }else {
+                    state = FINAL_BOSS;
+                }
+            }else {
+                Sound::playSFX(Denied, sizeof(Denied));
             }
-            doorLocked = true;
-            dor.play(door, Door::locked);
-            
-            LevelManager::setMap();
-            LevelManager::setDroneState(true);
-            camX = 10;
-            camY = 10;
-            PlayerManager::setDir(3);//face south
-            state = State::EXPLORE;
         }
+        
+        if(Buttons::upBtn()){
+            if(lvlSelect == 0) lvlSelect = 2;
+            if(lvlSelect == 1) lvlSelect = 3;
+            if(lvlSelect == 3) lvlSelect = 4;
+        }
+
+        if(Buttons::downBtn()){
+            if(lvlSelect == 2) lvlSelect = 0;
+            if(lvlSelect == 3) lvlSelect = 1;
+            if(lvlSelect == 4) lvlSelect = 3;
+        }
+        
+        if(Buttons::leftBtn()){
+            if(lvlSelect == 3) lvlSelect = 2;
+            if(lvlSelect == 1) lvlSelect = 0; 
+        }
+        if(Buttons::rightBtn()){
+            if(lvlSelect == 0) lvlSelect = 1;
+            if(lvlSelect == 2) lvlSelect = 3;
+        }
+        
+        if(lvlSelect == 4) activeLiftRing.draw(108, 24);
+        else liftRing.draw(108, 24);
+        
+        if(lvlSelect == 3) activeLiftRing.draw(lrRight, lrTop);
+        else liftRing.draw(lrRight, lrTop);
+        
+        if(lvlSelect == 1) activeLiftRing.draw(lrRight, lrBottom);
+        else liftRing.draw(lrRight, lrBottom);
+        
+        if(lvlSelect == 2) activeLiftRing.draw(lrLeft, lrTop);
+        else liftRing.draw(lrLeft, lrTop);
+        
+        if(lvlSelect == 0) activeLiftRing.draw(lrLeft, lrBottom);
+        else liftRing.draw(lrLeft, lrBottom);
+        
+        
+        if(lvlSelect == 0 && !lvlLock[0]) numG.play(floorNumbers, FloorNumbers::groundActive);
+        else numG.play(floorNumbers, FloorNumbers::ground);
+        
+        if(lvlSelect == 1 && !lvlLock[1]) num1.play(floorNumbers, FloorNumbers::oneActive);
+        else num1.play(floorNumbers, FloorNumbers::one);
+        
+        if(lvlSelect == 2 && !lvlLock[2]) num2.play(floorNumbers, FloorNumbers::twoActive);
+        else num2.play(floorNumbers, FloorNumbers::two);
+        
+        if(lvlSelect == 3 && !lvlLock[3]) num3.play(floorNumbers, FloorNumbers::threeActive);
+        else num3.play(floorNumbers, FloorNumbers::three);
+        
+        num3.draw(lrRight+8, lrTop+8);
+        num1.draw(lrRight+8, lrBottom+8);
+        num2.draw(lrLeft+8, lrTop+8);
+        numG.draw(lrLeft+8, lrBottom+8);
+        
     break;
     case HACK_LOG:
         HackLogManager::update();
@@ -481,7 +703,69 @@ void update(){
             playMusic = HackLogManager::getPlayMusic();
             state = prevState;
         }
-
+    break;
+    case FINAL_BOSS:
+        //TODO: final battle theme
+        LevelManager::render(-camX, -camY);
+        dor.draw(-camX+96, -camY+80);
+        dor.draw(-camX+112, -camY+80);
+        
+        oldX = camX;
+        oldY = camY;
+        
+        PlayerManager::render();
+                
+        if(BossFight::loop()){
+            if(!BossFight::complete()){
+                boss.draw(-camX + 160, - camY + 48);
+                BossFight::update();
+                BossFight::render();
+            }else {
+                doorLocked = false;
+                dor.play(door, Door::unlocked);
+                hasKey = true;
+            
+                if(BossFight::getVictory()) state = END_GAME;
+                
+                BossFight::endLoop();
+            }
+        }
+        
+        if(!BossFight::running()){
+            PlayerManager::update(camX, camY);
+            
+            tileX = (camX + PlayerManager::getX() + PROJ_TILE_W/2) / PROJ_TILE_W;
+            tileY = (camY + PlayerManager::getY() - 8 + PlayerManager::getH()) / PROJ_TILE_H;
+            tile = getTile(tileX, tileY);
+            
+            checkCollide();
+            checkDoor();
+            if( tile == Fight ){
+                hack.draw(PlayerManager::getX(), PlayerManager::getY()-16, false, false);
+                if(Buttons::cBtn()){
+                    BossFight::resume();
+                }
+            }
+            if( tile == Lift ){
+                state = END_GAME;
+            }
+                    
+            if(hasKey){
+                keyIcon.draw(16, 128);
+            }
+        }
+        // openHackLog();
+    break;
+    case END_GAME:
+        UI::clear();
+        UI::drawBox(messageX, messageY, 32, messageY + 4);
+        UI::setCursorBoundingBox(messageX + 1, messageY + 1, 32 - 1, messageY + 4 - 1);
+        UI::setCursor(messageX + 1, messageY + 1);
+        UI::setCursorDelta(UIVariants::standard);
+        UI::printText("Thanks for playing! Coming soon: More logs. More story.");
+        if(Buttons::cBtn()){
+            gotoLift();
+        }
     break;
     }
 }

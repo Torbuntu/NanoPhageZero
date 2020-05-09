@@ -2,15 +2,19 @@
 #include <Pokitto.h>
 #include "sprites.h"
 
-namespace Bruteforce {
+namespace BossBattle {
     
     enum BrutState{
-        READY, RUNNING, COMPLETE  
+        READY, RUNNING, CHOICE, PAUSE, COMPLETE  
     };
     
-    class BruteHack{
+    class BossFight{
         public:
             static void init(int count);
+            
+            static bool running();
+            
+            static void resume();
             
             static void update();
             
@@ -21,11 +25,18 @@ namespace Bruteforce {
             static bool fail();
             
             static void setSelect();
-        
+            
+            static bool getVictory();
+            
+            static bool loop();
+            
+            static void endLoop();
         private:
             static void drawUI();
         
             static inline int select = 0;
+            
+            static inline int dialogPos = 0;
         
             static inline int bruteCount = 0;
             static inline int bruteSelect;
@@ -33,7 +44,7 @@ namespace Bruteforce {
             static inline int enemyProgress = 0;
             static inline int enemyTimer = 0;
             static inline int enemySpeed = 0;
-            static inline int bruteFill = 30;
+            static inline int bruteFill = 100;
         
             // init button state mechanism
             static inline int buttonsPreviousState = 0;
@@ -42,8 +53,10 @@ namespace Bruteforce {
             
             static inline BrutState brutState = BrutState::READY;
             
-            static inline bool end;
+            static inline bool end, victory, loopcheck = true;
             
-            static inline Sprite icons, virus;
+            static inline Sprite icons;
+            
+            static inline char* dialog[5];
     };
 }
