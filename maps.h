@@ -93,7 +93,7 @@ static const MapEnum parameters[] = {
 	Drone,
 	EMPTY,
 	EMPTY,
-	EMPTY,
+	Collide,
 	Robo,
 	Collide,
 	EMPTY,
