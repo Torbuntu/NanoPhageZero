@@ -23,7 +23,7 @@ namespace HackLog {
     }
     
     bool HackLogManager::checkUnlocked(int id){
-        return id <= 35 ? unlocked[id] : false;
+        return id <= 28 ? unlocked[id] : false;
     }
     
     void HackLogManager::unlockLog(int id){
@@ -76,17 +76,8 @@ namespace HackLog {
         logs[26] = "";
         logs[27] = "";
         logs[28] = "";
-        logs[29] = "";
-        logs[30] = "";
-        logs[31] = "";
-        logs[32] = "";
-        logs[33] = "";
-        logs[34] = "";
-        logs[35] = "";
-        
-        
-        
-        for(int i = 0; i < 35; ++i){
+
+        for(int i = 0; i < 28; ++i){
             unlocked[i] = false;
         }
     }
@@ -104,7 +95,7 @@ namespace HackLog {
             if(logCursorX > 0) logCursorX--;
         }
         if(btnJustPressed == B_DOWN){
-            if(logCursorY < 4) logCursorY++;
+            if(logCursorY < 3) logCursorY++;
         }
         if(btnJustPressed == B_UP){
             if(logCursorY > 0) logCursorY--;
@@ -137,16 +128,20 @@ namespace HackLog {
         UI::clear();
         UI::showTileMapUISprites();
         UI::drawBox(1, 1, 32, 24);
-        UI::setCursorBoundingBox(2, 2, 32 - 1, 24 - 1);
+        UI::setCursorBoundingBox(2, 2, 31, 23);
         UI::setCursor(2, 2);
-        UI::setCursorDelta(UIVariants::standard);
-        UI::printString("Hack Log: ");
-        UI::setCursor(2, 32 - 2);
+        
+        UI::printText("Hack Log: ");
+        
+        UI::setCursorBoundingBox(2, 32-10, 31, 23);
+        UI::setCursor(2, 32-8);
+        UI::printText("> A read, B close/exit\n");
+        
         if(playMusic)UI::printText("> C to toggle music: true");
         else UI::printText("> C to toggle music: false");
         if(!showLog){
-            for(int x = 0; x < 7; ++x){
-                for(int y = 0; y < 5; ++y){
+            for(int x = 0; x < width; ++x){
+                for(int y = 0; y < height; ++y){
                     if(unlocked[x + y * 7]){
                         logging.draw(23 + x * 24, 25 + y * 24);
                     }else {

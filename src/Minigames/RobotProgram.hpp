@@ -34,6 +34,8 @@ namespace RobotProgram{
             
             static void setIntro(bool tut);
             
+            static bool keyReturned();
+            
             
             
         private:
@@ -46,7 +48,7 @@ namespace RobotProgram{
             
             static inline int program[13];
             
-            static inline int length, roboX, roboY, step, speed, renderX, renderY, keyX, keyY, btnX, btnY, vX, vY, vD, vDInit, vS, keyInitX, keyInitY, vInitX, vInitY, iconOffset;
+            static inline int length, roboX, roboY, step, speed, renderX, renderY, keyX, keyY, btnX, btnY, vX, vY, vD, vDInit, vS, keyInitX, keyInitY, vInitX, vInitY, iconOffset, spriteSize = 16;
             
             static inline RoboState roboState = RoboState::READY;
             

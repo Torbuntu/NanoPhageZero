@@ -242,14 +242,11 @@ namespace RobotProgram{
             break;
             case COMPLETE:
                 RoboHack::drawUI();
-                UI::printText("> C restart. A new. ");
-                if(unlocked){
-                    UI::printText("B exit.");
-                }
+                UI::printText("> C restart. A new. B Exit");
+
                 if( buttonsJustPressed == B_B ){
-                    if(unlocked){
-                        end = true;
-                    }
+                    UI::clear();
+                    end = true;
                 }
                 if( buttonsJustPressed == B_A){
                     RoboHack::restart();
@@ -307,24 +304,24 @@ namespace RobotProgram{
                 default:
                     icons.play(hackIcons, HackIcons::empty);
             }
-            icons.draw(iconOffset + i * 16, 18);
+            icons.draw(iconOffset + i * spriteSize, 18);
         }
-        if(roboState == RoboState::RUNNING){
-            robo.draw(iconOffset+step*16, 32);
+        if(roboState == RUNNING || roboState == PROGRAMMING){
+            robo.draw(iconOffset+step*spriteSize, 32);
         }
         
         if(!unlocked){
             if(hasKey){
-                keyIcon.draw(16, 128);
+                keyIcon.draw(spriteSize, 128);
             }else{
-                keyIcon.draw(64 + keyX * 16, 48 + keyY * 16);
+                keyIcon.draw(64 + keyX * spriteSize, 48 + keyY * spriteSize);
             }
         }
         
-        buttonIcon.draw(64 + btnX * 16, 48 + btnY * 16);
-        robo.draw(64 + roboX * 16, 48 + roboY * 16);
+        buttonIcon.draw(64 + btnX * spriteSize, 48 + btnY * spriteSize);
+        robo.draw(64 + roboX * spriteSize, 48 + roboY * spriteSize);
         if(!intro){
-            virus.draw(64 + vX * 16, 48 + vY * 16);
+            virus.draw(64 + vX * spriteSize, 48 + vY * spriteSize);
         }
         
         UI::drawBox(1, 24, 35, 26);
@@ -356,6 +353,10 @@ namespace RobotProgram{
     
     void RoboHack::setIntro(bool tut){
         intro = tut;
+    }
+    
+    bool RoboHack::keyReturned(){
+        return unlocked;
     }
     
 }

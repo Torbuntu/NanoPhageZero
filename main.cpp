@@ -521,20 +521,20 @@ void update(){
         }
 
         if(RoboHack::complete()){
-            Sound::playSFX(Unlock, sizeof(Unlock));
-            hasKey = true;
-            message = "I got the keycard!";
-            displayMessage = true;
-            if(prevState != EXPLORE){
-                LevelManager::setMap(lastMap, lastTile);
-                getTile = lastTile;
+            if(RoboHack::keyReturned()){
+                Sound::playSFX(Unlock, sizeof(Unlock));
+                hasKey = true;
+                message = "I got the keycard!";
+                displayMessage = true;
                 HackLogManager::unlockLog(3);
                 logAnimation = 16;
                 logTimer = 50;
-            }else {
-                LevelManager::setMap();
-                getTile = lastTile;
             }
+            
+            if(prevState != EXPLORE) LevelManager::setMap(lastMap, lastTile);
+            else LevelManager::setMap();
+            
+            getTile = lastTile;
             state = prevState;
         }
     

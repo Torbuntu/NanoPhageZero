@@ -23,10 +23,11 @@ namespace HackLog {
             static void animateLog(int pos);
             
         private:
-            static inline char* logs[35];
-            static inline bool unlocked[35];
+            static inline char* logs[28];
+            static inline bool unlocked[28];
             static inline Sprite lock, logging, cursorIcon;
             static inline int logCursorX, logCursorY, cursorTimer = 0, enterCooldown = 5;
+            static inline int width = 7, height = 4;
             
             static inline bool showLog = false, end = false, showCursor = true, playMusic = true;
             
