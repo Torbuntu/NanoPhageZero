@@ -111,7 +111,14 @@ namespace RobotProgram{
         buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
         buttonsPreviousState = Buttons::buttons_state;
         
-        if(!intro && roboState == RoboState::RUNNING){
+        if(intro){
+            if(buttonsJustPressed == B_C) intro = false;
+            return;
+        }
+        
+        
+        //virus movement
+        if(roboState == RoboState::RUNNING){
             if(speed == 1){
                 if(vD == 0){
                     vX += vS;
@@ -278,6 +285,24 @@ namespace RobotProgram{
     }
     
     void RoboHack::render(){
+        
+        
+        
+        
+        if(intro){
+            UI::clear();
+            UI::showTileMapUISprites();
+            UI::drawBox(1, 1, 35, 24);
+            UI::setCursorBoundingBox(6, 2, 33, 23);
+            UI::setCursor(6, 2);
+            
+            UI::printText("This Minibot Field has been infected as well.\n\nI need to program the Minibot to collect a keycard:        \n\n\n\n\nThen return it to the output station:        \n\n\n\n\nArrow keys move the Minibot, action keys are described in the UI.\n\n> C to continue");
+            keyIcon.draw(94, 50);
+            
+            buttonIcon.draw(94, 90);
+            
+            return;   
+        }
         for(int i = 0; i < length; ++i){
             switch(program[i]){
                 case B_A:
@@ -320,15 +345,13 @@ namespace RobotProgram{
         
         buttonIcon.draw(64 + btnX * spriteSize, 48 + btnY * spriteSize);
         robo.draw(64 + roboX * spriteSize, 48 + roboY * spriteSize);
-        if(!intro){
-            virus.draw(64 + vX * spriteSize, 48 + vY * spriteSize);
-        }
+        virus.draw(64 + vX * spriteSize, 48 + vY * spriteSize);
         
         UI::drawBox(1, 24, 35, 26);
         UI::setCursorBoundingBox(2, 2, 34, 25);
         UI::setCursor(2, 25);
         UI::setCursorDelta(UIVariants::standard);
-        UI::printText("A pickup, B use. C skip.");
+        UI::printText("A: pickup  B: use  C: wait.");
     }
     
     bool RoboHack::complete(){

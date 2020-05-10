@@ -82,7 +82,8 @@ void checkRobo(){
             displayMessage = false;
             Sound::playSFX(Comp, sizeof(Comp));
             RoboHack::init(13);
-            RoboHack::setIntro(false);
+            if(state == ROBO_INTRO) RoboHack::setIntro(true);
+            else RoboHack::setIntro(false);
             LevelManager::setMap(minibotfield, minibotfieldEnum);
             lastTile = getTile;
             getTile = minibotfieldEnum;
@@ -131,12 +132,11 @@ void checkSequ(){
 void checkDroneActive(){
     if(LevelManager::checkDrone(tileX * PROJ_TILE_W, tileY * PROJ_TILE_H)){
         if(state != EXPLORE){
-            camX = -60;
-            camY = -70;
+            camX = -52;
         }else{
             camX = 10;
-            camY = 10;
         }
+        camY = 10;
         Sound::playSFX(Denied, sizeof(Denied));
         message = "Arg!\nThe sentry returned me to the exit.";
         displayMessage = true;
@@ -370,11 +370,11 @@ void update(){
             return;
         }
         
-        UI::drawGauge(8, 28, 17, introProg, 100);
+        UI::drawGauge(8, 28, 17, introProg, 50);
 
         if( Buttons::cBtn() ){
             introProg++;
-            if(introProg == 100){
+            if(introProg == 50){
                 UI::clear();
                 state = SEQ_INTRO;
                 Sound::playMusicStream("music/npz-a.raw", 0);
@@ -509,7 +509,6 @@ void update(){
         
     case ROBOPROGRAM:
         RoboHack::update();
-        
         RoboHack::render();
         LevelManager::render(0, 0);
         
@@ -554,23 +553,26 @@ void update(){
             introLevel++;
             displayMessage = false;
             UI::clear();
-            camX = -60;
-            camY = -70;
             hasKey = false;
+            camX = -70;
+            camY = -70;
             PlayerManager::setDir(3);//face south
             if(introLevel == 1){
+                camX = -52;
+                camY = -20;
                 lastMap = roboIntro;
                 LevelManager::setMap(roboIntro, roboIntroEnum);
                 getTile = roboIntroEnum;
                 state = ROBO_INTRO;
             }
             if(introLevel == 2){
+                camX = -52;
+                camY = 10;
                 lastMap = bruteIntro;
                 LevelManager::setMap(bruteIntro, bruteIntroEnum);
                 LevelManager::setDroneState(true);
                 getTile = bruteIntroEnum;
                 state = BRUTE_INTRO;
-                
             }
             if(introLevel == 3){
                 lastMap = lobby;
