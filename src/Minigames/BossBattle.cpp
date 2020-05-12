@@ -30,13 +30,26 @@ namespace BossBattle {
         end = false;
         victory = false;
         
-        dialog[0] = "I've been expecting you.";
-        dialog[1] = "You don't think that Green Scrap at the facility was accidental, right?";
-        dialog[2] = "It was supposed to completely consume you. But here you are... unconsumed.";
-        dialog[3] = "I was human once. But I've since been upgraded. As you can see, I'm now far superior.";
-        dialog[4] = "You have a choice. Join me, and be superior. Or defeat me, and receive the cure.";
+        dialogA[0] = "<Cuber CEO> I've been expecting you.";
+        dialogA[1] = "You don't think that Green Scrap at the facility was accidental, do you?";
+        dialogA[2] = "I sent the NanoPhage to the facility. It was supposed to consume everybody there.";
+        dialogA[3] = "But I see it didn't completely consume you. Just... your arm and your eyes... remain.";
+        dialogA[4] = "That doesn't matter now. You were still driven by the NanoPhage to come home.";
+        dialogA[5] = "I know you feel it. The hunger to be superior. To be more than just a rotting meat bag.";
+        dialogA[6] = "I was human once. But I've since been upgraded. As you can see, I'm now far superior.";
+        dialogA[7] = "You have a choice. Join me, and be superior. Or defeat me, and receive the cure.";
         
-        brutState = BrutState::READY;
+        
+        dialogB[0] = "<Cuber CEO> You seriously think you can defeat me with moves like that? Ha ha ha!";
+        dialogB[1] = "You're going to have to try much harder than that.";
+        
+        dialogC[0] = "<Cyber CEO> What... How is this possible?? There is no way you're this strong...";
+        dialogC[1] = "A glitch, there must be a glitch... but... ";
+        dialogC[2] = "<ANGRY GROANING> This is not possible! I made the NanoPhage, it can't turn against...";
+        dialogC[3] = "<CYBER CEO BEGINS TO FADE>";
+        dialogC[4] = "This isn't over!! <ZZZAAAAAPPP>!!!";
+        
+        brutState = BrutState::DIALOG_A;
     }
     
     void BossFight::update(){
@@ -47,9 +60,30 @@ namespace BossBattle {
         buttonsPreviousState = Buttons::buttons_state;
         
         switch(brutState){
-            case READY:
+            case DIALOG_A:
+                if(buttonsJustPressed == B_A && dialogPos < 8) dialogPos++;
+                if(dialogPos == 8) {
+                    brutState = CHOICE;
+                    dialogPos = 0;
+                }
+            break;
+            case DIALOG_B:
+                drawUI();
+                if(buttonsJustPressed == B_A && dialogPos < 2) dialogPos++;
+                if(dialogPos == 2){
+                    dialogPos = 0;
+                    brutState = PAUSE;
+                }
+            break;
+            case DIALOG_C:
                 if(buttonsJustPressed == B_A && dialogPos < 5) dialogPos++;
-                if(dialogPos == 5) brutState = CHOICE;
+                if(dialogPos == 5){
+                    dialogPos = 0;
+                    brutState = COMPLETE;
+                }
+            break;
+            case READY:
+                
             break;
             case CHOICE:
                 if(buttonsJustPressed == B_B) brutState = COMPLETE;
@@ -74,12 +108,12 @@ namespace BossBattle {
                 }
                 
                 if( enemyProgress >= bruteFill ){
-                    brutState = PAUSE;
+                    brutState = DIALOG_B;
                 }
                 
                 if(bruteProgress >= bruteFill){
                     victory = true;
-                    brutState = BrutState::COMPLETE;   
+                    brutState = DIALOG_C;
                 }
             break;
             case PAUSE:
@@ -129,13 +163,21 @@ namespace BossBattle {
         using Pokitto::UI;
         
         switch(brutState){
-            case READY:
+            case DIALOG_A:
                 drawUI();
-                UI::printText(dialog[dialogPos]);
+                UI::printText(dialogA[dialogPos]);
+            break;
+            case DIALOG_B:
+                drawUI();
+                UI::printText(dialogB[dialogPos]);
+            break;
+            case DIALOG_C:
+                drawUI();
+                UI::printText(dialogC[dialogPos]);
             break;
             case CHOICE:
                 drawUI();
-                UI::printText("> B - join cyber race\n> C - battle cyborg CEO");
+                UI::printText("> B - join cyber race\n> C - battle Cyber CEO");
             break;
             case RUNNING:
                 UI::clear();
@@ -180,11 +222,7 @@ namespace BossBattle {
         return victory;
     }
     
-    void BossFight::endLoop(){
-        loopcheck = false;
-    }
-    
-    bool BossFight::loop(){
-        return loopcheck;
+    bool BossFight::isPaused(){
+        return brutState == PAUSE;
     }
 }

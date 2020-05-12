@@ -27,6 +27,11 @@
     <property name="Event" value="Botfield"/>
    </properties>
   </tile>
+  <tile id="23">
+   <properties>
+    <property name="Event" value="Log"/>
+   </properties>
+  </tile>
   <tile id="24">
    <properties>
     <property name="Event" value="Sequ"/>
@@ -42,6 +47,11 @@
     <property name="Event" value="Robo"/>
    </properties>
   </tile>
+  <tile id="28">
+   <properties>
+    <property name="Event" value="Log2"/>
+   </properties>
+  </tile>
   <tile id="32">
    <properties>
     <property name="Event" value="Drone"/>
@@ -55,7 +65,7 @@
   <data encoding="csv">
 0,8,8,8,8,8,8,8,8,8,8,0,0,0,
 8,0,8,0,0,0,0,0,0,0,0,8,8,8,
-8,0,0,0,0,0,0,0,0,0,0,8,0,8,
+8,0,24,0,0,0,0,0,0,0,0,8,29,8,
 8,0,0,0,0,8,8,8,8,0,0,0,0,8,
 8,0,0,0,0,8,14,14,8,0,0,0,0,8,
 0,8,8,8,8,8,3,3,8,0,0,0,0,8,

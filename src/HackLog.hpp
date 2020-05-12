@@ -22,16 +22,21 @@ namespace HackLog {
             static bool getPlayMusic();
             static void animateLog(int pos);
             
+            static bool cleared();
+            
+            static int getSpeed();
+            
         private:
             static inline char* logs[28];
             static inline bool unlocked[28];
             static inline Sprite lock, logging, cursorIcon;
             static inline int logCursorX, logCursorY, cursorTimer = 0, enterCooldown = 5;
-            static inline int width = 7, height = 4;
+            static inline int width = 7, height = 3, speed = 15;
             
             static inline bool showLog = false, end = false, showCursor = true, playMusic = true;
             
             // init button state mechanism
             static inline int btnPrevState = 0, btnJustPressed = 0;
+            
     };
 }

@@ -89,7 +89,7 @@ namespace RobotProgram{
         roboState = RoboState::READY;
     }
 
-    void RoboHack::init(int len){
+    void RoboHack::init(int len, int spd){
         icons.play(hackIcons, HackIcons::aUp);
         robo.play(robot, Robot::idle);
         keyIcon.play(key, Key::idle);
@@ -98,7 +98,8 @@ namespace RobotProgram{
         
         length = len;
         end = false;
-        speed = 15;
+        speed = spd;
+        startSpeed = spd;
         iconOffset = 7;
 
         RoboHack::restart();
@@ -195,7 +196,7 @@ namespace RobotProgram{
                 speed--;
                 
                 if(speed == 0){
-                    speed = 15;
+                    speed = startSpeed;
                     if(step < length){
                         switch(program[step]){
                             case B_A:
@@ -285,10 +286,6 @@ namespace RobotProgram{
     }
     
     void RoboHack::render(){
-        
-        
-        
-        
         if(intro){
             UI::clear();
             UI::showTileMapUISprites();

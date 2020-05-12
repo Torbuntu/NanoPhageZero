@@ -5,7 +5,7 @@
 namespace BossBattle {
     
     enum BrutState{
-        READY, RUNNING, CHOICE, PAUSE, COMPLETE  
+        DIALOG_A, DIALOG_B, DIALOG_C, READY, RUNNING, CHOICE, PAUSE, COMPLETE  
     };
     
     class BossFight{
@@ -28,9 +28,8 @@ namespace BossBattle {
             
             static bool getVictory();
             
-            static bool loop();
-            
-            static void endLoop();
+            static bool isPaused();
+
         private:
             static void drawUI();
         
@@ -53,10 +52,12 @@ namespace BossBattle {
             
             static inline BrutState brutState = BrutState::READY;
             
-            static inline bool end, victory, loopcheck = true;
+            static inline bool end, victory;
             
             static inline Sprite icons;
             
-            static inline char* dialog[5];
+            static inline char* dialogA[8];
+            static inline char* dialogB[2];
+            static inline char* dialogC[5];
     };
 }
