@@ -27,8 +27,8 @@ namespace HackLog {
             static int getSpeed();
             
         private:
-            static inline char* logs[28];
-            static inline bool unlocked[28];
+            static inline char* logs[22];
+            static inline bool unlocked[22];
             static inline Sprite lock, logging, cursorIcon;
             static inline int logCursorX, logCursorY, cursorTimer = 0, enterCooldown = 5;
             static inline int width = 7, height = 3, speed = 15;

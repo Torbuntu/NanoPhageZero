@@ -48,7 +48,7 @@ void debugFinalBoss(){
     camY = 10;
     PlayerManager::setDir(3);//face south
     LevelManager::setMap();
-    for(int i = 0; i < 28; ++i){
+    for(int i = 0; i < 22; ++i){
         HackLogManager::unlockLog(i);
     }
     state = FINAL_BOSS_BATTLE;
@@ -502,8 +502,11 @@ void update(){
         
         if(BruteHack::fail()){
             //lose
-            state = prevState;
+            message = "Oof! This drone is stronger than I thought...";
+            displayMessage = true;
             LevelManager::setDroneState(true);
+            UI::clear();
+            state = prevState;
         }
         
         break;
@@ -830,7 +833,7 @@ void update(){
                 keyIcon.draw(16, 128);
             }
         }
-        // openHackLog();
+        openHackLog();
     break;
     case FINAL_BOSS_BATTLE:
         //TODO: final battle theme

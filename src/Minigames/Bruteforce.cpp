@@ -50,7 +50,8 @@ namespace Bruteforce {
                 if(buttonsJustPressed & bruteSelect){
                     select++;
                     bruteProgress++;
-                }
+                }else if( buttonsJustPressed != 0 ) enemyProgress++;
+                
                 if( select == bruteCount ){
                     setSelect();
                     select = 0;

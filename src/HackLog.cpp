@@ -64,7 +64,7 @@ namespace HackLog {
         logs[20] = "I can feel a struggle between these chips. It is as if they aren't computer chips, but something... more familiar. The infected chip glows violently as I approach it. The red haze spreads. I better not touch.";
         logs[21] = "The Nano Phage virus is transforming people into computer parts. I must be next. I have to find how to deactivate the virus. There has to be a central control somewhere in this building. I can feel it!";
 
-        for(int i = 0; i < 28; ++i){
+        for(int i = 0; i < 22; ++i){
             unlocked[i] = false;
         }
     }
@@ -84,13 +84,13 @@ namespace HackLog {
             }
         }
         if(btnJustPressed == B_DOWN){
-            if(logCursorY < 3) logCursorY++;
+            if(logCursorY < 4) logCursorY++;
         }
         if(btnJustPressed == B_UP){
             if(logCursorY > 0) logCursorY--;
         }
         
-        if(logCursorY == 3){
+        if(logCursorY == 4){
             if(btnJustPressed == B_LEFT){
                 if(speed == 15) speed = 5;
                 else if(speed == 25) speed = 15;
@@ -108,7 +108,7 @@ namespace HackLog {
             cursorTimer = 0;
         }
         
-        if(btnJustPressed == B_A && logCursorY < 3){
+        if(btnJustPressed == B_A && logCursorY < 4){
             if(unlocked[logCursorX + logCursorY * 7]){
                 showLog = true;
             }
@@ -132,7 +132,7 @@ namespace HackLog {
         UI::setCursorBoundingBox(2, 2, 31, 23);
         UI::setCursor(2, 2);
         
-        UI::printText("Hack Log: ");
+        UI::printText("HackLog: A Open, B Close");
         
         UI::setCursorBoundingBox(2, 32-16, 31, 23);
         UI::setCursor(2, 32-12);
@@ -143,10 +143,10 @@ namespace HackLog {
         
         UI::setCursorBoundingBox(2, 32-10, 31, 23);
         UI::setCursor(2, 32-8);
-        UI::printText("> A read, B close/exit\n");
         
         if(playMusic)UI::printText("> C to toggle music: true");
         else UI::printText("> C to toggle music: false");
+        
         if(!showLog){
             for(int x = 0; x < width; ++x){
                 for(int y = 0; y < height; ++y){
@@ -157,12 +157,12 @@ namespace HackLog {
                     }
                 }
             }
-            if(checkUnlocked(21)){
-                logging.draw(23, 25 * 5 * 24);
-            }
+            if(checkUnlocked(21)) logging.draw(23, 25 + 3 * 24);
+            else lock.draw(20 , 24 + 3 * 24);
+            
             if(showCursor) {
-                if(logCursorY < 3) cursorIcon.draw(17 + logCursorX * 24, 30 + logCursorY * 24);
-                else cursorIcon.draw(13 + logCursorX * 24, 48 + logCursorY * 24);
+                if(logCursorY < 4) cursorIcon.draw(17 + logCursorX * 24, 30 + logCursorY * 24);
+                else cursorIcon.draw(13 + logCursorX * 24, 24 + logCursorY * 24);
             }
         }else {
             if(btnJustPressed == B_B) showLog = false;
@@ -195,10 +195,10 @@ namespace HackLog {
     
     bool HackLogManager::cleared(){
         int full = 0;
-        for(int i = 0; i < 28; ++i){
+        for(int i = 0; i < 22; ++i){
             if(unlocked[i])full++;
         }
-        return full == 28;
+        return full == 22;
     }
     
     int HackLogManager::getSpeed(){
