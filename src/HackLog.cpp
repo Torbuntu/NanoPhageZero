@@ -54,45 +54,15 @@ namespace HackLog {
         
         logs[14] = "These Minibot Fields are the same as the ones in the reclamation facility. I didn't think the City Center used the same tech as we did. Unless This is where the tech comes from. I must be in the right place.";
         
-        logs[15] = "";
-        logs[16] = "";
-        logs[17] = "";
-        logs[18] = "";
-        logs[19] = "";
-        logs[20] = "";
-        logs[21] = "";
-        // logs[9] = "Someone must have been experimenting in here with some of the reclaimed electronics. Could that have been the cause of the Minibot Fields being infected?";
-        // // END Intro Level Logs
+        logs[15] = "Where is everybody? I would expect there to be at least a few employees around. Everything is running as if someone was here. But where are they? I can sense the presense of.... something.";
+        logs[16] = "More of these infected chips. These ones I can feel even stronger, as if they are calling to me... Is it the virus? Is it connecting me to these chips? Are they designed to be... connected with?";
         
-        // //Lobby Logs
-        // logs[7] = 
-        // logs[8] = 
-        // logs[10] = 
-        // //END Lobby Logs
+        logs[17] = "More non-infected chips. But this time I can still feel something from them. Pain... Worry... Why am I getting emotions from electronic components? Is it because of my infection? Is it something worse?...";
+        logs[18] = "Hidden in the encrypted file system I found documents about a Nano Phage. A constructed virus. Notes talk about... bio-manipulation. Implants. Conversion. What in the world are they building here...";
         
-        // //LVL1 Logs
-        // logs[11] = "It is weird that there aren't any employees around. So far all I've run into are some infected sentry drones... I wonder what has happened to everyone. Everything is locked down, so someone must be here.";
-        // logs[12] = "Each hack feels more and more natural. I am starting to enjoy it... The pain in my arm is starting to feel like a comfort. I still don't quite understand what is happening to me...";
-        // logs[13] = "This system has encrypted files talking about a strange VIRUS... or PHAGE... The logs mention Green Scraps. but it seems like someone has been trying to tamper with or delete these files... strange.";
-
-        // logs[14] = "I keep finding computer chips that I don't understand. I've never seen these before at the facility. The scrap tech in me is very confused, but for some reason my humanity is drawn to these chips...";
-        // logs[15] = "I can feel someone watching me on the other side of these network connections. Some... evil is trying to make sure that I know they are there. Is this... the virus? Is it guiding me?";
-        // logs[16] = "Looking at these two chips I can feel a struggle between them. It is as if they aren't even actually computer chips, but something... more familiar. The infected chip glows violently as I approach it.";
-        
-        // logs[17] = "These systems aren't designed to be interfaced this way. Something has been changing their source remotely. They feel as if they are... alive...";
-        // logs[18] = "";
-        // logs[19] = "";
-        // logs[20] = "";
-        // logs[21] = "";
-        
-        
-        // logs[22] = "";
-        // logs[23] = "";
-        // logs[24] = "";
-        // logs[25] = "";
-        // logs[26] = "";
-        // logs[27] = "";
-        // logs[28] = "";
+        logs[19] = "This system has an open text document with an unfinished note. \"I feel my mind slipping. My body is already beginning to shift. It is gaining speed. Soon I'll be like the others. Just a com.nqweion ejn  \" ";
+        logs[20] = "I can feel a struggle between these chips. It is as if they aren't computer chips, but something... more familiar. The infected chip glows violently as I approach it. The red haze spreads. I better not touch.";
+        logs[21] = "The Nano Phage virus is transforming people into computer parts. I must be next. I have to find how to deactivate the virus. There has to be a central control somewhere in this building. I can feel it!";
 
         for(int i = 0; i < 28; ++i){
             unlocked[i] = false;
@@ -186,6 +156,9 @@ namespace HackLog {
                         lock.draw(20 + x * 24, 24 + y * 24);
                     }
                 }
+            }
+            if(checkUnlocked(21)){
+                logging.draw(23, 25 * 5 * 24);
             }
             if(showCursor) {
                 if(logCursorY < 3) cursorIcon.draw(17 + logCursorX * 24, 30 + logCursorY * 24);

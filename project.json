@@ -1073,6 +1073,9 @@
 		},
 		"/sprites/LiftSelector.bin": {
 			"sdcard": false
+		},
+		"/maps/blank.tmx": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {

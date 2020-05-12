@@ -38,6 +38,7 @@ char* prologText;
 char* lobbyText;
 
 int logAnimation = -36, logTimer = 0;
+Tilemap blankMap;
 
 void debugFinalBoss(){
     getTile = finalEnum;
@@ -73,7 +74,7 @@ void gotoLift(){
 }
 
 void gotoLevel(int id){
-    if(lvlLock[id+1]){
+    if(lvlLock[id+1] || id == 5){
         doorLocked = true;
         dor.play(door, Door::locked);
     }
@@ -154,6 +155,8 @@ void checkDroneActive(){
         displayMessage = true;
         if(state == BRUTE_INTRO){
             HackLogManager::unlockLog(10);
+            logAnimation = 16;
+            logTimer = 50;
         }
     }
 }
@@ -240,21 +243,21 @@ void primaryUpdate(){
                     displayMessage = true;
                 }
                 if(getTile == lvl1Enum){
-                    HackLogManager::unlockLog(11);
+                    HackLogManager::unlockLog(16);
                     logAnimation = 16;
                     logTimer = 50;
-                    message = "Where is everybody? Lights are on but nobody is home.";
+                    message = "These chips are calling out to me... I can almost hear something....";
                     displayMessage = true;
                 }
                 if(getTile == lvl2Enum){
-                    HackLogManager::unlockLog(12);
+                    HackLogManager::unlockLog(18);
                     logAnimation = 16;
                     logTimer = 50;
-                    message = "Is it... a bad thing that I am starting to like this?";
+                    message = "These file systems are encrypted, but I still got in easily.?";
                     displayMessage = true;
                 }
                 if(getTile == lvl3Enum){
-                    HackLogManager::unlockLog(15);
+                    HackLogManager::unlockLog(19);
                     logAnimation = 16;
                     logTimer = 50;
                     message = "I can feel an evil presence watching me now... this is it.";
@@ -282,29 +285,37 @@ void primaryUpdate(){
                     displayMessage = true;
                 }
                 if(getTile == lvl1Enum){
-                    HackLogManager::unlockLog(13);
+                    HackLogManager::unlockLog(15);
                     logAnimation = 16;
                     logTimer = 50;
-                    message = "These systems are encrypted, but I can still read them somehow.";
+                    message = "Where is everybody? Lights are on but nobody is home.";
                     displayMessage = true;
                 }
                 if(getTile == lvl2Enum){
-                    HackLogManager::unlockLog(14);
+                    HackLogManager::unlockLog(17);
                     logAnimation = 16;
                     logTimer = 50;
                     message = "These chips haven't been infected yet. Maybe I'm close to the source.";
                     displayMessage = true;
                 }
                 if(getTile == lvl3Enum){
-                    HackLogManager::unlockLog(16);
+                    HackLogManager::unlockLog(20);
                     logAnimation = 16;
                     logTimer = 50;
-                    message = "Is it... a bad thing that I am starting to like this?";
+                    message = "These chips appear to be in a power struggle with each other...";
                     displayMessage = true;
                 }
                 
             break;
         }
+    }
+    
+    if( tile == FinalLog && HackLogManager::checkUnlocked(20)){
+        HackLogManager::unlockLog(21);
+        logAnimation = 16;
+        logTimer = 50;
+        message = "These chips were... human?! Is that what I am becoming??";
+        displayMessage = true;
     }
     
     if(tile == Ubuntu && Buttons::aBtn()){
@@ -360,10 +371,15 @@ void init(){
     UI::showTileMapUISprites();
     messageX = 2, messageY = 24;
     
+    blankMap.set(blank[0], blank[1], blank+2);
+    for(int i=0; i<sizeof(tiles)/(POK_TILE_W*POK_TILE_H); i++){
+        blankMap.setTile(i, POK_TILE_W, POK_TILE_H, tiles+i*POK_TILE_W*POK_TILE_H);
+    }
+    
     Sound::playMusicStream("music/npz-t.raw", 0);
     
-    prologText = "In a reclamation facility, our worker is tirelessly processing scrap materials when a piece of Green Scrap comes in on the conveyor belt. Our worker reaches out to touch it, when it flashes with a painful light!";
-    lobbyText = "After successfully escaping the reclamation facility, our worker stumbles his way to the City Center. Drawn to a mysterious building, he enters the lobby doors.";
+    prologText = "In a reclamation facility, our worker is tirelessly processing scrap materials when a piece of Green Scrap comes in on the conveyor belt.\nOur worker reaches out to grab it quickly, Green Scrap goes for a high price.\nSuddenly it flashes with a painful light! A Red haze shoots out of the Green Scrap and attaches to the worker's arm.";
+    lobbyText = "After successfully escaping the reclamation facility, our worker stumbles his way to the City Center. Not sure where he is trying to go, he just walks ahead. His arm begins to feel pulled, drawn to a mysterious unmarked building. He walks up to the front door and enters into the lobby. A strange precense seems to fill the room...";
 }
 
 void update(){
@@ -398,11 +414,12 @@ void update(){
     
         if(prologue){
             UI::clear();
-            UI::drawBox(0, 0, 32, 12);
-            UI::setCursorBoundingBox(1, 1, 31, 11);
-            UI::setCursor(1, 1);
+            UI::drawBox(0, 5, 35, 24);
+            UI::setCursorBoundingBox(1, 6, 34, 23);
+            UI::setCursor(1, 6);
             UI::setCursorDelta(UIVariants::standard);
             UI::printText(prologText);
+            UI::printText("\n\n\n\n> A continue");
             if(Buttons::aBtn()){
                 UI::clear();
                 state = SEQ_INTRO;
@@ -471,21 +488,11 @@ void update(){
         if(BruteHack::complete()){
             if(prevState == BRUTE_INTRO){
                 HackLogManager::unlockLog(9);
+                 logAnimation = 16;
+                logTimer = 50;
             }
-            if(getTile == lobbyEnum){
-                
-            }
-            if(getTile == lvl1Enum){
-                HackLogManager::unlockLog(12);
-            }
-            if(getTile == lvl2Enum){
-                HackLogManager::unlockLog(12);
-            }
-            if(getTile == lvl3Enum){
-                HackLogManager::unlockLog(12);
-            }
-            logAnimation = 16;
-            logTimer = 50;
+  
+           
             Sound::playSFX(Unlock, sizeof(Unlock));
             message = "That sentry should be inactive now.";
             displayMessage = true;
@@ -520,28 +527,16 @@ void update(){
         if(SeqHack::complete()){
             if(prevState == SEQ_INTRO){
                 HackLogManager::unlockLog(2);
+                logAnimation = 16;
+                logTimer = 50;
             }
             if(prevState == ROBO_INTRO){
                 HackLogManager::unlockLog(6);
+                logAnimation = 16;
+                logTimer = 50;
             }
-            if(prevState == BRUTE_INTRO){
-                HackLogManager::unlockLog(6);
-            }
-            if(getTile == lobbyEnum){
-                HackLogManager::unlockLog(17);
-            }
-            if(getTile == lvl1Enum){
-                HackLogManager::unlockLog(17);
-            }
-            if(getTile == lvl2Enum){
-                HackLogManager::unlockLog(17);
-            }
-            if(getTile == lvl3Enum){
-                HackLogManager::unlockLog(17);
-            }
+
             
-            logAnimation = 16;
-            logTimer = 50;
             UI::clear();
             message = "The door is unlocked!";
             displayMessage = true;
@@ -586,25 +581,21 @@ void update(){
                 displayMessage = true;
                 if(prevState == ROBO_INTRO){
                     HackLogManager::unlockLog(5);
+                    logAnimation = 16;
+                    logTimer = 50;
                 }
                 if(prevState == BRUTE_INTRO){
                     HackLogManager::unlockLog(8);
+                    logAnimation = 16;
+                    logTimer = 50;
                 }
                 
-                if(lastTile == lobbyEnum){
-                    
+                if(prevState == EXPLORE && lastTile == lobbyEnum){
+                    HackLogManager::unlockLog(14);
+                    logAnimation = 16;
+                    logTimer = 50;
                 }
-                if(lastTile == lvl1Enum){
-                    
-                }
-                if(lastTile == lvl2Enum){
-                    HackLogManager::unlockLog(18);
-                }
-                if(lastTile == lvl3Enum){
-                    
-                }
-                logAnimation = 16;
-                logTimer = 50;
+               
             }
             
             if(prevState != EXPLORE) LevelManager::setMap(lastMap, lastTile);
@@ -669,14 +660,14 @@ void update(){
         
         break;
     case EXPLORE:
-    
         if(lobbyIntro){
             UI::clear();
-            UI::drawBox(0, 0, 32, 12);
-            UI::setCursorBoundingBox(1, 1, 31, 11);
-            UI::setCursor(1, 1);
+            UI::drawBox(0, 5, 35, 24);
+            UI::setCursorBoundingBox(1, 6, 34, 23);
+            UI::setCursor(1, 6);
             UI::setCursorDelta(UIVariants::standard);
             UI::printText(lobbyText);
+            UI::printText("\n\n\n\n> A continue");
             if(Buttons::aBtn()){
                 UI::clear();
                 lobbyIntro = false;;
@@ -869,9 +860,10 @@ void update(){
     
     break;
     case END_GAME_VICTORY:
+        blankMap.draw(0,0);
         UI::clear();
-        UI::drawBox(0, 0, 32, 12);
-        UI::setCursorBoundingBox(1, 1, 31, 11);
+        UI::drawBox(0, 0, 35, 12);
+        UI::setCursorBoundingBox(1, 1, 34, 11);
         UI::setCursor(1, 1);
         UI::setCursorDelta(UIVariants::standard);
         UI::printText("You've defeated the Cyber CEO spreading NanoPhage through Green Scrap. But is that it?");
@@ -880,6 +872,7 @@ void update(){
         }
     break;
     case END_GAME_JOIN:
+        blankMap.draw(0,0);
         UI::clear();
         UI::drawBox(0, 0, 32, 12);
         UI::setCursorBoundingBox(1, 1, 31, 11);
@@ -891,6 +884,7 @@ void update(){
         }
     break;
     case END_GAME_COMPLETE:
+        blankMap.draw(0,0);
         UI::clear();
         UI::drawBox(0, 0, 32, 12);
         UI::setCursorBoundingBox(1, 1, 31, 11);
