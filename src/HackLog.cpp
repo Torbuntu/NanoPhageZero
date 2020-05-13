@@ -45,16 +45,16 @@ namespace HackLog {
         logs[7] = "The chips aren't supposed to leave the packaging room. This one is 3 levels outside of security clearance. Someone must have been up to something. This isn't right...";
         logs[8] = "This Minibot Field has remnants of code left over by a malicious hacker. What they were after though I cannot tell. The Minibot is still in here. Is this where they planted the virus?";
         
-        logs[9] = "The facility has very powerful sentry drones that gaurd certain floors. When I look at them now they are glowing red... They must be infected with some virus... If I get close enough maybe I can hack them.";
-        logs[10] = "The sentry drones have been compromised. Every time I try to get by they force me back to the enterance. The drones used to be around to protect the facility merchandise. I wonder what happened to them.";
+        logs[9] = "The facility has very powerful sentry drones that guard certain floors. When I look at them now they are glowing red... They must be infected with some virus... If I get close enough maybe I can hack them.";
+        logs[10] = "The sentry drones have been compromised. Every time I try to get by they force me back to the entrance. The drones used to be around to protect the facility merchandise. I wonder what happened to them.";
 
         logs[11] = "These computer systems were typically run in a text terminal. It looks like these ones were all upgraded with a fancy GUI Desktop system. It doesn't change the underlying systems however, I can still hack.";
-        logs[12] = "The tower lobby... I see they use the same tech as the reclemation facility. My arm is starting to ache. The Green Scrap in use here must be much stronger than the scraps at the facility. I must be close.";
+        logs[12] = "The tower lobby... I see they use the same tech as the reclamation facility. My arm is starting to ache. The Green Scrap in use here must be much stronger than the scraps at the facility. I must be close.";
         logs[13] = "This chip... it glows with an ominous red haze. My arm aches as I stare at it... Were they experimenting with the virus I found in the reclamation facility? Did they create the virus? What's going on?";
         
         logs[14] = "These Minibot Fields are the same as the ones in the reclamation facility. I didn't think the City Center used the same tech as we did. Unless This is where the tech comes from. I must be in the right place.";
         
-        logs[15] = "Where is everybody? I would expect there to be at least a few employees around. Everything is running as if someone was here. But where are they? I can sense the presense of.... something.";
+        logs[15] = "Where is everybody? I would expect there to be at least a few employees around. Everything is running as if someone was here. But where are they? I can sense the presence of.... something.";
         logs[16] = "More of these infected chips. These ones I can feel even stronger, as if they are calling to me... Is it the virus? Is it connecting me to these chips? Are they designed to be... connected with?";
         
         logs[17] = "More non-infected chips. But this time I can still feel something from them. Pain... Worry... Why am I getting emotions from electronic components? Is it because of my infection? Is it something worse?...";

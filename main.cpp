@@ -877,7 +877,7 @@ void update(){
         UI::setCursorBoundingBox(1, 1, 34, 27);
         UI::setCursor(1, 1);
         UI::setCursorDelta(UIVariants::standard);
-        UI::printText("You've defeated the Cyber CEO spreading NanoPhage through Green Scrap. But is that it? The mystery remains as to what they were doing with the Green Scrap and the Nano Phage. The purpose of the various chips laying around the facility and the tower is also a mystery. The logs remaining on the Cyber CEO's computer terminal were enough to create a cure for the NanoPhage. You become fully human again and slowly regain your eyeseight.\nYou go to the nearest coffee shop and get the biggest coffee they offer. As you take the coffee you thought you saw a red haze shift to the barista. You shake it off...");
+        UI::printText("You've defeated the Cyber CEO spreading NanoPhage through Green Scrap. But is that it? The mystery remains as to what they were doing with the Green Scrap and the Nano Phage. The purpose of the various chips laying around the facility and the tower is also a mystery. The logs remaining on the Cyber CEO's computer terminal were enough to create a cure for the NanoPhage. You become fully human again and slowly regain your eyesight.\nYou go to the nearest coffee shop and get the biggest coffee they offer. As you take the coffee you thought you saw a red haze shift to the barista. You shake it off...");
         coffee.draw(90, 150);
         if(Buttons::cBtn()){
             gotoLift();
@@ -906,7 +906,7 @@ void update(){
         UI::setCursorBoundingBox(1, 1, 34, 27);
         UI::setCursor(1, 1);
         UI::setCursorDelta(UIVariants::standard);
-        UI::printText("The mystery is completely solved. The Hack Log is completed and you've found the source of Green Scrap, the reason for the spread of the Nano Phage virus, and you decyphered how to  manufacture the cure. But all those lost souls. Those poor fools that were consumed by the NanoPhage and transformed into helpless computer chips. They are too far gone to be saved by the cure. You only hope that you have stopped it before it spread too far...\n\nMeanwhile, on a coffee farm in the middle of nowhere, a farmer plays with his YoYo, blissfully unaware of what the future my hold.");
+        UI::printText("The mystery is completely solved. The Hack Log is completed and you've found the source of Green Scrap, the reason for the spread of the Nano Phage virus, and you deciphered how to  manufacture the cure. But all those lost souls. Those poor fools that were consumed by the NanoPhage and transformed into helpless computer chips. They are too far gone to be saved by the cure. You only hope that you have stopped it before it spread too far...\n\nMeanwhile, on a coffee farm in the middle of nowhere, a farmer plays with his YoYo, blissfully unaware of what the future my hold.");
         farm.draw(80, 140);
         
         if(Buttons::cBtn()){

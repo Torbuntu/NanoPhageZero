@@ -1133,6 +1133,9 @@
 		},
 		"/sprites/Coffea.h": {
 			"sdcard": false
+		},
+		"/NanoPhageZero.zip": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
