@@ -94,6 +94,13 @@ public:
 	};
 };
 
+class Coffea {
+public:
+    enum Animation : std::uint16_t {
+		harvest = 0
+	};
+};
+
 class Cursor {
 public:
     enum Animation : std::uint16_t {
@@ -114,6 +121,13 @@ class EnemyVirus {
 public:
     enum Animation : std::uint16_t {
 		play = 0
+	};
+};
+
+class Farmer {
+public:
+    enum Animation : std::uint16_t {
+		yoyo = 0
 	};
 };
 
@@ -216,6 +230,13 @@ public:
 	};
 };
 
+class RedChip {
+public:
+    enum Animation : std::uint16_t {
+		idle = 0
+	};
+};
+
 class Robot {
 public:
     enum Animation : std::uint16_t {
@@ -255,9 +276,11 @@ public:
 // https://stackoverflow.com/a/19591902
 extern "C" {
 extern const Button button;
+extern const Coffea coffea;
 extern const Cursor cursor;
 extern const Door door;
 extern const EnemyVirus enemyVirus;
+extern const Farmer farmer;
 extern const FinalBoss finalBoss;
 extern const FloorNumbers floorNumbers;
 extern const HackIcons hackIcons;
@@ -268,6 +291,7 @@ extern const LiftSelector liftSelector;
 extern const LockIcon lockIcon;
 extern const LogIcon logIcon;
 extern const MinibotField minibotField;
+extern const RedChip redChip;
 extern const Robot robot;
 extern const SecurityDrone securityDrone;
 extern const Sentinal sentinal;

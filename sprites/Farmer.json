@@ -1,0 +1,55 @@
+{ "frames": [
+   {
+    "filename": "Farmer 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 39, "h": 14 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 39, "h": 14 },
+    "sourceSize": { "w": 39, "h": 14 },
+    "duration": 100
+   },
+   {
+    "filename": "Farmer 1.aseprite",
+    "frame": { "x": 39, "y": 0, "w": 39, "h": 14 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 39, "h": 14 },
+    "sourceSize": { "w": 39, "h": 14 },
+    "duration": 100
+   },
+   {
+    "filename": "Farmer 2.aseprite",
+    "frame": { "x": 78, "y": 0, "w": 39, "h": 14 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 39, "h": 14 },
+    "sourceSize": { "w": 39, "h": 14 },
+    "duration": 100
+   },
+   {
+    "filename": "Farmer 3.aseprite",
+    "frame": { "x": 117, "y": 0, "w": 39, "h": 14 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 39, "h": 14 },
+    "sourceSize": { "w": 39, "h": 14 },
+    "duration": 100
+   }
+ ],
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.2.18-x64",
+  "image": "Farmer.png",
+  "format": "RGBA8888",
+  "size": { "w": 156, "h": 14 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "yoyo", "from": 0, "to": 3, "direction": "forward" }
+  ],
+  "layers": [
+   { "name": "Sprite Sheet", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

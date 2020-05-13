@@ -5,6 +5,7 @@
 #include "audio/Denied.h"
 #include "audio/Comp.h"
 #include "audio/Unlock.h"
+#include "audio/Explode.h"
 
 enum State{
     INTRO, EXPLORE, LIFT,
@@ -21,7 +22,7 @@ int camX, camY, tileX, tileY, oldX, oldY, introLevel = 0, zx=30, zy=60, zc = 10,
 int messageX, messageY;
 int lrTop = 72, lrBottom=136, lrRight=144, lrLeft = 64;
 
-Sprite hack, dor, keyIcon, boss, num1,num2,num3,numG, liftRing, activeLiftRing;//, nano, zero;
+Sprite hack, dor, keyIcon, boss, num1,num2,num3,numG, liftRing, activeLiftRing, evilChip, farm, coffee;//, nano, zero;
 
 bool hacking = false, doorLocked = true, hasKey = false, playMusic = true, hackLogUnlocked = false;
 bool lvlLock[5];
@@ -48,7 +49,7 @@ void debugFinalBoss(){
     camY = 10;
     PlayerManager::setDir(3);//face south
     LevelManager::setMap();
-    for(int i = 0; i < 22; ++i){
+    for(int i = 0; i < 10; ++i){
         HackLogManager::unlockLog(i);
     }
     state = FINAL_BOSS_BATTLE;
@@ -70,6 +71,7 @@ void gotoLift(){
     if(getTile == lvl1Enum) lvlLock[2] = false;
     if(getTile == lvl2Enum) lvlLock[3] = false;
     if(getTile == lvl3Enum) lvlLock[4] = false;
+    Sound::playMusicStream("music/npz-lift.raw", 0);
     state = LIFT;
 }
 
@@ -350,6 +352,10 @@ void init(){
     
     liftRing.play(liftSelector, LiftSelector::idle);
     activeLiftRing.play(liftSelector, LiftSelector::hover);
+    
+    evilChip.play(redChip, RedChip::idle);
+    farm.play(farmer, Farmer::yoyo);
+    coffee.play(coffea, Coffea::harvest);
     
     num1.play(floorNumbers, FloorNumbers::one);
     num2.play(floorNumbers, FloorNumbers::two);
@@ -854,6 +860,7 @@ void update(){
             doorLocked = false;
             hasKey = true;
             dor.play(door, Door::unlocked);
+            Sound::playSFX(Explode, sizeof(Explode));
             state = FINAL_BOSS;
         }
         
@@ -865,11 +872,13 @@ void update(){
     case END_GAME_VICTORY:
         blankMap.draw(0,0);
         UI::clear();
-        UI::drawBox(0, 0, 35, 12);
-        UI::setCursorBoundingBox(1, 1, 34, 11);
+        UI::showTileMapUISprites();
+        UI::drawBox(0, 0, 35, 28);
+        UI::setCursorBoundingBox(1, 1, 34, 27);
         UI::setCursor(1, 1);
         UI::setCursorDelta(UIVariants::standard);
-        UI::printText("You've defeated the Cyber CEO spreading NanoPhage through Green Scrap. But is that it?");
+        UI::printText("You've defeated the Cyber CEO spreading NanoPhage through Green Scrap. But is that it? The mystery remains as to what they were doing with the Green Scrap and the Nano Phage. The purpose of the various chips laying around the facility and the tower is also a mystery. The logs remaining on the Cyber CEO's computer terminal were enough to create a cure for the NanoPhage. You become fully human again and slowly regain your eyeseight.\nYou go to the nearest coffee shop and get the biggest coffee they offer. As you take the coffee you thought you saw a red haze shift to the barista. You shake it off...");
+        coffee.draw(90, 150);
         if(Buttons::cBtn()){
             gotoLift();
         }
@@ -877,11 +886,14 @@ void update(){
     case END_GAME_JOIN:
         blankMap.draw(0,0);
         UI::clear();
-        UI::drawBox(0, 0, 32, 12);
-        UI::setCursorBoundingBox(1, 1, 31, 11);
+        UI::showTileMapUISprites();
+        UI::drawBox(0, 0, 35, 28);
+        UI::setCursorBoundingBox(1, 1, 34, 27);
         UI::setCursor(1, 1);
         UI::setCursorDelta(UIVariants::standard);
-        UI::printText("You joined forces with the Cyber CEO. Slowly you feel the NanoPhage consume your humanity as you become fully cybernetic.");
+        UI::printText("You joined forces with the Cyber CEO. Slowly you feel the NanoPhage consume your humanity as you become fully cybernetic. The hacking powers grow stronger and you believe you made the right choice regardless. You work for the Cyber CEO doing his bidding, spreading Green Scrap disks, the successfully converted humans, to infect more people. One day you slowly start to transform, until you are nothing but a computer chip, another Green Scrap, clouded in an evil red haze. The NanoPhage virus grows stronger, transforming many people into computer chips, but eventually it finds a home in Coffee seeds.");
+        evilChip.draw(100, 120);
+        
         if(Buttons::cBtn()){
             gotoLift();
         }
@@ -889,11 +901,14 @@ void update(){
     case END_GAME_COMPLETE:
         blankMap.draw(0,0);
         UI::clear();
-        UI::drawBox(0, 0, 32, 12);
-        UI::setCursorBoundingBox(1, 1, 31, 11);
+        UI::showTileMapUISprites();
+        UI::drawBox(0, 0, 35, 28);
+        UI::setCursorBoundingBox(1, 1, 34, 27);
         UI::setCursor(1, 1);
         UI::setCursorDelta(UIVariants::standard);
-        UI::printText("The mystery is completely solved. The Hack Log is completed and you've found the source of Green Scrap. You can now manufacture the cure.");
+        UI::printText("The mystery is completely solved. The Hack Log is completed and you've found the source of Green Scrap, the reason for the spread of the Nano Phage virus, and you decyphered how to  manufacture the cure. But all those lost souls. Those poor fools that were consumed by the NanoPhage and transformed into helpless computer chips. They are too far gone to be saved by the cure. You only hope that you have stopped it before it spread too far...\n\nMeanwhile, on a coffee farm in the middle of nowhere, a farmer plays with his YoYo, blissfully unaware of what the future my hold.");
+        farm.draw(80, 140);
+        
         if(Buttons::cBtn()){
             gotoLift();
         }

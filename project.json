@@ -1076,6 +1076,63 @@
 		},
 		"/maps/blank.tmx": {
 			"sdcard": false
+		},
+		"/audio/Explode.wav": {
+			"sdcard": false
+		},
+		"/audio/Explode.h": {
+			"sdcard": false
+		},
+		"/music/npz-lift.wav": {
+			"sdcard": false
+		},
+		"/music/npz-lift.raw": {
+			"sdcard": false
+		},
+		"/asepriteProjects/RedChip.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/RedChip.json": {
+			"sdcard": false
+		},
+		"/sprites/RedChip.png": {
+			"sdcard": false
+		},
+		"/sprites/RedChip.h": {
+			"sdcard": false
+		},
+		"/sprites/RedChip.bin": {
+			"sdcard": false
+		},
+		"/asepriteProjects/Farmer.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/Farmer.json": {
+			"sdcard": false
+		},
+		"/sprites/Farmer.png": {
+			"sdcard": false
+		},
+		"/sprites/Farmer.h": {
+			"sdcard": false
+		},
+		"/sprites/Farmer.bin": {
+			"sdcard": false
+		},
+		"/asepriteProjects/Coffea.aseprite": {
+			"sdcard": false
+		},
+		"/sprites/Coffea.json": {
+			"sdcard": false
+		},
+		"/sprites/Coffea.png": {
+			"sdcard": false
+		},
+		"/sprites/Coffea.bin": {
+			"sdcard": false
+		},
+		"/sprites/Coffea.h": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
