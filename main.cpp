@@ -82,6 +82,7 @@ void gotoLevel(int id){
     }
     LevelManager::setLvl(id);
     LevelManager::setMap();
+    Sound::playMusicStream("music/npz-e.raw", 0);
 }
 
 void checkRobo(){
@@ -124,7 +125,7 @@ void checkSequ(){
                     SeqHack::init(60);
                     SeqHack::shuffle(6);
                 }else{
-                    SeqHack::init(40);
+                    SeqHack::init(50);
                     SeqHack::shuffle(10);
                 }
                 prevState = state;
@@ -433,17 +434,17 @@ void update(){
             return;
         }
     
-        if(Buttons::downBtn()){
-            debugFinalBoss();
-            return;
-        }
-        if(Buttons::upBtn()){
-            for(int i = 0; i < 5; ++i){
-                lvlLock[i] = false;
-            }
-            gotoLift();
-            return;
-        }
+        // if(Buttons::downBtn()){
+        //     debugFinalBoss();
+        //     return;
+        // }
+        // if(Buttons::upBtn()){
+        //     for(int i = 0; i < 5; ++i){
+        //         lvlLock[i] = false;
+        //     }
+        //     gotoLift();
+        //     return;
+        // }
         
         UI::drawGauge(8, 28, 17, introProg, 50);
 
