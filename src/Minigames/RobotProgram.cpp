@@ -7,6 +7,7 @@
 #include <tasui>
 #include <puits_UltimateUtopia.h>
 #include "src/structs.h"
+#include "audio/Denied.h"
 
 namespace RobotProgram{
     using Pokitto::UI;
@@ -107,6 +108,7 @@ namespace RobotProgram{
     
     void RoboHack::update(){
         using Pokitto::Buttons;
+        using Pokitto::Sound;
         // Poll the button
         Buttons::pollButtons();
         buttonsJustPressed = Buttons::buttons_state & (~buttonsPreviousState);
@@ -198,6 +200,14 @@ namespace RobotProgram{
                 if(speed == 0){
                     speed = startSpeed;
                     if(step < length){
+                        if(program[step+1] == B_A && (roboX != keyX && roboY != keyY)){
+                            Sound::playSFX(Denied, sizeof(Denied));
+                            shake = true;
+                        }
+                        if(program[step+1] == B_B && !hasKey){
+                            Sound::playSFX(Denied, sizeof(Denied));
+                            shake = true;
+                        }
                         switch(program[step]){
                             case B_A:
                                 if(roboX == keyX && roboY == keyY){
@@ -205,12 +215,14 @@ namespace RobotProgram{
                                 }
                             break;
                             case B_B:
-                                if(roboX == btnX && roboY == btnY){
-                                    unlocked = true;
-                                }else{
-                                    keyX = roboX;
-                                    keyY = roboY;
-                                    hasKey = false;
+                                if(hasKey){
+                                    if(roboX == btnX && roboY == btnY){
+                                        unlocked = true;
+                                    }else{
+                                        keyX = roboX;
+                                        keyY = roboY;
+                                        hasKey = false;
+                                    }
                                 }
                             break;
                             case B_LEFT:
@@ -249,6 +261,12 @@ namespace RobotProgram{
             
             break;
             case COMPLETE:
+                if(unlocked) {
+                    UI::clear();
+                    end = true;
+                    return;
+                }
+            
                 RoboHack::drawUI();
                 UI::printText("> C restart. A new. B Exit");
 
@@ -329,7 +347,16 @@ namespace RobotProgram{
             icons.draw(iconOffset + i * spriteSize, 18);
         }
         if(roboState == RUNNING || roboState == PROGRAMMING){
-            robo.draw(iconOffset+step*spriteSize, 32);
+            if(shake) {
+                shakeTime--;
+                int shaking = rand()%4 > 2 ? 1 : -1;
+                robo.draw(iconOffset+step*spriteSize + shaking, 32);
+                if(shakeTime == 0){
+                    shakeTime = 15;
+                    shake = false;
+                }
+            }else robo.draw(iconOffset+step*spriteSize, 32);
+            
         }
         
         if(!unlocked){
@@ -348,7 +375,17 @@ namespace RobotProgram{
         UI::setCursorBoundingBox(2, 2, 34, 25);
         UI::setCursor(2, 25);
         UI::setCursorDelta(UIVariants::standard);
-        UI::printText("A: pickup  B: use  C: wait.");
+        switch(roboState){
+            case READY:
+                UI::printText("Program loaded: 4D3+ Cortex-M0+");
+                break;
+            case PROGRAMMING:
+                UI::printText("A: pickup  B: use  C: wait.");
+                break;
+            case RUNNING:
+                if(hasKey) UI::printText("Keycard collected...");
+                else UI::printText("Searching for keycard...");
+        }
     }
     
     bool RoboHack::complete(){

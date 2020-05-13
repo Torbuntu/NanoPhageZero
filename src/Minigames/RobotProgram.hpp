@@ -48,7 +48,7 @@ namespace RobotProgram{
             
             static inline int program[13];
             
-            static inline int length, roboX, roboY, step, speed, renderX, renderY, keyX, keyY, btnX, btnY, vX, vY, vD, vDInit, vS, keyInitX, keyInitY, vInitX, vInitY, iconOffset, spriteSize = 16, startSpeed;
+            static inline int shakeTime = 15, length, roboX, roboY, step, speed, renderX, renderY, keyX, keyY, btnX, btnY, vX, vY, vD, vDInit, vS, keyInitX, keyInitY, vInitX, vInitY, iconOffset, spriteSize = 16, startSpeed;
             
             static inline RoboState roboState = RoboState::READY;
             
@@ -57,7 +57,7 @@ namespace RobotProgram{
             
             static inline int buttonsJustPressed = 0;
             
-            static inline bool end = false, hasKey = false, unlocked = false, intro; 
+            static inline bool end = false, hasKey = false, unlocked = false, intro, shake = false; 
     };
     
     
