@@ -15,7 +15,6 @@ namespace Player{
             static int getY();
             static int getW();
             static int getH();
-        
         private:
         
             static inline Sprite player;

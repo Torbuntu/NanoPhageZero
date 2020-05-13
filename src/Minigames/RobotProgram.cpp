@@ -208,6 +208,34 @@ namespace RobotProgram{
                             Sound::playSFX(Denied, sizeof(Denied));
                             shake = true;
                         }
+                        
+                        switch(program[step+1]){
+                            case B_LEFT:
+                                if(roboX - 1 < 0) {
+                                    Sound::playSFX(Denied, sizeof(Denied));
+                                    shake = true;
+                                }
+                                break;
+                            case B_RIGHT:
+                                if(roboX + 1 > 5) {
+                                    Sound::playSFX(Denied, sizeof(Denied));
+                                    shake = true;
+                                }
+                                break;
+                            case B_UP:
+                                if(roboY - 1 < 0){
+                                    Sound::playSFX(Denied, sizeof(Denied));
+                                    shake = true;
+                                }
+                                break;
+                            case B_DOWN:
+                                if( roboY + 1 > 4){
+                                    Sound::playSFX(Denied, sizeof(Denied));
+                                    shake = true;
+                                }
+                                break;
+                        }
+                        
                         switch(program[step]){
                             case B_A:
                                 if(roboX == keyX && roboY == keyY){

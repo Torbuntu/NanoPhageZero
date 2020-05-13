@@ -562,9 +562,11 @@ void update(){
             state = prevState;
             doorLocked = true;
             displayMessage = true;
-            message = "Ugh! I need to be careful. \nThe computer took my keycard!";
+            if(hasKey) message = "Ugh! I need to be careful. \nThe computer took my keycard!";
+            else message = "Ugh! The system found me hacking\nand ejected me...";
             hasKey = false;
             dor.play(door, Door::locked);
+            camY += 8;
         }
         
         SeqHack::render();
@@ -584,6 +586,7 @@ void update(){
         }
 
         if(RoboHack::complete()){
+            UI::clear();
             if(RoboHack::keyReturned()){
                 Sound::playSFX(Unlock, sizeof(Unlock));
                 hasKey = true;

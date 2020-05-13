@@ -1136,6 +1136,9 @@
 		},
 		"/NanoPhageZero.zip": {
 			"sdcard": false
+		},
+		"/NanoPhageZero-sources.zip": {
+			"sdcard": false
 		}
 	},
 	"BUILDFlags": {
